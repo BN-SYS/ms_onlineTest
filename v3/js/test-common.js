@@ -412,7 +412,8 @@ class TestManager {
     localStorage.setItem(`stage${this.config.stage}Result`, JSON.stringify(stageResult));
     this.saveLog(stageResult);
 
-    alert(`${this.config.stage}단계 완료!\n정답: ${correctCount} / ${this.selectedQuestions.length}`);
+    // alert(`${this.config.stage}단계 완료!\n정답: ${correctCount} / ${this.selectedQuestions.length}`);
+    alert(`${this.config.stage}단계 완료!`);
     location.href = this.config.nextPage;
   }
 

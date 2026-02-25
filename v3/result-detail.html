@@ -12,7 +12,7 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <!-- 📄 A4 레이아웃 결과지 -->
+    <!-- A4 레이아웃 결과지 -->
     <div class="result-page-wrapper">
         <div class="result-page" id="resultPage">
             <!-- 헤더 -->
@@ -49,9 +49,9 @@
             <!-- 종합 점수 섹션 -->
             <div class="score-section">
                 <div class="main-score-box">
-                    <div class="score-label">총합 IQ</div>
-                    <div class="score-value" id="totalScore">128</div>
-                    <div class="score-percentile">상위 <span id="percentile">5</span>%</div>
+                    <div class="score-label">종합 점수</div>
+                    <div class="score-value" id="totalScore"></div>
+                    <div class="score-percentile"><span id="percentile"></span></div>
                 </div>
                 <div class="level-box" id="levelBox">
                     <!-- JS로 동적 생성 -->
@@ -99,7 +99,7 @@
 
             <!-- 푸터 -->
             <div class="result-page-footer">
-                <p>본 리포트는 멘사코리아 공식 인증 테스트 결과입니다. | www.mensa.or.kr</p>
+                <p>본 리포트는 멘사코리아 공식 인증 테스트 결과입니다. | https://test.mensakorea.kr/</p>
                 <p class="footer-notice">※ 본 결과는 온라인 테스트 기준이며, 공식 멘사 가입을 위해서는 오프라인 테스트가 필요합니다.</p>
             </div>
         </div>
@@ -107,16 +107,16 @@
         <!-- 액션 버튼 (PDF 외부에 배치) -->
         <div class="action-buttons-wrapper">
             <button class="action-btn primary" onclick="downloadPDF()">
-                <span>📄</span> PDF 다운로드
+                <span></span> PDF 다운로드
             </button>
             <button class="action-btn" onclick="printResult()">
-                <span>🖨️</span> 인쇄하기
+                <span></span> 인쇄하기
             </button>
             <button class="action-btn" onclick="shareResult()">
-                <span>📤</span> 공유하기
+                <span></span> 공유하기
             </button>
             <button class="action-btn" onclick="location.href='index.html'">
-                <span>🏠</span> 홈으로
+                <span></span> 홈으로
             </button>
         </div>
     </div>
