@@ -1,7 +1,7 @@
 <header class="header">
     <div class="header__inner">
         <a href="index.html" class="logo"></a>
-gi        <nav class="gnb">
+        <nav class="gnb">
             <ul class="ul_1depth">
                 <li><a href="consent.html">온라인테스트</a></li>
                 <li>
@@ -53,18 +53,18 @@ gi        <nav class="gnb">
 </div>
 
 <script>
-function openSidebar() {
-    document.getElementById('sidebar').classList.add('active');
-}
-function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('active');
-}
-window.addEventListener('scroll', function() {
-    const header = document.querySelector('.header');
-    if (window.scrollY > 50) {
-        header.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-    } else {
-        header.style.boxShadow = 'none';
+    function openSidebar() {
+        document.getElementById('sidebar').classList.add('active');
     }
-});
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('active');
+    }
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 50) {
+            header.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+        } else {
+            header.style.boxShadow = 'none';
+        }
+    });
 </script>
