@@ -14,21 +14,21 @@
     <div id="header-placeholder"></div>
     <div class="payment-container">
         <div class="payment-header">
-            <h1>🎉 테스트 완료!</h1>
+            <h1>테스트 완료!</h1>
             <p>결과를 확인하시려면 결제 옵션을 선택해주세요</p>
         </div>
 
         <div class="payment-options">
             <!-- 기본 결과 -->
             <div class="payment-card" onclick="selectPayment('basic')">
-                <h3>📊 기본 결과</h3>
+                <h3>기본 결과</h3>
                 <div class="price">
                     19,900<small>원</small>
                 </div>
                 <ul>
-                    <li>IQ 추정 점수</li>
+                    <li>종합 점수</li>
                     <li>백분위 순위</li>
-                    <li>3가지 영역별 점수</li>
+                    <!-- <li>3가지 영역별 점수</li> -->
                     <li>이메일 결과 발송</li>
                 </ul>
                 <button class="payment-btn" onclick="event.stopPropagation(); processPayment('basic')">
@@ -39,7 +39,7 @@
             <!-- 상세 리포트 -->
             <div class="payment-card" onclick="selectPayment('detail')">
                 <div class="badge">추천</div>
-                <h3>📈 상세 리포트</h3>
+                <h3>상세 리포트</h3>
                 <div class="price">
                     24,900<small>원</small>
                 </div>
@@ -56,7 +56,7 @@
         </div>
 
         <div class="upgrade-notice">
-            <strong>💡 알려드립니다</strong>
+            <strong>알려드립니다</strong>
             <p>기본 결과를 먼저 확인하신 후, 차액(5,000원)을 결제하시면 상세 리포트로 업그레이드하실 수 있습니다.</p>
         </div>
     </div>

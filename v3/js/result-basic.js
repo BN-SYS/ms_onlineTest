@@ -349,7 +349,6 @@ function displayInterpretation(scoreResult) {
     }
 
     let level = '';
-    let emoji = '';
     let description = '';
 
     if (scoreResult.totalScore >= 95) {
@@ -376,22 +375,8 @@ function displayInterpretation(scoreResult) {
     }
 
     container.innerHTML = `
-        <h4>${emoji} ${level}</h4>
+        <h4>${level}</h4>
         <p>${description}</p>
-        <div class="stage-detail" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-            <h5 style="margin-bottom: 10px;">📋 단계별 점수</h5>
-            <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 8px;">
-                    <strong>1단계:</strong> ${scoreResult.stage1Score}점 (${scoreResult.stage1Percentile})
-                </li>
-                <li style="margin-bottom: 8px;">
-                    <strong>2단계:</strong> ${scoreResult.stage2Score}점 (${scoreResult.stage2Percentile})
-                </li>
-                <li style="margin-bottom: 8px;">
-                    <strong>3단계:</strong> ${scoreResult.stage3Score}점 (${scoreResult.stage3Percentile})
-                </li>
-            </ul>
-        </div>
     `;
     
     console.log('해석 표시 완료:', { level, totalScore: scoreResult.totalScore });
@@ -404,7 +389,7 @@ function sendEmailNotification() {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     
     if (!userData || !userData.email) {
-        console.log('ℹ이메일 정보가 없습니다.');
+        console.log('이메일 정보가 없습니다.');
         return;
     }
     
@@ -442,24 +427,145 @@ function shareResult() {
 }
 
 /* ========================================
-   업그레이드
+   상세 리포트 업그레이드 (차액 결제)
 ======================================== */
 function upgradeToDetail() {
-    if (confirm('5,000원을 추가 결제하시면 상세 리포트를 확인하실 수 있습니다.\n결제하시겠습니까?')) {
+    // 결제 확인 팝업
+    const confirmMsg = `상세 리포트 업그레이드\n\n결제 금액: 5,000원\n\n추가 제공 내용:\n- 표준편차 그래프 4개\n- 단계별 상세 분석\n- 개선 방향 가이드\n- PDF 다운로드\n\n결제를 진행하시겠습니까?`;
+    
+    if (confirm(confirmMsg)) {
+        // 결제 진행 표시
+        showPaymentProcessing();
+        
+        // 실제 PG 연동 시 아래 주석 해제
+        // initiatePayment();
+        
+        // 테스트용: 1.5초 후 결제 완료 처리
         setTimeout(() => {
-            alert('결제가 완료되었습니다!');
-            
-            const paymentInfo = {
-                type: 'detail',
-                amount: 5000,
-                upgraded: true,
-                upgradeTimestamp: new Date().toISOString(),
-                certificateNumber: localStorage.getItem('certNumber'),
-                verificationCode: localStorage.getItem('verifyCode')
-            };
-            localStorage.setItem('paymentInfo', JSON.stringify(paymentInfo));
-            
-            location.href = 'result-detail.html';
-        }, 1000);
+            processUpgradePayment();
+        }, 1500);
     }
+}
+
+/* ========================================
+   결제 처리 중 표시
+======================================== */
+function showPaymentProcessing() {
+    // 로딩 오버레이 생성
+    const overlay = document.createElement('div');
+    overlay.id = 'paymentOverlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    `;
+    
+    overlay.innerHTML = `
+        <div style="
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        ">
+            <h3 style="margin-bottom: 10px; color: #333;">결제 진행 중...</h3>
+            <p style="color: #666;">잠시만 기다려주세요.</p>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+}
+
+/* ========================================
+   차액 결제 처리
+======================================== */
+function processUpgradePayment() {
+    // 결제 정보 생성
+    const paymentInfo = {
+        type: 'upgrade', // 차액 결제
+        originalAmount: 19900, // 기본 결과 금액
+        upgradeAmount: 5000, // 추가 결제 금액
+        totalPaid: 24900, // 총 결제 금액
+        upgraded: true,
+        paymentTimestamp: new Date().toISOString(),
+        paymentMethod: 'card', // 실제로는 PG에서 받아온 정보
+        transactionId: 'TXN-' + Date.now(), // 실제로는 PG에서 받아온 거래번호
+        certificateNumber: localStorage.getItem('certNumber'),
+        verificationCode: localStorage.getItem('verifyCode')
+    };
+    
+    // localStorage에 결제 정보 저장
+    localStorage.setItem('paymentInfo', JSON.stringify(paymentInfo));
+    
+    // 결제 완료 로그
+    console.log('차액 결제 완료:', paymentInfo);
+    
+    // 로딩 오버레이 제거
+    const overlay = document.getElementById('paymentOverlay');
+    if (overlay) {
+        overlay.remove();
+    }
+    
+    // 결제 완료 알림
+    alert('결제가 완료되었습니다!\n상세 리포트 페이지로 이동합니다.');
+    
+    // 상세 리포트 페이지로 이동
+    location.href = 'result-detail.html';
+}
+
+/* ========================================
+   실제 PG 결제 연동 (이니시스)
+======================================== */
+function initiatePayment() {
+    // 이니시스 PG 연동 예시
+    // 실제 구현 시 이 함수를 사용하세요
+    
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const certNumber = localStorage.getItem('certNumber');
+    
+    // 이니시스 결제 파라미터 설정
+    const paymentParams = {
+        // 상점 정보
+        mid: 'YOUR_MERCHANT_ID', // 상점 ID (발급받은 ID)
+        signKey: 'YOUR_SIGN_KEY', // 서명 키
+        
+        // 결제 정보
+        goodsName: '멘사 테스트 상세 리포트 업그레이드',
+        price: 5000,
+        buyerName: userData.name || '구매자',
+        buyerEmail: userData.email || '',
+        buyerTel: userData.phone || '',
+        
+        // 주문 정보
+        orderNumber: certNumber || 'ORDER-' + Date.now(),
+        timestamp: new Date().getTime(),
+        
+        // 결과 URL
+        returnUrl: window.location.origin + '/payment-complete.html',
+        closeUrl: window.location.origin + '/payment-cancel.html'
+    };
+    
+    // 이니시스 결제창 호출
+    // INIStdPay.pay(paymentParams);
+    
+    console.log('PG 결제 호출:', paymentParams);
+}
+
+/* ========================================
+   결제 취소 처리
+======================================== */
+function cancelPayment() {
+    const overlay = document.getElementById('paymentOverlay');
+    if (overlay) {
+        overlay.remove();
+    }
+    
+    console.log('결제가 취소되었습니다.');
 }
