@@ -26,7 +26,7 @@ function loadDetailResult() {
         testSettings = createSampleTestSettings();
     }
     
-    console.log('📊 상세 결과 로드:', { stage1, stage2, stage3, userData, testSettings });
+    console.log('상세 결과 로드:', { stage1, stage2, stage3, userData, testSettings });
     
     // 날짜 표시
     const now = new Date();
@@ -516,50 +516,92 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
     document.getElementById('recommendationContent').innerHTML = content;
 }
 
+
 /* ========================================
    PDF 다운로드
 ======================================== */
-function downloadPDF() {
-    if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
-        alert('PDF 라이브러리를 로드하는 중입니다. 잠시 후 다시 시도해주세요.');
-        return;
-    }
+async function downloadPDF() {
+  if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+    alert('PDF 라이브러리를 로드하는 중입니다.\n잠시 후 다시 시도해주세요.');
+    return;
+  }
 
-    const button = event.target.closest('.action-btn');
-    const originalHTML = button.innerHTML;
-    button.innerHTML = '<span>⏳</span> 생성 중...';
+  const button = event?.target?.closest('.action-btn');
+  const originalHTML = button ? button.innerHTML : '';
+  
+  if (button) {
+    button.innerHTML = 'PDF 생성 중...';
     button.disabled = true;
+  }
 
-    const resultPage = document.getElementById('resultPage');
-    resultPage.classList.add('pdf-rendering');
+  const resultPage = document.getElementById('resultPage');
+  if (!resultPage) {
+    alert('결과 페이지를 찾을 수 없습니다.');
+    return;
+  }
 
-    html2canvas(resultPage, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff',
-        width: 794,
-        height: 1123
-    }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-        
-        pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
-        
-        const now = new Date();
-        const fileName = `Mensa_Test_Result_${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}.pdf`;
-        pdf.save(fileName);
-        
-        resultPage.classList.remove('pdf-rendering');
-        button.innerHTML = originalHTML;
-        button.disabled = false;
-    }).catch(error => {
-        console.error('PDF 생성 실패:', error);
-        alert('PDF 생성 중 오류가 발생했습니다.');
-        resultPage.classList.remove('pdf-rendering');
-        button.innerHTML = originalHTML;
-        button.disabled = false;
+  const A4_WIDTH_MM = 210;
+  const A4_HEIGHT_MM = 297;
+  const MARGIN_MM = 3; // 양쪽 여백
+  const MAX_WIDTH_MM = A4_WIDTH_MM - 2 * MARGIN_MM;  // 200 mm
+  const MAX_HEIGHT_MM = A4_HEIGHT_MM - 2 * MARGIN_MM; // 287 mm
+
+  try {
+    // 1. html2canvas로 고해상도 캡처 (scale 2)
+    const canvas = await html2canvas(resultPage, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#fff',
+      windowWidth: resultPage.scrollWidth,
+      windowHeight: resultPage.scrollHeight
     });
+
+    const imgData = canvas.toDataURL('image/png');
+    const imgWidthPx = canvas.width;
+    const imgHeightPx = canvas.height;
+
+    // 2. 픽셀 → mm 변환 (96 dpi 기준: 1 mm ≈ 3.7795 px)
+    const PX_TO_MM = 0.264583; // 1 px = 0.264583 mm
+    const imgWidthMM = imgWidthPx * PX_TO_MM;
+    const imgHeightMM = imgHeightPx * PX_TO_MM;
+
+    // 3. 가로·세로 각각의 축소 비율 계산
+    const scaleW = imgWidthMM > MAX_WIDTH_MM ? MAX_WIDTH_MM / imgWidthMM : 1;
+    const scaleH = imgHeightMM > MAX_HEIGHT_MM ? MAX_HEIGHT_MM / imgHeightMM : 1;
+
+    // 4. 둘 중 더 작은 비율(= 더 많이 축소해야 하는 쪽) 적용
+    const scale = Math.min(scaleW, scaleH);
+
+    const finalW = imgWidthMM * scale;
+    const finalH = imgHeightMM * scale;
+
+    // 5. 중앙 정렬 좌표
+    const x = (A4_WIDTH_MM - finalW) / 2;
+    const y = (A4_HEIGHT_MM - finalH) / 2;
+
+    console.log(`📐 원본: ${imgWidthMM.toFixed(1)}×${imgHeightMM.toFixed(1)} mm`);
+    console.log(`📐 축소 비율: ${(scale * 100).toFixed(1)}% (scaleW=${(scaleW*100).toFixed(1)}%, scaleH=${(scaleH*100).toFixed(1)}%)`);
+    console.log(`📐 최종: ${finalW.toFixed(1)}×${finalH.toFixed(1)} mm, 위치: (${x.toFixed(1)}, ${y.toFixed(1)})`);
+
+    // 6. PDF 생성
+    const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+    pdf.addImage(imgData, 'PNG', x, y, finalW, finalH);
+
+    const fileName = `MensaStyle_Test_Report_${Date.now()}.pdf`;
+    pdf.save(fileName);
+
+    console.log('PDF 다운로드 완료:', fileName);
+
+  } catch (err) {
+    console.error('PDF 생성 실패:', err);
+    alert('PDF 생성 중 오류가 발생했습니다.\n다시 시도해주세요.');
+  } finally {
+    if (button) {
+      button.innerHTML = originalHTML;
+      button.disabled = false;
+    }
+  }
 }
 
 /* ========================================
@@ -586,3 +628,5 @@ function shareResult() {
 function printResult() {
     window.print();
 }
+
+
