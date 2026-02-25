@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>문제 등록 - 멘사코리아 관리자</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <div class="admin-container">
+    <!-- 사이드바 -->
+    <div id="sidebarPlaceholder"></div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="admin-main">
+      <!-- 헤더 -->
+      <div id="headerPlaceholder"></div>
+
+      <!-- 콘텐츠 -->
+      <div class="admin-content">
+        <div class="dashboard-header">
+          <h2>문제 등록</h2>
+          <p>새로운 테스트 문제를 등록합니다</p>
+        </div>
+
+        <!-- 문제 등록 폼 -->
+        <form id="questionForm" class="form-container">
+          <!-- 단계 선택 -->
+          <div class="form-group">
+            <label for="stage">유형 (단계)</label>
+            <select name="stage" id="stage" class="form-control" required>
+              <option value="">단계 선택</option>
+              <option value="1">1단계</option>
+              <option value="2">2단계</option>
+              <option value="3">3단계</option>
+            </select>
+          </div>
+
+          <!-- 문제 이미지 -->
+          <div class="form-group">
+            <label for="questionImg">문제 이미지</label>
+            <input type="file" id="questionImg" accept="image/*" class="form-control" required />
+            <span id="questionFileName" class="choice-filename">선택된 파일 없음</span>
+            <img id="questionPreview" class="choice-preview" alt="문제 미리보기" />
+          </div>
+
+          <!-- 선택지 개수 -->
+          <div class="form-group">
+            <label>선택지 개수</label>
+            <div class="choice-count-selector">
+              <label><input type="radio" name="choiceCount" value="4" checked /> 4개</label>
+              <label><input type="radio" name="choiceCount" value="5" /> 5개</label>
+              <label><input type="radio" name="choiceCount" value="6" /> 6개</label>
+              <label><input type="radio" name="choiceCount" value="7" /> 7개</label>
+              <label><input type="radio" name="choiceCount" value="8" /> 8개</label>
+            </div>
+          </div>
+
+          <!-- 보기 -->
+          <div class="form-group">
+            <label>보기</label>
+            <div class="choice-list">
+              <!-- 1~8번 선택지 카드 -->
+              <div class="choice-item" id="choice-1">
+                <div class="choice-header">
+                  <strong>1번</strong>
+                  <label class="correct-label">
+                    <input type="radio" name="correctAnswer" value="1" required />
+                    정답
+                  </label>
+                </div>
+                <input type="file" id="choice-1-img" accept="image/*" class="form-control" required />
+                <span id="choice-1-name" class="choice-filename">선택된 파일 없음</span>
+                <img id="choice-1-preview" class="choice-preview" alt="1번 미리보기" />
+              </div>
+
+              <div class="choice-item" id="choice-2">
+                <div class="choice-header">
+                  <strong>2번</strong>
+                  <label class="correct-label">
+                    <input type="radio" name="correctAnswer" value="2" />
+                    정답
+                  </label>
+                </div>
+                <input type="file" id="choice-2-img" accept="image/*" class="form-control" required />
+                <span id="choice-2-name" class="choice-filename">선택된 파일 없음</span>
+                <img id="choice-2-preview" class="choice-preview" alt="2번 미리보기" />
+              </div>
+
+              <div class="choice-item" id="choice-3">
+                <div class="choice-header">
+                  <strong>3번</strong>
+                  <label class="correct-label">
+                    <input type="radio" name="correctAnswer" value="3" />
+                    정답
+                  </label>
+                </div>
+                <input type="file" id="choice-3-img" accept="image/*" class="form-control" required />
+                <span id="choice-3-name" class="choice-filename">선택된 파일 없음</span>
+                <img id="choice-3-preview" class="choice-preview" alt="3번 미리보기" />
+              </div>
+
+              <div class="choice-item" id="choice-4">
+                <div class="choice-header">
+                  <strong>4번</strong>
+                  <label class="correct-label">
+                    <input type="radio" name="correctAnswer" value="4" />
+                    정답
+                  </label>
+                </div>
+                <input type="file" id="choice-4-img" accept="image/*" class="form-control" required />
+                <span id="choice-4-name" class="choice-filename">선택된 파일 없음</span>
+                <img id="choice-4-preview" class="choice-preview" alt="4번 미리보기" />
+              </div>
+
+              <div class="choice-item" id="choice-5" style="display:none;">
+                <div class="choice-header">
+                  <strong>5번</strong>
+                  <label class="correct-label">
+                    <input type="radio" name="correctAnswer" value="5" />
+                    정답
+                  </label>
+                </div>
+                <input type="file" id="choice-5-img" accept="image/*" class="form-control" />
+                <span id="choice-5-name" class="choice-filename">선택된 파일 없음</span>
+                <img id="choice-5-preview" class="choice-preview" alt="5번 미리보기" />
+              </div>
+
+              <div class="choice-item" id="choice-6" style="display:none;">
+                <div class="choice-header">
+                  <strong>6번</strong>
+                  <label class="correct-label">
+                    <input type="radio" name="correctAnswer" value="6" />
+                    정답
+                  </label>
+                </div>
+                <input type="file" id="choice-6-img" accept="image/*" class="form-control" />
+                <span id="choice-6-name" class="choice-filename">선택된 파일 없음</span>
+                <img id="choice-6-preview" class="choice-preview" alt="6번 미리보기" />
+              </div>
+
+              <div class="choice-item" id="choice-7" style="display:none;">
+                <div class="choice-header">
+                  <strong>7번</strong>
+                  <label class="correct-label">
+                    <input type="radio" name="correctAnswer" value="7" />
+                    정답
+                  </label>
+                </div>
+                <input type="file" id="choice-7-img" accept="image/*" class="form-control" />
+                <span id="choice-7-name" class="choice-filename">선택된 파일 없음</span>
+                <img id="choice-7-preview" class="choice-preview" alt="7번 미리보기" />
+              </div>
+
+              <div class="choice-item" id="choice-8" style="display:none;">
+                <div class="choice-header">
+                  <strong>8번</strong>
+                  <label class="correct-label">
+                    <input type="radio" name="correctAnswer" value="8" />
+                    정답
+                  </label>
+                </div>
+                <input type="file" id="choice-8-img" accept="image/*" class="form-control" />
+                <span id="choice-8-name" class="choice-filename">선택된 파일 없음</span>
+                <img id="choice-8-preview" class="choice-preview" alt="8번 미리보기" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 버튼 -->
+          <div class="form-group" style="display:flex; justify-content:flex-end; gap:15px;">
+            <button type="button" class="btn btn-secondary" onclick="history.back()">취소하기</button>
+            <button type="submit" class="btn btn-primary">등록하기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/include.js"></script>
+  <script src="../js/admin-common.js"></script>
+  <script src="../js/admin-question-form.js"></script>
+</body>
+</html>

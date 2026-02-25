@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>응시 로그 - 멘사코리아 관리자</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <div class="admin-container">
+    <!-- 사이드바 -->
+    <div id="sidebarPlaceholder"></div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="admin-main">
+      <!-- 헤더 -->
+      <div id="headerPlaceholder"></div>
+
+      <!-- 콘텐츠 -->
+      <div class="admin-content">
+        <div class="dashboard-header">
+          <h2>응시 로그</h2>
+          <p>테스트 응시 기록을 조회합니다</p>
+        </div>
+
+        <!-- 필터 -->
+        <div class="form-container">
+          <div style="display:flex; gap:15px; align-items:flex-end;">
+            <div class="form-group" style="margin:0; flex:1;">
+              <label>날짜 범위</label>
+              <input type="date" id="startDate" class="form-control" />
+            </div>
+            <div class="form-group" style="margin:0; flex:1;">
+              <label>&nbsp;</label>
+              <input type="date" id="endDate" class="form-control" />
+            </div>
+            <div class="form-group" style="margin:0; flex:1;">
+              <label>결제 상태</label>
+              <select id="paymentFilter" class="form-control">
+                <option value="">전체</option>
+                <option value="paid">완료</option>
+                <option value="unpaid">미결제</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="filterLogs()">검색</button>
+            <button class="btn btn-success" onclick="exportCSV()">CSV 다운로드</button>
+          </div>
+        </div>
+
+        <!-- 로그 테이블 -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3 class="table-title">응시 내역</h3>
+            <span id="logCount">총 0건</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>세션 ID</th>
+                <th>이름</th>
+                <th>생년</th>
+                <th>이메일</th>
+                <th>점수</th>
+                <th>백분위</th>
+                <th>결제</th>
+                <th>응시일시</th>
+                <th>상세</th>
+              </tr>
+            </thead>
+            <tbody id="logList">
+              <tr>
+                <td colspan="9" class="text-center">로딩 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/include.js"></script>
+  <script src="../js/admin-common.js"></script>
+  <script src="../js/admin-logs.js"></script>
+</body>
+</html>

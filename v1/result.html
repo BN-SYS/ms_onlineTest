@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테스트 결과 - 멘사 IQ 테스트</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .result-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .result-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .score-display {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 30px 0;
+        }
+
+        .result-info {
+            background: var(--bg-gray);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .payment-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .payment-section h2 {
+            margin-bottom: 15px;
+        }
+
+        .payment-section p {
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .payment-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .blur-content {
+            filter: blur(10px);
+            pointer-events: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        <div class="result-header">
+            <h1>🎉 테스트 완료!</h1>
+            <p>수고하셨습니다. 아래는 기본 결과입니다.</p>
+        </div>
+
+        <div class="result-info">
+            <div class="info-row">
+                <span>정답 수</span>
+                <strong id="correctCount">-</strong>
+            </div>
+            <div class="info-row">
+                <span>총 문제 수</span>
+                <strong id="totalQuestions">-</strong>
+            </div>
+            <div class="info-row">
+                <span>소요 시간</span>
+                <strong id="timeSpent">-</strong>
+            </div>
+        </div>
+
+        <div class="payment-section">
+            <h2>📊 상세 결과 확인하기</h2>
+            <p>IQ 추정 결과, 연령대별 비교, 문항별 해설을 확인하려면<br>결제가 필요합니다.</p>
+
+            <form id="userInfoForm">
+                <div class="form-group">
+                    <label>이름 *</label>
+                    <input type="text" name="name" required placeholder="홍길동">
+                </div>
+                <div class="form-group">
+                    <label>출생연도 *</label>
+                    <input type="number" name="birthYear" required placeholder="1990" min="1900" max="2024">
+                </div>
+                <div class="form-group">
+                    <label>이메일 *</label>
+                    <input type="email" name="email" required placeholder="example@email.com">
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" name="agree" required id="agreeCheck">
+                    <label for="agreeCheck">개인정보 수집 및 이용에 동의합니다</label>
+                </div>
+
+                <button type="submit" class="payment-btn">
+                    💳 9,900원 결제하고 결과 확인하기
+                </button>
+            </form>
+        </div>
+
+        <div class="blur-content" style="margin-top: 40px;">
+            <h3>📈 IQ 추정 결과</h3>
+            <div class="score-display">IQ 128</div>
+            <p>상위 5% 수준입니다. 매우 우수한 결과입니다...</p>
+        </div>
+    </div>
+
+    <script src="js/result.js"></script>
+</body>
+</html>

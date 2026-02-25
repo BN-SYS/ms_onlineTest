@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>응시 로그 - 멘사 관리자</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 사이드바 -->
+        <aside class="sidebar">
+            <h2>🧠 멘사 관리자</h2>
+            <nav>
+                <button class="nav-btn" onclick="location.href='admin-questions.html'">문제 관리</button>
+                <button class="nav-btn active" onclick="location.href='admin-logs.html'">응시 로그</button>
+            </nav>
+        </aside>
+
+        <!-- 메인 -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>응시 로그</h1>
+                <div class="header-actions">
+                    <button class="btn-secondary" onclick="exportToExcel()">📊 Excel 다운로드</button>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <select id="paymentFilter" onchange="filterLogs()">
+                    <option value="all">전체</option>
+                    <option value="paid">결제 완료</option>
+                    <option value="unpaid">미결제</option>
+                </select>
+                
+                <input type="date" id="startDate" onchange="filterLogs()">
+                <span>~</span>
+                <input type="date" id="endDate" onchange="filterLogs()">
+                
+                <input type="text" id="searchInput" placeholder="이름/이메일 검색" onkeyup="filterLogs()" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 200px;">
+            </div>
+
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>총 응시자</h3>
+                    <div class="stat-value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>결제 완료</h3>
+                    <div class="stat-value" id="paidUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>평균 IQ</h3>
+                    <div class="stat-value" id="avgIQ">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>총 매출</h3>
+                    <div class="stat-value" id="totalRevenue">0원</div>
+                </div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>응시일시</th>
+                        <th>이름</th>
+                        <th>출생연도</th>
+                        <th>이메일</th>
+                        <th>점수</th>
+                        <th>IQ</th>
+                        <th>소요시간</th>
+                        <th>결제</th>
+                        <th>IP</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody id="logsTableBody">
+                    <!-- JS로 동적 생성 -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- 상세 모달 -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>응시 상세</h2>
+                <button class="close-btn" onclick="closeDetailModal()">✕</button>
+            </div>
+            <div id="detailContent">
+                <!-- JS로 동적 생성 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin-logs.js"></script>
+</body>
+</html>

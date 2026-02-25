@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>문제 목록 - 멘사코리아 관리자</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <div class="admin-container">
+    <!-- 사이드바 -->
+    <div id="sidebarPlaceholder"></div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="admin-main">
+      <!-- 헤더 -->
+      <div id="headerPlaceholder"></div>
+
+      <!-- 콘텐츠 -->
+      <div class="admin-content">
+        <div class="dashboard-header">
+          <h2>문제 목록</h2>
+          <p>등록된 테스트 문제를 관리합니다</p>
+        </div>
+
+        <!-- 필터 -->
+        <div class="form-container">
+          <div style="display:flex; gap:15px; align-items:center;">
+            <div class="form-group" style="margin:0; flex:1;">
+              <label>단계 필터</label>
+              <select id="stageFilter" class="form-control">
+                <option value="">전체</option>
+                <option value="1">1단계</option>
+                <option value="2">2단계</option>
+                <option value="3">3단계</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin:0; flex:2;">
+              <label>검색</label>
+              <input type="text" id="searchInput" class="form-control" placeholder="문제 ID 또는 설명 검색" />
+            </div>
+            <button class="btn btn-primary" onclick="filterQuestions()">검색</button>
+          </div>
+        </div>
+
+        <!-- 문제 목록 테이블 -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3 class="table-title">전체 문제</h3>
+            <a href="question-form.html" class="btn btn-primary">+ 문제 등록</a>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>단계</th>
+                <th>문제 이미지</th>
+                <th>선택지 개수</th>
+                <th>정답</th>
+                <th>응시 횟수</th>
+                <th>정답률</th>
+                <th>등록일</th>
+                <th>관리</th>
+              </tr>
+            </thead>
+            <tbody id="questionList">
+              <tr>
+                <td colspan="9" class="text-center">로딩 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/include.js"></script>
+  <script src="../js/admin-common.js"></script>
+  <script src="../js/admin-questions.js"></script>
+</body>
+</html>

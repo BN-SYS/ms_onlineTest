@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>문제 유형 관리 - 멘사코리아 관리자</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <div class="admin-container">
+    <div id="sidebarPlaceholder"></div>
+    <div class="admin-main">
+      <div id="headerPlaceholder"></div>
+      <div class="admin-content">
+        <div class="dashboard-header">
+          <h2>문제 유형 관리</h2>
+          <p>테스트 단계별 문제 유형을 등록하고 관리합니다</p>
+        </div>
+
+        <!-- 유형 등록 폼 -->
+        <div class="form-container">
+          <h3 style="margin-bottom:20px;">새 유형 등록</h3>
+          <form id="typeForm">
+            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:20px;">
+              <div class="form-group">
+                <label>유형 이름 <span style="color:red;">*</span></label>
+                <input type="text" id="typeName" class="form-control" placeholder="예: 1단계 - 기본 패턴" required />
+              </div>
+
+              <div class="form-group">
+                <label>단계 순서 <span style="color:red;">*</span></label>
+                <input type="number" id="stageOrder" class="form-control" min="1" value="1" required />
+                <small style="color:#6c757d;">테스트 진행 순서 (1, 2, 3...)</small>
+              </div>
+
+              <div class="form-group">
+                <label>난이도</label>
+                <select id="difficulty" class="form-control">
+                  <option value="easy">쉬움</option>
+                  <option value="medium">보통</option>
+                  <option value="hard">어려움</option>
+                  <option value="expert">최고난이도</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>출제 문제 수 <span style="color:red;">*</span></label>
+                <input type="number" id="questionCount" class="form-control" min="1" max="50" value="15" required />
+              </div>
+
+              <div class="form-group">
+                <label>시간 제한 (분)</label>
+                <input type="number" id="timeLimit" class="form-control" min="0" max="120" value="30" />
+                <small style="color:#6c757d;">0 입력 시 제한 없음</small>
+              </div>
+
+              <div class="form-group">
+                <label>최소 정답률 (%)</label>
+                <input type="number" id="minCorrectRate" class="form-control" min="0" max="100" value="20" />
+              </div>
+
+              <div class="form-group">
+                <label>최소 평균 응답시간 (초)</label>
+                <input type="number" id="minAvgTime" class="form-control" min="0" max="300" value="30" />
+              </div>
+
+              <div class="form-group">
+                <label>상태</label>
+                <select id="status" class="form-control">
+                  <option value="active">활성</option>
+                  <option value="inactive">비활성</option>
+                  <option value="preparing">준비중</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>유형 설명</label>
+              <textarea id="description" class="form-control" rows="3" placeholder="이 유형에 대한 설명을 입력하세요"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="allowRetry" checked />
+                재응시 허용
+              </label>
+              <small style="color:#6c757d;">실패 시 해당 단계를 다시 응시할 수 있습니다</small>
+            </div>
+
+            <div class="form-group">
+              <label style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="showTimer" checked />
+                타이머 표시
+              </label>
+              <small style="color:#6c757d;">응시자에게 남은 시간을 표시합니다</small>
+            </div>
+
+            <div style="display:flex; gap:15px; justify-content:flex-end;">
+              <button type="button" class="btn btn-secondary" onclick="resetForm()">초기화</button>
+              <button type="submit" class="btn btn-primary">등록하기</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 유형 목록 -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3 class="table-title">등록된 유형 목록</h3>
+            <span id="typeCount">총 0개</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:50px;">순서</th>
+                <th>유형 이름</th>
+                <th>난이도</th>
+                <th>문제 수</th>
+                <th>시간 제한</th>
+                <th>최소 정답률</th>
+                <th>최소 응답시간</th>
+                <th>재응시</th>
+                <th>상태</th>
+                <th style="width:150px;">관리</th>
+              </tr>
+            </thead>
+            <tbody id="typeList">
+              <tr>
+                <td colspan="10" class="text-center">등록된 유형이 없습니다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/include.js"></script>
+  <script src="../js/admin-common.js"></script>
+  <script src="../js/admin-question-types.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문제 관리 - 멘사 관리자</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 사이드바 -->
+        <aside class="sidebar">
+            <h2>🧠 멘사 관리자</h2>
+            <nav>
+                <button class="nav-btn active" onclick="location.href='admin-questions.html'">문제 관리</button>
+                <button class="nav-btn" onclick="location.href='admin-logs.html'">응시 로그</button>
+            </nav>
+        </aside>
+
+        <!-- 메인 -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>문제 관리</h1>
+                <button class="btn-primary" onclick="openQuestionModal()">+ 문제 추가</button>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" id="searchInput" placeholder="문제 검색..." style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 300px;">
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">번호</th>
+                        <th>문제 이미지</th>
+                        <th>보기 개수</th>
+                        <th>정답</th>
+                        <th style="width: 200px;">관리</th>
+                    </tr>
+                </thead>
+                <tbody id="questionsTableBody">
+                    <!-- JS로 동적 생성 -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- 문제 추가/수정 모달 -->
+    <div class="modal" id="questionModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>문제 등록</h2>
+                <button class="close-btn" onclick="closeQuestionModal()">✕</button>
+            </div>
+            <form id="questionForm">
+                <div class="form-group">
+                    <label>문제 번호</label>
+                    <input type="number" name="questionNumber" required placeholder="1" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label>문제 이미지 *</label>
+                    <input type="file" name="questionImage" accept="image/*" required>
+                    <small>통 이미지 1개 업로드</small>
+                </div>
+
+                <div class="form-group">
+                    <label>보기 이미지 (최대 8개)</label>
+                    <div id="choicesContainer">
+                        <div class="choice-input-group">
+                            <input type="file" name="choice1" accept="image/*">
+                            <label>
+                                <input type="radio" name="correctAnswer" value="1" required>
+                                정답
+                            </label>
+                        </div>
+                        <div class="choice-input-group">
+                            <input type="file" name="choice2" accept="image/*">
+                            <label>
+                                <input type="radio" name="correctAnswer" value="2">
+                                정답
+                            </label>
+                        </div>
+                        <div class="choice-input-group">
+                            <input type="file" name="choice3" accept="image/*">
+                            <label>
+                                <input type="radio" name="correctAnswer" value="3">
+                                정답
+                            </label>
+                        </div>
+                        <div class="choice-input-group">
+                            <input type="file" name="choice4" accept="image/*">
+                            <label>
+                                <input type="radio" name="correctAnswer" value="4">
+                                정답
+                            </label>
+                        </div>
+                        <div class="choice-input-group">
+                            <input type="file" name="choice5" accept="image/*">
+                            <label>
+                                <input type="radio" name="correctAnswer" value="5">
+                                정답
+                            </label>
+                        </div>
+                        <div class="choice-input-group">
+                            <input type="file" name="choice6" accept="image/*">
+                            <label>
+                                <input type="radio" name="correctAnswer" value="6">
+                                정답
+                            </label>
+                        </div>
+                        <div class="choice-input-group">
+                            <input type="file" name="choice7" accept="image/*">
+                            <label>
+                                <input type="radio" name="correctAnswer" value="7">
+                                정답
+                            </label>
+                        </div>
+                        <div class="choice-input-group">
+                            <input type="file" name="choice8" accept="image/*">
+                            <label>
+                                <input type="radio" name="correctAnswer" value="8">
+                                정답
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeQuestionModal()">취소</button>
+                    <button type="submit" class="btn-primary">저장</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-questions.js"></script>
+</body>
+</html>

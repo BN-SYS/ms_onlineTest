@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 페이지 - 멘사 온라인 테스트</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- 사이드바 -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>🎓 MENSA ADMIN</h2>
+            </div>
+            <nav class="admin-nav">
+                <a href="#dashboard" class="nav-item active" onclick="showSection('dashboard')">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">대시보드</span>
+                </a>
+                <a href="#users" class="nav-item" onclick="showSection('users')">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">사용자 관리</span>
+                </a>
+                <a href="#results" class="nav-item" onclick="showSection('results')">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">결과 조회</span>
+                </a>
+                <a href="#verification" class="nav-item" onclick="showSection('verification')">
+                    <span class="nav-icon">🔐</span>
+                    <span class="nav-text">진위 확인</span>
+                </a>
+                <a href="#payments" class="nav-item" onclick="showSection('payments')">
+                    <span class="nav-icon">💳</span>
+                    <span class="nav-text">결제 관리</span>
+                </a>
+                <a href="#settings" class="nav-item" onclick="showSection('settings')">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">설정</span>
+                </a>
+            </nav>
+            <div class="admin-footer">
+                <button class="logout-btn" onclick="logout()">
+                    <span>🚪</span> 로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- 메인 콘텐츠 -->
+        <main class="admin-main">
+            <!-- 헤더 -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 id="pageTitle">대시보드</h1>
+                    <p class="header-subtitle" id="pageSubtitle">전체 시스템 현황</p>
+                </div>
+                <div class="header-right">
+                    <div class="admin-profile">
+                        <span class="profile-name">관리자</span>
+                        <span class="profile-icon">👤</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 대시보드 섹션 -->
+            <section id="dashboard-section" class="content-section active">
+                <!-- 통계 카드 -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <p class="stat-label">총 사용자</p>
+                            <h3 class="stat-value" id="totalUsers">0</h3>
+                            <p class="stat-change positive">+12 오늘</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-content">
+                            <p class="stat-label">총 테스트</p>
+                            <h3 class="stat-value" id="totalTests">0</h3>
+                            <p class="stat-change positive">+28 오늘</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <p class="stat-label">총 매출</p>
+                            <h3 class="stat-value" id="totalRevenue">0원</h3>
+                            <p class="stat-change positive">+45,000원 오늘</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <p class="stat-label">평균 IQ</p>
+                            <h3 class="stat-value" id="avgIQ">0</h3>
+                            <p class="stat-change neutral">표준편차 15</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 최근 활동 -->
+                <div class="content-grid">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>최근 테스트 결과</h3>
+                            <button class="btn-small" onclick="showSection('results')">전체보기</button>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table" id="recentTestsTable">
+                                <thead>
+                                    <tr>
+                                        <th>이름</th>
+                                        <th>IQ 점수</th>
+                                        <th>백분위</th>
+                                        <th>일시</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- JS로 동적 생성 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>최근 결제</h3>
+                            <button class="btn-small" onclick="showSection('payments')">전체보기</button>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table" id="recentPaymentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>이름</th>
+                                        <th>금액</th>
+                                        <th>타입</th>
+                                        <th>일시</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- JS로 동적 생성 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 사용자 관리 섹션 -->
+            <section id="users-section" class="content-section">
+                <div class="section-toolbar">
+                    <div class="search-box">
+                        <input type="text" id="userSearch" placeholder="이름, 이메일로 검색..." onkeyup="searchUsers()">
+                        <button class="btn-icon">🔍</button>
+                    </div>
+                    <button class="btn-primary" onclick="exportUsers()">
+                        📥 사용자 내보내기
+                    </button>
+                </div>
+
+                <div class="content-card">
+                    <table class="data-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>이름</th>
+                                <th>이메일</th>
+                                <th>생년월일</th>
+                                <th>테스트 횟수</th>
+                                <th>가입일</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- JS로 동적 생성 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 결과 조회 섹션 -->
+            <section id="results-section" class="content-section">
+                <div class="section-toolbar">
+                    <div class="filter-group">
+                        <select id="iqRangeFilter" onchange="filterResults()">
+                            <option value="">전체 IQ 범위</option>
+                            <option value="140+">140 이상 (천재)</option>
+                            <option value="130-139">130-139 (매우 우수)</option>
+                            <option value="120-129">120-129 (우수)</option>
+                            <option value="110-119">110-119 (평균 상)</option>
+                            <option value="90-109">90-109 (평균)</option>
+                            <option value="0-89">89 이하</option>
+                        </select>
+                        <input type="date" id="dateFilter" onchange="filterResults()">
+                    </div>
+                    <button class="btn-primary" onclick="exportResults()">
+                        📥 결과 내보내기
+                    </button>
+                </div>
+
+                <div class="content-card">
+                    <table class="data-table" id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>인증번호</th>
+                                <th>이름</th>
+                                <th>IQ 점수</th>
+                                <th>백분위</th>
+                                <th>1단계</th>
+                                <th>2단계</th>
+                                <th>3단계</th>
+                                <th>테스트 일시</th>
+                                <th>상세</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- JS로 동적 생성 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 진위 확인 섹션 -->
+            <section id="verification-section" class="content-section">
+                <div class="content-card">
+                    <h3>인증번호 진위 확인</h3>
+                    <div class="verification-form">
+                        <div class="form-group">
+                            <label>인증번호</label>
+                            <input type="text" id="verifyCertNumber" placeholder="MENSA-2026-123456">
+                        </div>
+                        <div class="form-group">
+                            <label>진위확인코드</label>
+                            <input type="text" id="verifyCode" placeholder="A3F2-8D1C">
+                        </div>
+                        <button class="btn-primary" onclick="verifyCode()">확인</button>
+                    </div>
+                    <div class="verification-result" id="verificationResult">
+                        <!-- 확인 결과 표시 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 결제 관리 섹션 -->
+            <section id="payments-section" class="content-section">
+                <div class="section-toolbar">
+                    <div class="filter-group">
+                        <select id="paymentTypeFilter" onchange="filterPayments()">
+                            <option value="">전체 타입</option>
+                            <option value="basic">베이직 (무료)</option>
+                            <option value="detail">상세 리포트 (5,000원)</option>
+                        </select>
+                        <select id="paymentStatusFilter" onchange="filterPayments()">
+                            <option value="">전체 상태</option>
+                            <option value="completed">완료</option>
+                            <option value="pending">대기</option>
+                            <option value="failed">실패</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="exportPayments()">
+                        📥 결제 내역 내보내기
+                    </button>
+                </div>
+
+                <div class="content-card">
+                    <table class="data-table" id="paymentsTable">
+                        <thead>
+                            <tr>
+                                <th>결제번호</th>
+                                <th>이름</th>
+                                <th>이메일</th>
+                                <th>금액</th>
+                                <th>타입</th>
+                                <th>상태</th>
+                                <th>결제일시</th>
+                                <th>관리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- JS로 동적 생성 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 설정 섹션 -->
+            <section id="settings-section" class="content-section">
+                <div class="content-grid">
+                    <div class="content-card">
+                        <h3>시스템 설정</h3>
+                        <div class="settings-form">
+                            <div class="form-group">
+                                <label>테스트 제한 시간 (분)</label>
+                                <input type="number" value="30" id="testTimeLimit">
+                            </div>
+                            <div class="form-group">
+                                <label>최소 문제 수</label>
+                                <input type="number" value="25" id="minQuestions">
+                            </div>
+                            <div class="form-group">
+                                <label>베이직 리포트 가격 (원)</label>
+                                <input type="number" value="0" id="basicPrice">
+                            </div>
+                            <div class="form-group">
+                                <label>상세 리포트 가격 (원)</label>
+                                <input type="number" value="5000" id="detailPrice">
+                            </div>
+                            <button class="btn-primary" onclick="saveSettings()">설정 저장</button>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <h3>데이터 관리</h3>
+                        <div class="data-management">
+                            <button class="btn-secondary" onclick="backupData()">
+                                💾 데이터 백업
+                            </button>
+                            <button class="btn-secondary" onclick="clearOldData()">
+                                🗑️ 오래된 데이터 정리
+                            </button>
+                            <button class="btn-danger" onclick="resetAllData()">
+                                ⚠️ 전체 데이터 초기화
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

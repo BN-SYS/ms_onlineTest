@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개발 문의 - 에스알바이오텍</title>
+    <link rel="stylesheet" href="css/inquiry.css">
+</head>
+<body>
+    <div class="inquiry-container">
+        <!-- 헤더 -->
+        <div class="inquiry-header">
+            <h1>개발 문의</h1>
+            <p class="subtitle">제품 개발 문의를 보다 정확하게 검토하기 위해 아래 항목을 작성해 주세요.<br>
+            기재해 주신 정보는 검토 및 회신을 위한 용도로만 사용됩니다.</p>
+        </div>
+
+        <form id="inquiryForm">
+            <!-- 기본 정보 섹션 -->
+            <section class="form-section">
+                <h2 class="section-title">기본 정보</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>이름 <span class="required">*</span></label>
+                        <input type="text" name="name" required placeholder="홍길동">
+                    </div>
+
+                    <div class="form-group">
+                        <label>국가 <span class="required">*</span></label>
+                        <select name="country" required onchange="updateCountryCode(this.value)">
+                            <option value="">국가 선택</option>
+                            <option value="KR">대한민국 (+82)</option>
+                            <option value="US">미국 (+1)</option>
+                            <option value="CN">중국 (+86)</option>
+                            <option value="JP">일본 (+81)</option>
+                            <option value="VN">베트남 (+84)</option>
+                            <option value="TH">태국 (+66)</option>
+                            <option value="SG">싱가포르 (+65)</option>
+                            <option value="MY">말레이시아 (+60)</option>
+                            <option value="ID">인도네시아 (+62)</option>
+                            <option value="PH">필리핀 (+63)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>전화번호 <span class="required">*</span></label>
+                        <div class="phone-input-group">
+                            <span class="country-code" id="countryCode">+82</span>
+                            <input type="tel" name="phone" required placeholder="10-1234-5678">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>이메일 <span class="required">*</span></label>
+                        <input type="email" name="email" required placeholder="example@company.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>회사명 <span class="required">*</span></label>
+                        <input type="text" name="company" required placeholder="회사명을 입력하세요">
+                    </div>
+
+                    <div class="form-group">
+                        <label>브랜드명</label>
+                        <input type="text" name="brand" placeholder="미정인 경우 공란으로 두세요">
+                    </div>
+
+                    <div class="form-group">
+                        <label>웹사이트 URL</label>
+                        <input type="url" name="website" placeholder="https://example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>SNS 계정</label>
+                        <input type="text" name="sns" placeholder="Instagram, YouTube 등">
+                    </div>
+                </div>
+
+                <div class="form-group radio-group">
+                    <label>화장품 개발 경험 <span class="required">*</span></label>
+                    <div class="radio-options">
+                        <label class="radio-label">
+                            <input type="radio" name="experience" value="yes" required>
+                            <span>있음</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="experience" value="no" required>
+                            <span>없음</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 문의 내용 섹션 -->
+            <section class="form-section">
+                <h2 class="section-title">문의 내용</h2>
+                <p class="section-description">원활한 상담을 위해 아래 정보를 함께 기재해 주세요.</p>
+
+                <div class="inquiry-content-wrapper">
+                    <!-- 왼쪽: 입력 필드 -->
+                    <div class="inquiry-fields">
+                        <div class="form-group">
+                            <label>제품 제형 및 타겟</label>
+                            <textarea name="productType" rows="3" placeholder="예: 수분크림, 20-30대 여성 타겟"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>제품 향</label>
+                            <textarea name="fragrance" rows="2" placeholder="예: 무향, 은은한 플로럴 계열"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>유통 채널</label>
+                            <textarea name="channel" rows="2" placeholder="예: 온라인 쇼핑몰, 면세점, 홈쇼핑"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>희망 단가 (KRW/USD 기준)</label>
+                            <input type="text" name="price" placeholder="예: 5,000원 ~ 10,000원">
+                        </div>
+
+                        <div class="form-group">
+                            <label>초도발주 수량</label>
+                            <input type="text" name="quantity" placeholder="예: 10,000개">
+                        </div>
+
+                        <div class="form-group">
+                            <label>수출 예정 국가</label>
+                            <input type="text" name="exportCountry" placeholder="예: 중국, 일본, 미국">
+                        </div>
+
+                        <div class="form-group">
+                            <label>용기 타입 및 용량</label>
+                            <textarea name="container" rows="2" placeholder="예: 에어리스 펌프 50ml, 튜브형 30ml"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>참고 레퍼런스 URL</label>
+                            <input type="url" name="referenceUrl" placeholder="https://example.com/product">
+                        </div>
+                    </div>
+
+                    <!-- 오른쪽: 안내 이미지 -->
+                    <div class="inquiry-info-box">
+                        <div class="info-icon">💡</div>
+                        <h3>상담 안내</h3>
+                        <ul>
+                            <li>제품 제형과 타겟을 구체적으로 기재해 주세요</li>
+                            <li>희망 단가는 범위로 작성하시면 더 정확한 검토가 가능합니다</li>
+                            <li>레퍼런스 이미지가 있다면 하단에 첨부해 주세요</li>
+                            <li>평균 회신 기간은 영업일 기준 3일 이내입니다</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 첨부 파일 섹션 -->
+            <section class="form-section">
+                <h2 class="section-title">첨부 파일</h2>
+                
+                <div class="file-upload-area" id="fileUploadArea">
+                    <input type="file" id="fileInput" accept="image/jpeg,image/png" multiple hidden>
+                    <div class="file-upload-placeholder" onclick="document.getElementById('fileInput').click()">
+                        <div class="upload-icon">📎</div>
+                        <p class="upload-text">파일을 클릭하거나 드래그하여 업로드</p>
+                        <p class="upload-info">최대 10MB | JPG, PNG 형식 지원</p>
+                    </div>
+                    <div id="fileList" class="file-list"></div>
+                </div>
+                
+                <p class="help-text">예: 레퍼런스 이미지, 기획서 등</p>
+            </section>
+
+            <!-- 개인정보 동의 섹션 -->
+            <section class="form-section">
+                <h2 class="section-title">개인정보 수집 및 이용 동의</h2>
+                
+                <div class="privacy-box">
+                    <p>에스알바이오텍은 OEM 제품 개발 문의 및 검토를 위하여 아래와 같이 개인정보를 수집·이용합니다.<br>
+                    내용을 충분히 확인하신 후 동의 여부를 결정해 주시기 바랍니다.</p>
+                    
+                    <div class="privacy-content">
+                        <div class="privacy-item">
+                            <strong>수집·이용 목적</strong>
+                            <p>OEM 제품 개발 문의 접수 및 대응, 개발 검토 및 관련 업무 연락</p>
+                        </div>
+                        
+                        <div class="privacy-item">
+                            <strong>수집하는 개인정보 항목</strong>
+                            <p>이름, 이메일 주소, 연락처(휴대전화), 회사명(개인/법인 사업자명)</p>
+                        </div>
+                        
+                        <div class="privacy-item">
+                            <strong>보유 및 이용 기간</strong>
+                            <p>문의 처리 완료 후 1년 (단, 관련 법령에 따라 보관이 필요한 경우 해당 기간 동안 보관)</p>
+                        </div>
+                    </div>
+                    
+                    <p class="privacy-notice">※ 개인정보 수집 및 이용에 대한 동의를 거부할 수 있으나, 동의 거부 시 문의 접수 및 회신이 제한될 수 있습니다.</p>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="privacyAgree" required id="privacyCheck">
+                        <span>개인정보 수집 및 이용에 동의합니다.</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- 제출 버튼 -->
+            <div class="submit-section">
+                <button type="submit" class="submit-btn">제출하기</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/inquiry.js"></script>
+</body>
+</html>

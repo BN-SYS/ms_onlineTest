@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 선택 - 멘사 온라인 테스트</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/payment.css">
+</head>
+
+<body>
+    <!-- 헤더 -->
+    <div id="header-placeholder"></div>
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1>🎉 테스트 완료!</h1>
+            <p>결과를 확인하시려면 결제 옵션을 선택해주세요</p>
+        </div>
+
+        <div class="payment-options">
+            <!-- 기본 결과 -->
+            <div class="payment-card" onclick="selectPayment('basic')">
+                <h3>📊 기본 결과</h3>
+                <div class="price">
+                    19,900<small>원</small>
+                </div>
+                <ul>
+                    <li>IQ 추정 점수</li>
+                    <li>백분위 순위</li>
+                    <li>3가지 영역별 점수</li>
+                    <li>이메일 결과 발송</li>
+                </ul>
+                <button class="payment-btn" onclick="event.stopPropagation(); processPayment('basic')">
+                    기본 결과 결제하기
+                </button>
+            </div>
+
+            <!-- 상세 리포트 -->
+            <div class="payment-card" onclick="selectPayment('detail')">
+                <div class="badge">추천</div>
+                <h3>📈 상세 리포트</h3>
+                <div class="price">
+                    24,900<small>원</small>
+                </div>
+                <ul>
+                    <li><strong>기본 결과 전체 포함</strong></li>
+                    <li>영역별 상세 해석</li>
+                    <li>표준편차 그래프</li>
+                    <li>PDF 다운로드 가능</li>
+                </ul>
+                <button class="payment-btn" onclick="event.stopPropagation(); processPayment('detail')">
+                    상세 리포트 결제하기
+                </button>
+            </div>
+        </div>
+
+        <div class="upgrade-notice">
+            <strong>💡 알려드립니다</strong>
+            <p>기본 결과를 먼저 확인하신 후, 차액(5,000원)을 결제하시면 상세 리포트로 업그레이드하실 수 있습니다.</p>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div id="footer-placeholder"></div>
+
+    <!-- include.js 추가 -->
+    <script src="js/include.js"></script>
+    <script>
+        function selectPayment(type) {
+            document.querySelectorAll('.payment-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+
+        function processPayment(type) {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            const stage1 = JSON.parse(localStorage.getItem('stage1Result'));
+            const stage2 = JSON.parse(localStorage.getItem('stage2Result'));
+            const stage3 = JSON.parse(localStorage.getItem('stage3Result'));
+
+            if (!userData || !stage1 || !stage2 || !stage3) {
+                alert('테스트 데이터가 없습니다.');
+                location.href = 'index.html';
+                return;
+            }
+
+            // 실제로는 이니시스 PG 연동
+            if (confirm(`${type === 'basic' ? '19,900' : '24,900'}원을 결제하시겠습니까?`)) {
+                // 결제 성공 시뮬레이션
+                setTimeout(() => {
+                    // 결제 정보 저장
+                    const paymentInfo = {
+                        type: type,
+                        amount: type === 'basic' ? 9900 : 19900,
+                        timestamp: new Date().toISOString(),
+                        transactionId: 'TXN' + Date.now(),
+                        certificateNumber: generateCertificateNumber(),
+                        verificationCode: generateVerificationCode()
+                    };
+
+                    localStorage.setItem('paymentInfo', JSON.stringify(paymentInfo));
+
+                    alert('결제가 완료되었습니다!');
+
+                    // 결과 페이지로 이동
+                    if (type === 'basic') {
+                        location.href = 'result-basic.html';
+                    } else {
+                        location.href = 'result-detail.html';
+                    }
+                }, 1000);
+            }
+        }
+
+        // 고유 발급번호 생성
+        function generateCertificateNumber() {
+            const year = new Date().getFullYear();
+            const random = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+            return `MENSA-${year}-${random}`;
+        }
+
+        // 진위 확인 코드 생성
+        function generateVerificationCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 12; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+                if ((i + 1) % 4 === 0 && i < 11) code += '-';
+            }
+            return code;
+        }
+    </script>
+</body>
+
+</html>

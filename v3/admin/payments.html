@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>결제 내역 - 멘사코리아 관리자</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <div class="admin-container">
+    <!-- 사이드바 -->
+    <div id="sidebarPlaceholder"></div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="admin-main">
+      <!-- 헤더 -->
+      <div id="headerPlaceholder"></div>
+
+      <!-- 콘텐츠 -->
+      <div class="admin-content">
+        <div class="dashboard-header">
+          <h2>결제 내역</h2>
+          <p>테스트 결과 결제 내역을 조회합니다</p>
+        </div>
+
+        <!-- 통계 -->
+        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:30px;">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">총 결제 건수</span>
+              <span class="stat-icon">💳</span>
+            </div>
+            <div class="stat-value" id="totalPayments">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">총 매출액</span>
+              <span class="stat-icon">💰</span>
+            </div>
+            <div class="stat-value" id="totalAmount">0원</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">평균 결제액</span>
+              <span class="stat-icon">📊</span>
+            </div>
+            <div class="stat-value" id="avgAmount">0원</div>
+          </div>
+        </div>
+
+        <!-- 결제 목록 -->
+        <div class="table-container">
+          <div class="table-header">
+            <h3 class="table-title">결제 내역</h3>
+            <button class="btn btn-success" onclick="exportPayments()">엑셀 다운로드</button>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>결제 ID</th>
+                <th>세션 ID</th>
+                <th>이름</th>
+                <th>상품</th>
+                <th>금액</th>
+                <th>결제 방법</th>
+                <th>결제일시</th>
+                <th>상태</th>
+              </tr>
+            </thead>
+            <tbody id="paymentList">
+              <tr>
+                <td colspan="8" class="text-center">로딩 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/include.js"></script>
+  <script src="../js/admin-common.js"></script>
+  <script src="../js/admin-payments.js"></script>
+</body>
+</html>

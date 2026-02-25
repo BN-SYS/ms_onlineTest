@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테스트 시작 전 동의 - 멘사형 사고력 온라인 테스트</title>
+    <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/consent.css">
+    <style>
+        .consent-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .consent-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .consent-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .consent-box {
+            background: var(--bg-gray);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .consent-box h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .consent-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .consent-box li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .consent-box li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .warning-box strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .checkbox-group {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-label:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkbox-label input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .start-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 헤더 -->
+    <div id="header-placeholder"></div>
+
+    <div class="consent-container">
+        <div class="consent-header">
+            <h1>🧠 테스트 시작 전 안내</h1>
+            <p>정확한 검사를 위해 아래 내용을 확인해주세요</p>
+        </div>
+
+        <div class="consent-box">
+            <h3>📋 테스트 안내사항</h3>
+            <ul>
+                <li>총 3단계, 25문제로 구성되어 있습니다 (1단계 15문제, 2·3단계 각 5문제)</li>
+                <li>제한시간은 1단계 30분, 2·3단계는 각 5분입니다.</li>
+                <li>중간 저장 기능은 제공되지 않습니다.</li>
+                <li>문제 풀이 중 인터넷 검색 등은 본인에게 불리할 수 있습니다.</li>
+                <li>비정상적인 응시 패턴 감지 시 테스트가 중단될 수 있습니다.</li>
+            </ul>
+
+            <h3 style="margin-top: 30px;">💳 결제 안내</h3>
+            <ul>
+                <li>테스트 응시는 무료이나, 결과 확인을 위해서는 결제가 필요합니다.</li>
+                <li>기본 결과 (점수+퍼센트): 19,900원</li>
+                <li>상세 리포트: 24,900원</li>
+                <li>기본 결과 결제 후 차액으로 상세 리포트 업그레이드 가능</li>
+            </ul>
+
+            <h3 style="margin-top: 30px;">🔒 개인정보 처리</h3>
+            <ul>
+                <li>수집항목: 이름, 출생연도, 이메일, IP주소</li>
+                <li>이용목적: 테스트 결과 제공 및 통계 분석</li>
+                <li>보유기간: 결과 제공 후 1년</li>
+                <li>결과는 이메일로 발송되며 사이트에서는 1회만 확인 가능합니다.</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ 중요 안내</strong>
+            <p>본 테스트는 <strong>멘사 공식 입회 테스트가 아닙니다.</strong>
+                결과는 참고용이며, 실제 멘사 입회를 위해서는 별도의 공식 테스트를 응시하셔야 합니다.</p>
+        </div>
+
+        <form id="consentForm">
+            <div class="form-group">
+                <label>이름 <span class="required">*</span></label>
+                <input type="text" name="name" required placeholder="홍길동">
+            </div>
+
+            <div class="form-group">
+                <label>출생연도 <span class="required">*</span></label>
+                <input type="number" name="birthYear" required placeholder="1990" min="1900" max="2024">
+            </div>
+
+            <div class="form-group">
+                <label>이메일 <span class="required">*</span></label>
+                <input type="email" name="email" required placeholder="example@email.com">
+            </div>
+
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" required id="agree1">
+                    <span>개인정보 수집 및 이용에 동의합니다.</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" required id="agree2">
+                    <span>본 테스트가 공식 입회 테스트가 아님을 확인했습니다.</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" required id="agree3">
+                    <span>문제 유출 및 부정행위 시 법적 책임이 있음을 확인했습니다.</span>
+                </label>
+            </div>
+
+            <button type="submit" class="start-btn" id="startBtn">테스트 시작하기</button>
+        </form>
+    </div>
+
+    <!-- 푸터 -->
+    <div id="footer-placeholder"></div>
+
+    <!-- include.js 추가 -->
+    <script src="js/include.js"></script>
+    <script>
+        document.getElementById('consentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const userData = {
+                name: formData.get('name'),
+                birthYear: parseInt(formData.get('birthYear')),
+                email: formData.get('email'),
+                ip: '127.0.0.1', // 실제로는 서버에서
+                timestamp: new Date().toISOString(),
+                sessionId: Date.now() // 세션 고유 번호
+            };
+
+            // 로컬 스토리지에 저장
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            // 1단계 테스트로 이동
+            location.href = 'test-stage1.html';
+        });
+
+        // 버튼 활성화 체크
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const startBtn = document.getElementById('startBtn');
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                const allChecked = Array.from(checkboxes).every(c => c.checked);
+                startBtn.disabled = !allChecked;
+            });
+        });
+
+        // 초기 비활성화
+        startBtn.disabled = true;
+    </script>
+</body>
+
+</html>

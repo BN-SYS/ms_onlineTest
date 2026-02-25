@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 리포트 - 멘사형 사고력 온라인 테스트</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/result.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <!-- 📄 A4 레이아웃 결과지 -->
+    <div class="result-page-wrapper">
+        <div class="result-page" id="resultPage">
+            <!-- 헤더 -->
+            <div class="result-page-header">
+                <div class="logo-section">
+                    <h1>Mensa-Style Cognitive Test</h1>
+                    <p class="subtitle">Official Intelligence Assessment Report</p>
+                </div>
+                <div class="date-section" id="testDate"></div>
+            </div>
+
+            <!-- 인증 정보 카드 -->
+            <div class="cert-card">
+                <div class="cert-item">
+                    <span class="cert-label">성명</span>
+                    <span class="cert-value" id="userName">홍길동</span>
+                </div>
+                <div class="cert-item">
+                    <span class="cert-label">생년월일</span>
+                    <span class="cert-value" id="userBirth">1995년생</span>
+                </div>
+                <div class="cert-item">
+                    <span class="cert-label">인증번호</span>
+                    <span class="cert-value" id="certNumber">MENSA-2026-123456</span>
+                </div>
+                <!-- 진위확인코드 추가 -->
+                <div class="cert-item">
+                    <span class="cert-label">진위확인코드</span>
+                    <span class="cert-value" id="verifyCode">0-</span>
+                </div>
+            </div>
+
+
+            <!-- 종합 점수 섹션 -->
+            <div class="score-section">
+                <div class="main-score-box">
+                    <div class="score-label">Score</div>
+                    <div class="score-value" id="totalScore">128</div>
+                    <div class="score-percentile">상위 <span id="percentile">5</span>%</div>
+                </div>
+                <div class="level-box" id="levelBox">
+                    <!-- JS로 동적 생성 -->
+                </div>
+            </div>
+
+            <!-- 단계별 성적 -->
+            <div class="stages-section">
+                <h3 class="section-title">단계별 성적</h3>
+                <div class="stages-grid" id="stagesGrid">
+                    <!-- JS로 동적 생성 -->
+                </div>
+            </div>
+
+            <!-- 표준편차 분석 그래프 -->
+            <div class="charts-section">
+                <h3 class="section-title">표준편차 분석</h3>
+                <div class="charts-grid">
+                    <div class="chart-box">
+                        <canvas id="totalChart"></canvas>
+                        <p class="chart-label">종합 평가</p>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="stage1Chart"></canvas>
+                        <p class="chart-label">시각 추론</p>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="stage2Chart"></canvas>
+                        <p class="chart-label">논리 사고</p>
+                    </div>
+                    <div class="chart-box">
+                        <canvas id="stage3Chart"></canvas>
+                        <p class="chart-label">지식 응용</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 맞춤형 개선 가이드 -->
+            <div class="recommendation-section">
+                <h3 class="section-title">맞춤형 개선 가이드</h3>
+                <div class="recommendation-content" id="recommendationContent">
+                    <!-- JS로 동적 생성 -->
+                </div>
+            </div>
+
+            <!-- 푸터 -->
+            <div class="result-page-footer">
+                <p>본 리포트는 멘사코리아 공식 인증 테스트 결과입니다. | www.mensa.or.kr</p>
+                <p class="footer-notice">※ 본 결과는 온라인 테스트 기준이며, 공식 멘사 가입을 위해서는 오프라인 테스트가 필요합니다.</p>
+            </div>
+        </div>
+
+        <!-- 액션 버튼 (PDF 외부에 배치) -->
+        <div class="action-buttons-wrapper">
+            <button class="action-btn primary" onclick="downloadPDF()">
+                <span>📄</span> PDF 다운로드
+            </button>
+            <button class="action-btn" onclick="printResult()">
+                <span>🖨️</span> 인쇄하기
+            </button>
+            <button class="action-btn" onclick="shareResult()">
+                <span>📤</span> 공유하기
+            </button>
+            <button class="action-btn" onclick="location.href='index.html'">
+                <span>🏠</span> 홈으로
+            </button>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- html2canvas for PDF -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <!-- jsPDF for PDF download -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+    <script src="js/include.js"></script>
+    <script src="js/result-detail.js"></script>
+</body>
+
+</html>

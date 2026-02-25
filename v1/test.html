@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테스트 진행 중 - 멘사 IQ 테스트</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/test.css">
+</head>
+<body>
+    <div class="test-container">
+        <!-- 상단 진행바 -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <!-- 문제 번호 및 타이머 -->
+        <div class="test-header">
+            <div class="question-number">
+                문제 <span id="currentQuestion">1</span> / <span id="totalQuestions">20</span>
+            </div>
+            <div class="timer" id="timer">
+                ⏱️ <span id="timeDisplay">00:00</span>
+            </div>
+        </div>
+
+        <!-- 문제 영역 -->
+        <div class="question-section">
+            <div class="question-image">
+                <img id="questionImg" src="/image/question1.jpg" alt="문제 이미지">
+            </div>
+            <div class="question-text" id="questionText">
+                <!-- 필요시 텍스트 표시 -->
+            </div>
+        </div>
+
+        <!-- 보기 영역 -->
+        <div class="choices-grid" id="choicesGrid">
+            <!-- JS로 동적 생성 -->
+        </div>
+
+        <!-- 하단 버튼 -->
+        <div class="test-footer">
+            <button class="btn-secondary" id="prevBtn" onclick="goToPrevQuestion()">이전</button>
+            <button class="btn-primary" id="nextBtn" onclick="goToNextQuestion()">다음</button>
+            <button class="btn-success" id="submitBtn" onclick="submitTest()" style="display: none;">제출하기</button>
+        </div>
+    </div>
+
+    <script src="js/test.js"></script>
+</body>
+</html>

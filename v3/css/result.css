@@ -1,0 +1,637 @@
+/* ========================================
+   css/result.css - A4 최적화 버전
+======================================== */
+
+/* 공통 wrapper */
+.result-page-wrapper {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* A4 비율 결과지 (297mm / 210mm = 1.414 비율) */
+.result-page {
+    background: white;
+    width: 100%;
+    max-width: 210mm;
+    min-height: 297mm; /* A4 세로 */
+    margin: 0 auto 30px;
+    padding: 15mm 18mm; /* 상하좌우 여백 축소 */
+    box-sizing: border-box;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 베이직 버전 스타일 */
+.result-page.basic-result {
+    padding: 15mm 18mm;
+    justify-content: space-between; /* 컨텐츠를 균등 배치 */
+}
+
+/* 헤더 */
+.result-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #667eea;
+    margin-bottom: 15px;
+}
+
+.logo-section h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #667eea;
+    margin: 0;
+    letter-spacing: 1.2px;
+}
+
+.subtitle {
+    font-size: 11px;
+    color: #666;
+    margin: 3px 0 0 0;
+    font-weight: 500;
+}
+
+.date-section {
+    font-size: 11px;
+    color: #666;
+    text-align: right;
+    font-weight: 600;
+}
+
+/* 인증 정보 카드 */
+.cert-card {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* 베이직 버전 인증 카드 (3열) */
+.cert-card.basic {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 12px;
+}
+
+.cert-card.basic .cert-item.wide {
+    grid-column: span 3;
+}
+
+.cert-item {
+    text-align: center;
+}
+
+.cert-label {
+    display: block;
+    font-size: 10px;
+    color: #666;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.cert-value {
+    display: block;
+    font-size: 13px;
+    color: #333;
+    font-weight: 700;
+}
+
+/* 종합 점수 섹션 */
+.score-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* 베이직 버전 점수 (중앙 크게) */
+.score-section.basic {
+    grid-template-columns: 1fr;
+    margin-bottom: 15px;
+}
+
+.main-score-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.main-score-box.large {
+    padding: 28px 25px;
+}
+
+.score-label {
+    font-size: 12px;
+    opacity: 0.95;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.score-value {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1;
+    margin: 8px 0;
+}
+
+.main-score-box.large .score-value {
+    font-size: 48px;
+}
+
+.score-percentile {
+    font-size: 15px;
+    opacity: 0.95;
+    font-weight: 600;
+}
+
+.main-score-box.large .score-percentile {
+    font-size: 18px;
+}
+
+/* 간단한 해석 섹션 */
+.interpretation-section.basic {
+    margin-bottom: 15px;
+    flex-shrink: 0;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #667eea;
+}
+
+.interpretation-box.simple {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+
+.interpretation-box.simple h4 {
+    font-size: 16px;
+    color: #333;
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.interpretation-box.simple p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #666;
+    margin: 0;
+}
+
+/* 업그레이드 CTA - 압축 */
+.upgrade-cta {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid #667eea;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.upgrade-header h3 {
+    font-size: 19px;
+    color: #333;
+    margin: 0 0 6px 0;
+}
+
+.upgrade-subtitle {
+    font-size: 12px;
+    color: #666;
+    margin: 0 0 15px 0;
+}
+
+.upgrade-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.feature-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.feature-text {
+    font-size: 12px;
+    color: #333;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.upgrade-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 14px 35px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.upgrade-btn:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #654a8a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.btn-arrow {
+    font-size: 18px;
+    transition: transform 0.3s;
+}
+
+.upgrade-btn:hover .btn-arrow {
+    transform: translateX(4px);
+}
+
+.upgrade-notice {
+    font-size: 10px;
+    color: #999;
+    margin-top: 12px;
+}
+
+/* 디테일 버전 레이아웃 최적화 */
+.result-page:not(.basic-result) {
+    padding: 12mm 15mm;
+}
+
+/* 레벨 박스 (디테일 버전용) */
+.level-box {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.level-box h4 {
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.level-box p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #666;
+    margin: 0;
+}
+
+/* 단계별 성적 (디테일 버전용) */
+.stages-section {
+    margin-bottom: 18px;
+}
+
+.stages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.stage-item {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stage-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.stage-item h5 {
+    font-size: 12px;
+    color: #666;
+    margin: 0 0 6px 0;
+    font-weight: 600;
+}
+
+.stage-score {
+    font-size: 20px;
+    color: #667eea;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.stage-rate {
+    font-size: 10px;
+    color: #999;
+}
+
+/* 그래프 섹션 (디테일 버전용) - 압축 */
+.charts-section {
+    margin-bottom: 18px;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.chart-box {
+    background: #fafbfc;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.chart-box canvas {
+    width: 100% !important;
+    height: 100px !important; /* 높이 축소 */
+}
+
+.chart-label {
+    text-align: center;
+    font-size: 10px;
+    color: #666;
+    margin: 6px 0 0 0;
+    font-weight: 600;
+}
+
+/* 개선 가이드 (디테일 버전용) - 압축 */
+.recommendation-section {
+    margin-bottom: 15px;
+}
+
+.recommendation-content {
+    background: #f8f9fa;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.recommendation-content h4 {
+    font-size: 13px;
+    color: #667eea;
+    margin: 0 0 10px 0;
+}
+
+.recommendation-content ul {
+    margin: 6px 0;
+    padding-left: 18px;
+}
+
+.recommendation-content li {
+    margin-bottom: 5px;
+}
+
+.stage-summary {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #dee2e6;
+    font-size: 10px;
+}
+
+.stage-summary strong {
+    color: #667eea;
+}
+
+/* 푸터 */
+.result-page-footer {
+    text-align: center;
+    font-size: 9px;
+    color: #999;
+    border-top: 1px solid #e9ecef;
+    padding-top: 10px;
+    margin-top: auto; /* 하단에 고정 */
+}
+
+.footer-notice {
+    margin-top: 4px;
+    color: #666;
+}
+
+/* 액션 버튼 */
+.action-buttons-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 30px 0 50px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background: white;
+    border: 2px solid #e9ecef;
+    color: #333;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-btn:hover {
+    background: #f8f9fa;
+    border-color: #667eea;
+    color: #667eea;
+    transform: translateY(-2px);
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+.action-btn.primary:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #654a8a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .result-page {
+        padding: 15px;
+        margin-bottom: 20px;
+        min-height: auto;
+    }
+
+    .result-page.basic-result {
+        padding: 20px 15px;
+    }
+
+    .result-page-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .logo-section h1 {
+        font-size: 22px;
+    }
+
+    .cert-card {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .cert-card.basic {
+        grid-template-columns: 1fr;
+    }
+
+    .cert-card.basic .cert-item.wide {
+        grid-column: span 1;
+    }
+
+    .score-section {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .main-score-box {
+        padding: 18px;
+    }
+
+    .score-value {
+        font-size: 44px;
+    }
+
+    .main-score-box.large .score-value {
+        font-size: 56px;
+    }
+
+    .upgrade-features {
+        grid-template-columns: 1fr;
+    }
+
+    .upgrade-btn {
+        padding: 13px 28px;
+        font-size: 14px;
+    }
+
+    .stages-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .action-buttons-wrapper {
+        flex-direction: column;
+        padding: 0 15px;
+    }
+
+    .action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* 인쇄 및 PDF 최적화 */
+@media print {
+    body {
+        background: white;
+    }
+
+    .result-page-wrapper {
+        margin: 0;
+        padding: 0;
+    }
+
+    .result-page {
+        max-width: 210mm;
+        width: 210mm;
+        min-height: 297mm;
+        height: 297mm;
+        box-shadow: none;
+        border-radius: 0;
+        page-break-after: avoid;
+        margin: 0;
+        padding: 15mm 18mm;
+    }
+
+    .action-buttons-wrapper,
+    #header-placeholder,
+    #footer-placeholder {
+        display: none !important;
+    }
+
+    /* 베이직 버전 PDF에서는 업그레이드 CTA 숨김 */
+    .result-page.basic-result .upgrade-cta {
+        display: flex !important;
+    }
+}
+
+/* PDF 다운로드 최적화 */
+.result-page.pdf-rendering {
+    width: 210mm;
+    height: 297mm;
+    min-height: 297mm;
+    max-width: 210mm;
+    padding: 15mm 18mm;
+    overflow: hidden;
+}
+
+/* 컨텐츠가 페이지를 넘지 않도록 강제 */
+.result-page.pdf-rendering > * {
+    page-break-inside: avoid;
+}
