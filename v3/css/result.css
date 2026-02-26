@@ -154,9 +154,10 @@
     letter-spacing: 0.5px;
 }
 
-/* 메타 정보 */
+/* 메타 정보 - 우측 정렬 */
 .banner-meta {
     display: flex;
+    justify-content: flex-end; /* ✅ 우측 정렬 */
     gap: 35px;
     padding-top: 12px;
     border-top: 1px solid rgba(212,175,55,0.2);
@@ -166,6 +167,7 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    align-items: flex-end; /* ✅ 우측 정렬 */
 }
 
 .meta-label {
@@ -916,7 +918,7 @@
     }
 }
 
-/* PDF 렌더링 모드 */
+/* PDF 렌더링 모드 - 테두리 포함 */
 .pdf-rendering {
     width: 210mm !important;
     height: auto !important;
@@ -924,7 +926,11 @@
     max-width: 210mm !important;
     padding: 0 !important;
     overflow: visible !important;
+    /* PDF 생성 시 테두리 */
+    border: 0.3mm solid #e9ecef !important;
+    box-sizing: border-box !important;
 }
+
 
 .pdf-rendering > *:not(.result-banner) {
     padding-left: 18mm !important;

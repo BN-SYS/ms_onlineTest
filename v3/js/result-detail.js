@@ -345,7 +345,6 @@ function displayStages(s1, s2, s3, scoreResult) {
         <div class="stage-item">
             <h5>${s.title}</h5>
             <div class="stage-score">${s.score}점</div>
-            <div class="stage-detail">${s.correct}/${s.total} 정답 (${s.rate.toFixed(0)}%)</div>
             <div class="stage-percentile">${s.percentile}</div>
         </div>
     `).join('');
@@ -536,8 +535,9 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
     document.getElementById('recommendationContent').innerHTML = content;
 }
 
+
 /* ========================================
-   PDF 다운로드
+   고화질 PDF 다운로드
 ======================================== */
 async function downloadPDF() {
   if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
@@ -559,63 +559,63 @@ async function downloadPDF() {
     return;
   }
 
+  // PDF 렌더링 모드 ON (테두리 추가)
+  resultPage.classList.add('pdf-rendering');
+
   const A4_WIDTH_MM = 210;
   const A4_HEIGHT_MM = 297;
-  const MARGIN_MM = 3;
-  const MAX_WIDTH_MM = A4_WIDTH_MM - 2 * MARGIN_MM;
-  const MAX_HEIGHT_MM = A4_HEIGHT_MM - 2 * MARGIN_MM;
 
   try {
+    // CSS 적용 대기
+    await new Promise(resolve => setTimeout(resolve, 150));
+
+    // 고해상도 캡처 (scale 3 = 3배 해상도)
     const canvas = await html2canvas(resultPage, {
-      scale: 2,
+      scale: 3,       
       useCORS: true,
       logging: false,
-      backgroundColor: '#fff',
+      backgroundColor: '#ffffff',
       windowWidth: resultPage.scrollWidth,
-      windowHeight: resultPage.scrollHeight
+      windowHeight: resultPage.scrollHeight,
+      imageTimeout: 0,    
+      removeContainer: true,
+      letterRendering: true, 
     });
 
-    const imgData = canvas.toDataURL('image/png');
-    const imgWidthPx = canvas.width;
-    const imgHeightPx = canvas.height;
+    // 고품질 이미지로 변환 (JPEG 품질 최대)
+    const imgData = canvas.toDataURL('image/jpeg', 1.0); // 품질 1.0 (최고)
 
-    const PX_TO_MM = 0.264583;
-    const imgWidthMM = imgWidthPx * PX_TO_MM;
-    const imgHeightMM = imgHeightPx * PX_TO_MM;
+    // PDF 생성 (compress: false = 압축 안 함)
+    const pdf = new jspdf.jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+      compress: false,      // 압축 비활성화 (화질 우선)
+      precision: 16         // 정밀도 증가
+    });
 
-    const scaleW = imgWidthMM > MAX_WIDTH_MM ? MAX_WIDTH_MM / imgWidthMM : 1;
-    const scaleH = imgHeightMM > MAX_HEIGHT_MM ? MAX_HEIGHT_MM / imgHeightMM : 1;
-
-    const scale = Math.min(scaleW, scaleH);
-
-    const finalW = imgWidthMM * scale;
-    const finalH = imgHeightMM * scale;
-
-    const x = (A4_WIDTH_MM - finalW) / 2;
-    const y = (A4_HEIGHT_MM - finalH) / 2;
-
-    console.log(`원본: ${imgWidthMM.toFixed(1)}×${imgHeightMM.toFixed(1)} mm`);
-    console.log(`축소 비율: ${(scale * 100).toFixed(1)}%`);
-    console.log(`최종: ${finalW.toFixed(1)}×${finalH.toFixed(1)} mm, 위치: (${x.toFixed(1)}, ${y.toFixed(1)})`);
-
-    const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-    pdf.addImage(imgData, 'PNG', x, y, finalW, finalH);
+    // 이미지를 A4에 맞춤 (압축 없음)
+    pdf.addImage(imgData, 'JPEG', 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM, undefined, 'FAST');
 
     const fileName = `MensaStyle_Test_Report_${Date.now()}.pdf`;
     pdf.save(fileName);
 
-    console.log('PDF 다운로드 완료:', fileName);
+    console.log('고화질 PDF 다운로드 완료:', fileName);
 
   } catch (err) {
-    console.error('PDF 생성 실패:', err);
+    console.error('❌ PDF 생성 실패:', err);
     alert('PDF 생성 중 오류가 발생했습니다.\n다시 시도해주세요.');
   } finally {
+    // PDF 렌더링 모드 OFF
+    resultPage.classList.remove('pdf-rendering');
+    
     if (button) {
       button.innerHTML = originalHTML;
       button.disabled = false;
     }
   }
 }
+
 
 /* ========================================
    공유/인쇄
