@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>테스트 설정 - 온라인테스트 관리</title>
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+
+<body class="admin">
+  <div id="headerPlaceholder"></div>
+
+  <div class="admin-shell">
+    <div id="sidebarPlaceholder"></div>
+
+    <main class="admin-main">
+      <div class="page-head">
+        <div>
+          <div class="page-title">테스트 설정</div>
+          <div class="page-desc">단계별 문항 수/시간/배점/비정상 검증 기준을 관리합니다.</div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn" id="btnReset">초기값</button>
+          <button class="btn primary" id="btnSave">저장</button>
+        </div>
+      </div>
+
+      <section class="panel">
+        <div class="panel-title">Stage 설정</div>
+        <div id="settingsForm"></div>
+      </section>
+
+      <div id="toast" class="toast"></div>
+    </main>
+  </div>
+
+  <script src="../js/include.js"></script>
+  <script type="module" src="../js/admin/test-settings.js"></script>
+</body>
+</html>

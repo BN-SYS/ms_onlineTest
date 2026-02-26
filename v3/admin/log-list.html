@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>응시 로그 - 온라인테스트 관리</title>
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+
+<body class="admin">
+  <div id="headerPlaceholder"></div>
+
+  <div class="admin-shell">
+    <div id="sidebarPlaceholder"></div>
+
+    <main class="admin-main">
+      <div class="page-head">
+        <div>
+          <div class="page-title">응시 로그</div>
+          <div class="page-desc">기간/결제/완료/비정상 기준으로 필터링하고 상세를 확인합니다.</div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn" id="btnCSV">CSV 다운로드</button>
+        </div>
+      </div>
+
+      <section class="panel">
+        <div class="filters">
+          <div class="field">
+            <label>시작일</label>
+            <input class="input" id="fromDate" type="date" />
+          </div>
+          <div class="field">
+            <label>종료일</label>
+            <input class="input" id="toDate" type="date" />
+          </div>
+          <div class="field">
+            <label>결제</label>
+            <select class="select" id="paidSel">
+              <option value="all">전체</option>
+              <option value="paid">결제</option>
+              <option value="unpaid">미결제</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>완료</label>
+            <select class="select" id="statusSel">
+              <option value="all">전체</option>
+              <option value="완료">완료</option>
+              <option value="중간 이탈">중간 이탈</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>비정상 플래그</label>
+            <select class="select" id="abSel">
+              <option value="all">전체</option>
+              <option value="Y">Y</option>
+              <option value="N">N</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column: span 4;">
+            <label>검색(이름/이메일/IP)</label>
+            <input class="input" id="search" placeholder="예: hong@example.com" />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn primary" id="btnApply">검색</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>로그ID</th>
+                <th>일시</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>총점</th>
+                <th>결제</th>
+                <th>상태</th>
+                <th>비정상</th>
+                <th>액션</th>
+              </tr>
+            </thead>
+            <tbody id="logTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="drawer" id="logDrawer">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+          <div style="font-weight:1000; font-size:16px;"><a class="btn btn-secondary btn-sm"
+     href="log-detail.html?sessionId=${encodeURIComponent(r.sessionId)}">
+    상세
+  </a></div>
+          <button class="btn" id="btnCloseDrawer">닫기</button>
+        </div>
+        <div id="drawerBody" style="margin-top:12px;"></div>
+      </div>
+
+      <div id="toast" class="toast"></div>
+    </main>
+  </div>
+
+  <script src="../js/include.js"></script>
+  <script type="module" src="../js/admin/logs.js"></script>
+</body>
+
+</html>

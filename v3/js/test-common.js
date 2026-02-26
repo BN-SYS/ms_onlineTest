@@ -396,6 +396,7 @@ class TestManager {
       }
     }
 
+
     // 검증 통과: 결과 저장
     const stageResult = {
       stage: this.config.stage,
@@ -409,6 +410,26 @@ class TestManager {
       totalQuestions: this.selectedQuestions.length,
       passed: true
     };
+
+    // submitStage() 내부, stageResult 생성 직전에 추가
+    const questionSnapshots = this.selectedQuestions.map(q => {
+      const correct = q.choices?.find(c => c.isCorrect);
+      return {
+        questionId: q.id,
+        questionText: q.questionText || null,      // (차기) 텍스트형 대비
+        questionImage: q.questionImage || null,
+        correctChoiceId: correct ? correct.id : null,
+        choices: (q.choices || []).map(c => ({
+          id: c.id,
+          text: c.text || null,                   // (차기) 텍스트형 대비
+          image: c.image || null,
+          isCorrect: !!c.isCorrect
+        }))
+      };
+    });
+
+    // stageResult에 포함
+    stageResult.questionSnapshots = questionSnapshots;
     localStorage.setItem(`stage${this.config.stage}Result`, JSON.stringify(stageResult));
     this.saveLog(stageResult);
 
@@ -440,7 +461,7 @@ class TestManager {
    검증 함수 팩토리
 ======================================== */
 function createValidation(minCorrectRate, minAvgTime, minTotalTime) {
-  return function(correctRate, avgTimePerQuestion, totalTime) {
+  return function (correctRate, avgTimePerQuestion, totalTime) {
     // 1) 정답률 검증
     if (correctRate < minCorrectRate) {
       return {

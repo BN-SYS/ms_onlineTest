@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login - 온라인테스트 관리</title>
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+
+<body class="admin">
+  <main class="admin-main" style="max-width: 520px; margin: 8vh auto;">
+    <div class="panel">
+      <div class="panel-title" style="font-size:18px;">온라인테스트 관리 로그인</div>
+      <p style="color: rgba(232,238,252,0.72); font-size:13px; margin: 6px 0 14px;">
+        데모 계정: <code>admin@example.com</code> / <code>admin1234</code>
+      </p>
+
+      <div class="field">
+        <label>이메일</label>
+        <input class="input" id="email" type="email" placeholder="admin@example.com" />
+      </div>
+
+      <div class="field" style="margin-top:10px;">
+        <label>비밀번호</label>
+        <input class="input" id="password" type="password" placeholder="••••••••" />
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:14px;">
+        <button class="btn primary" id="btnLogin" type="button" style="flex:1;">로그인</button>
+        <a class="btn" href="../index.html" style="text-align:center;">사용자 화면</a>
+      </div>
+
+      <div style="margin-top:12px; color: rgba(232,238,252,0.62); font-size:12px;">
+        * 실제 운영에서는 계정/권한/감사로그 정책 확정 후 연동이 필요합니다.
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { AdminAPI } from "../js/admin/admin-api.js";
+    import { toast } from "../js/admin/ui.js";
+
+    AdminAPI.seedIfEmpty();
+
+    const session = AdminAPI.getSession();
+    if (session) location.href = "dashboard.html";
+
+    document.getElementById("btnLogin").addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const res = AdminAPI.login({ email, password });
+      if (!res.ok) {
+        toast(res.message);
+        return;
+      }
+      toast("로그인 성공. 대시보드로 이동합니다.");
+      setTimeout(() => location.href = "dashboard.html", 300);
+    });
+  </script>
+</body>
+</html>

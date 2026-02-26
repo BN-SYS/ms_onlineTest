@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>문제 은행 - 온라인테스트 관리</title>
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+
+<body class="admin">
+  <div id="headerPlaceholder"></div>
+
+  <div class="admin-shell">
+    <div id="sidebarPlaceholder"></div>
+
+    <main class="admin-main">
+      <div class="page-head">
+        <div>
+          <div class="page-title">문제 은행</div>
+          <div class="page-desc">단계별 문제 등록/수정/삭제 및 JSON Import/Export를 제공합니다.</div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn" id="btnExport">Export JSON</button>
+          <button class="btn" id="btnImport">Import JSON</button>
+          <button class="btn primary" id="btnNew">+ 새 문제</button>
+        </div>
+      </div>
+
+      <section class="panel">
+        <div class="filters">
+          <div class="field">
+            <label>단계</label>
+            <select class="select" id="stageSel">
+              <option value="1">Stage 1</option>
+              <option value="2">Stage 2</option>
+              <option value="3">Stage 3</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column: span 6;">
+            <label>검색(문제ID)</label>
+            <input class="input" id="qSearch" placeholder="예: s1_q10" />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn" id="btnFilter">필터 적용</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>썸네일</th>
+                <th>문제ID</th>
+                <th>보기수</th>
+                <th>정답</th>
+                <th>수정일</th>
+                <th>액션</th>
+              </tr>
+            </thead>
+            <tbody id="qTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- modal -->
+      <div class="modal-backdrop" id="qModal">
+        <div class="modal">
+          <div class="modal-head">
+            <div class="modal-title" id="modalTitle">문제 등록</div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn" id="btnModalClose">닫기</button>
+              <button class="btn primary" id="btnModalSave">저장</button>
+            </div>
+          </div>
+
+          <div class="filters">
+            <div class="field">
+              <label>단계</label>
+              <select class="select" id="mStage">
+                <option value="1">Stage 1</option>
+                <option value="2">Stage 2</option>
+                <option value="3">Stage 3</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column: span 6;">
+              <label>문제ID</label>
+              <input class="input" id="mId" placeholder="예: s1_q16" />
+            </div>
+            <div class="field" style="grid-column: span 12;">
+              <label>문제 이미지 URL</label>
+              <input class="input" id="mQImg" placeholder="./image/stage1/question1.jpg 또는 https://..." />
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:10px;">
+            <div class="panel-title">보기</div>
+            <div id="choicesWrap"></div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+              <button class="btn" id="btnAddChoice">+ 보기 추가</button>
+              <button class="btn danger" id="btnClearChoices">보기 초기화</button>
+            </div>
+            <div style="margin-top:10px; color: rgba(232,238,252,0.65); font-size:12px;">
+              * MVP는 URL 입력형입니다. 실제 업로드/썸네일 생성은 차기 범위로 분리 권장.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- hidden import -->
+      <input type="file" id="importFile" accept="application/json" style="display:none;" />
+
+      <div id="toast" class="toast"></div>
+    </main>
+  </div>
+
+  <script src="../js/include.js"></script>
+  <script type="module" src="../js/admin/questions.js"></script>
+</body>
+</html>

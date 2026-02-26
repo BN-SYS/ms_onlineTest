@@ -1,101 +1,47 @@
-<!-- ========================================
-     관리자 페이지 사이드바
-     ======================================== -->
-<aside class="admin-sidebar" id="adminSidebar">
-  <nav class="sidebar-nav">
-    <ul class="nav-menu">
-      <!-- 대시보드 -->
-      <li class="nav-item">
-        <a href="index.html" class="nav-link">
-          <i class="icon">📊</i>
-          <span>대시보드</span>
-        </a>
-      </li>
+<aside id="adminSidebar">
+  <div class="admin-brand">
+    <div style="width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg, rgba(102,126,234,1), rgba(118,75,162,0.9));"></div>
+    <div>
+      <div style="font-weight:1000;">MensaKorea</div>
+      <div style="color: rgba(232,238,252,0.72); font-size:12px;">Admin Console</div>
+    </div>
+  </div>
 
-      <!-- 테스트 관리 -->
-      <li class="nav-item has-submenu">
-        <a href="#" class="nav-link">
-          <i class="icon">📝</i>
-          <span>테스트 관리</span>
-          <i class="arrow">▼</i>
-        </a>
-        <ul class="submenu">
-          <li><a href="questions.html">문제 목록</a></li>
-          <li><a href="question-form.html">문제 등록</a></li>
-          <li><a href="question-types.html">문제 유형</a></li> 
-          <!-- <li><a href="stage-settings.html">단계 설정</a></li>
-          <li><a href="statistics.html">문제 통계</a></li> -->
-        </ul>
-      </li>
+  <div class="admin-badge">메뉴: 온라인테스트 관리</div>
 
-      <!-- 참가자 관리 -->
-      <li class="nav-item has-submenu">
-        <a href="#" class="nav-link">
-          <i class="icon">👥</i>
-          <span>참가자 관리</span>
-          <i class="arrow">▼</i>
-        </a>
-        <ul class="submenu">
-          <li><a href="logs.html">응시 로그</a></li>
-          <li><a href="payments.html">결제 내역</a></li>
-          <!-- <li><a href="members.html">회원 연동</a></li> -->
-        </ul>
-      </li>
+  <nav class="admin-nav">
+    <div class="nav-item has-submenu">
+      <a class="nav-link" href="#none">
+        <span>테스트 설정/콘텐츠</span>
+        <span style="opacity:.7;">▾</span>
+      </a>
+      <div class="submenu">
+        <a href="test-settings.html">테스트 설정</a>
+        <a href="question-manage.html">문제 은행</a>
+      </div>
+    </div>
 
-      <!-- 결과 관리 -->
-      <!-- <li class="nav-item has-submenu">
-        <a href="#" class="nav-link">
-          <i class="icon">📈</i>
-          <span>결과 관리</span>
-          <i class="arrow">▼</i>
-        </a>
-        <ul class="submenu">
-          <li><a href="issuances.html">발급 내역</a></li>
-          <li><a href="verification.html">진위 확인</a></li>
-          <li><a href="email-logs.html">이메일 발송</a></li>
-        </ul>
-      </li>
+    <div class="nav-item has-submenu">
+      <a class="nav-link" href="#none">
+        <span>운영 데이터</span>
+        <span style="opacity:.7;">▾</span>
+      </a>
+      <div class="submenu">
+        <a href="log-list.html">응시 로그</a>
+        <a href="payments.html">결제 내역</a>
+      </div>
+    </div>
 
-
-      <li class="nav-item has-submenu">
-        <a href="#" class="nav-link">
-          <i class="icon">📄</i>
-          <span>콘텐츠 관리</span>
-          <i class="arrow">▼</i>
-        </a>
-        <ul class="submenu">
-          <li><a href="messages.html">결과 메시지</a></li>
-          <li><a href="graphs.html">표준편차 그래프</a></li>
-          <li><a href="email-templates.html">이메일 템플릿</a></li>
-        </ul>
-      </li>
-
-      <li class="nav-item has-submenu">
-        <a href="#" class="nav-link">
-          <i class="icon">⚙️</i>
-          <span>시스템 설정</span>
-          <i class="arrow">▼</i>
-        </a>
-        <ul class="submenu">
-          <li><a href="scoring.html">점수 산출</a></li>
-          <li><a href="security.html">보안 설정</a></li>
-          <li><a href="payments-config.html">결제 설정</a></li>
-          <li><a href="notifications.html">알림 설정</a></li>
-        </ul>
-      </li>
-
- 
-      <li class="nav-item has-submenu">
-        <a href="#" class="nav-link">
-          <i class="icon">💬</i>
-          <span>지원</span>
-          <i class="arrow">▼</i>
-        </a>
-        <ul class="submenu">
-          <li><a href="inquiries.html">문의 관리</a></li>
-          <li><a href="notices.html">공지사항</a></li>
-        </ul>
-      </li>
-    </ul> -->
+    <div class="nav-item">
+      <a class="nav-link" href="../index.html">
+        <span>HOMEPAGE</span>
+        <span style="opacity:.7;">↗</span>
+      </a>
+    </div>
   </nav>
+
+  <div style="margin-top:16px; padding:12px; border:1px dashed rgba(232,238,252,0.18); border-radius:14px; color: rgba(232,238,252,0.72); font-size:12px;">
+    팁) 지금 버전은 “UI 우선”입니다. <br/>
+    API 연동은 <code>js/admin/admin-api.js</code>만 교체하면 됩니다.
+  </div>
 </aside>

@@ -1,87 +1,73 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>결제 내역 - 멘사코리아 관리자</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>결제 내역 - 온라인테스트 관리</title>
+  <link rel="stylesheet" href="../css/common.css" />
   <link rel="stylesheet" href="../css/admin.css" />
 </head>
-<body>
-  <div class="admin-container">
-    <!-- 사이드바 -->
+
+<body class="admin">
+  <div id="headerPlaceholder"></div>
+
+  <div class="admin-shell">
     <div id="sidebarPlaceholder"></div>
 
-    <!-- 메인 콘텐츠 -->
-    <div class="admin-main">
-      <!-- 헤더 -->
-      <div id="headerPlaceholder"></div>
-
-      <!-- 콘텐츠 -->
-      <div class="admin-content">
-        <div class="dashboard-header">
-          <h2>결제 내역</h2>
-          <p>테스트 결과 결제 내역을 조회합니다</p>
-        </div>
-
-        <!-- 통계 -->
-        <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:30px;">
-          <div class="stat-card">
-            <div class="stat-header">
-              <span class="stat-title">총 결제 건수</span>
-              <span class="stat-icon">💳</span>
-            </div>
-            <div class="stat-value" id="totalPayments">0</div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-header">
-              <span class="stat-title">총 매출액</span>
-              <span class="stat-icon">💰</span>
-            </div>
-            <div class="stat-value" id="totalAmount">0원</div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-header">
-              <span class="stat-title">평균 결제액</span>
-              <span class="stat-icon">📊</span>
-            </div>
-            <div class="stat-value" id="avgAmount">0원</div>
-          </div>
-        </div>
-
-        <!-- 결제 목록 -->
-        <div class="table-container">
-          <div class="table-header">
-            <h3 class="table-title">결제 내역</h3>
-            <button class="btn btn-success" onclick="exportPayments()">엑셀 다운로드</button>
-          </div>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>결제 ID</th>
-                <th>세션 ID</th>
-                <th>이름</th>
-                <th>상품</th>
-                <th>금액</th>
-                <th>결제 방법</th>
-                <th>결제일시</th>
-                <th>상태</th>
-              </tr>
-            </thead>
-            <tbody id="paymentList">
-              <tr>
-                <td colspan="8" class="text-center">로딩 중...</td>
-              </tr>
-            </tbody>
-          </table>
+    <main class="admin-main">
+      <div class="page-head">
+        <div>
+          <div class="page-title">결제 내역</div>
+          <div class="page-desc">기본/상세/차액 결제 기록을 조회합니다. (데모 데이터)</div>
         </div>
       </div>
-    </div>
+
+      <section class="card-grid" id="payKpis"></section>
+
+      <section class="panel" style="margin-top:14px;">
+        <div class="filters">
+          <div class="field">
+            <label>유형</label>
+            <select class="select" id="typeSel">
+              <option value="all">전체</option>
+              <option value="basic">기본</option>
+              <option value="detail">상세</option>
+              <option value="upgrade">차액</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column: span 6;">
+            <label>검색(이름/이메일/PG TID)</label>
+            <input class="input" id="search" placeholder="예: PG_..." />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn primary" id="btnApply">검색</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>결제ID</th>
+                <th>일시</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>유형</th>
+                <th>금액</th>
+                <th>PG 거래번호</th>
+              </tr>
+            </thead>
+            <tbody id="payTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div id="toast" class="toast"></div>
+    </main>
   </div>
 
   <script src="../js/include.js"></script>
-  <script src="../js/admin-common.js"></script>
-  <script src="../js/admin-payments.js"></script>
+  <script type="module" src="../js/admin/payments.js"></script>
 </body>
 </html>
