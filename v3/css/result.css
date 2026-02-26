@@ -288,6 +288,7 @@
     word-break: break-word;
 }
 
+
 /* ========================================
    종합 점수 섹션 (detail)
 ======================================== */
@@ -328,12 +329,10 @@
     margin-left: 5px;
 }
 
-.percentile {
-    font-size: 16px;
-    color: #d4af37;
-    margin-top: 12px;
-    font-weight: 600;
+.score-percentile {
+    color: #ffffff;  /* 흰색으로 변경 */
 }
+
 
 /* ========================================
    종합 점수 섹션 (basic)
