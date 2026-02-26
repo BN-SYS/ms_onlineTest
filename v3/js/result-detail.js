@@ -1,5 +1,5 @@
 /* ========================================
-   js/result-detail.js - 점수 체계로 변경
+   js/result-detail.js - 점수 체계 + 배너 동기화 + 톤앤매너 통일
 ======================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,12 +28,22 @@ function loadDetailResult() {
     
     console.log('상세 결과 로드:', { stage1, stage2, stage3, userData, testSettings });
     
-    // 날짜 표시
+    // 날짜 표시 (화면 + 배너 동기화)
     const now = new Date();
     const dateStr = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
-    document.getElementById('testDate').textContent = dateStr;
     
-    // 개인정보 + 인증정보
+    const testDateElem = document.getElementById('testDate');
+    if (testDateElem) {
+        testDateElem.textContent = dateStr;
+    }
+    
+    // 배너 날짜 동기화
+    const bannerDateElem = document.getElementById('bannerDate');
+    if (bannerDateElem) {
+        bannerDateElem.textContent = dateStr;
+    }
+    
+    // 개인정보 + 인증정보 (배너 포함)
     displayUserInfo(userData, certNumber, verifyCode);
     
     // 점수 계산 (scoreResult가 없으면 재계산)
@@ -126,18 +136,21 @@ function createSampleTestSettings() {
 }
 
 /* ========================================
-   개인정보 표시 (진위확인코드 추가)
+   개인정보 표시 (진위확인코드 + 배너 동기화)
 ======================================== */
 function displayUserInfo(userData, certNumber, verifyCode) {
     // certNumber와 verifyCode가 없으면 생성
     if (!certNumber) {
         const now = new Date();
         certNumber = `MS-${now.getFullYear()}-${String(Date.now()).slice(-6)}`;
+        localStorage.setItem('certNumber', certNumber);
     }
     if (!verifyCode) {
         verifyCode = generateVerifyCode(userData.sessionId || Date.now().toString());
+        localStorage.setItem('verifyCode', verifyCode);
     }
 
+    // 화면 인증 카드 채우기
     document.getElementById('userName').textContent = userData.name || '홍길동';
     document.getElementById('userBirth').textContent = (userData.birthYear || '1990') + '년생';
     document.getElementById('certNumber').textContent = certNumber;
@@ -145,6 +158,12 @@ function displayUserInfo(userData, certNumber, verifyCode) {
     const verifyCodeElem = document.getElementById('verifyCode');
     if (verifyCodeElem) {
         verifyCodeElem.textContent = verifyCode;
+    }
+    
+    // 배너 인증번호 동기화
+    const bannerCertNoElem = document.getElementById('bannerCertNo');
+    if (bannerCertNoElem) {
+        bannerCertNoElem.textContent = certNumber;
     }
     
     console.log('사용자 정보 표시:', { certNumber, verifyCode });
@@ -351,7 +370,7 @@ function generateNormalDistribution(mean, stdDev, points = 80) {
 }
 
 /* ========================================
-   Chart.js 그래프 생성 (100점 만점 기준)
+   Chart.js 그래프 생성 (통일된 톤앤매너)
 ======================================== */
 function createCompactChart(canvasId, userScore, percentile, mean = 70, stdDev = 12) {
     const ctx = document.getElementById(canvasId);
@@ -367,8 +386,8 @@ function createCompactChart(canvasId, userScore, percentile, mean = 70, stdDev =
             datasets: [
                 {
                     data: distributionData,
-                    borderColor: 'rgba(102, 126, 234, 1)',
-                    backgroundColor: 'rgba(102, 126, 234, 0.15)',
+                    borderColor: 'rgba(26, 26, 46, 0.8)',
+                    backgroundColor: 'rgba(212, 175, 55, 0.15)',
                     fill: true,
                     tension: 0.4,
                     pointRadius: 0,
@@ -376,10 +395,11 @@ function createCompactChart(canvasId, userScore, percentile, mean = 70, stdDev =
                 },
                 {
                     data: [{ x: userScore, y: 0 }, { x: userScore, y: userY }],
-                    borderColor: 'rgba(237, 100, 166, 1)',
-                    backgroundColor: 'rgba(237, 100, 166, 1)',
-                    borderWidth: 2.5,
-                    pointRadius: 4,
+                    borderColor: '#d4af37',
+                    backgroundColor: '#d4af37',
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#d4af37',
                     type: 'line',
                     fill: false
                 }
@@ -407,9 +427,10 @@ function createCompactChart(canvasId, userScore, percentile, mean = 70, stdDev =
                     ticks: {
                         stepSize: 20,
                         callback: v => v + '점',
-                        font: { size: 9 }
+                        font: { size: 9 },
+                        color: '#666'
                     },
-                    grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                    grid: { color: 'rgba(212, 175, 55, 0.1)' }
                 },
                 y: {
                     display: false,
@@ -450,7 +471,6 @@ function addPercentileLabels(scoreResult) {
             if (!existingLabel) {
                 const percentileLabel = document.createElement('p');
                 percentileLabel.className = 'chart-percentile';
-                percentileLabel.style.cssText = 'text-align: center; margin-top: 10px; font-weight: 600; color: #667eea;';
                 percentileLabel.textContent = `${label.score}점 (${label.percentile})`;
                 chartBox.appendChild(percentileLabel);
             }
@@ -507,15 +527,14 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
     }
 
     content += `
-        <div class="stage-summary" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-            <div style="margin-bottom: 8px;"><strong>강점 영역:</strong> ${strongest.name} - ${strongest.score}점 (정답률 ${strongest.rate.toFixed(0)}%)</div>
-            <div><strong>보완 영역:</strong> ${weakest.name} - ${weakest.score}점 (정답률 ${weakest.rate.toFixed(0)}%)</div>
+        <div class="stage-summary" style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, rgba(26,26,46,0.03) 0%, rgba(212,175,55,0.05) 100%); border-radius: 8px; border: 1px solid rgba(212,175,55,0.15);">
+            <div style="margin-bottom: 6px;"><strong style="color: #1a1a2e;">강점 영역:</strong> ${strongest.name} - ${strongest.score}점 (정답률 ${strongest.rate.toFixed(0)}%)</div>
+            <div><strong style="color: #1a1a2e;">보완 영역:</strong> ${weakest.name} - ${weakest.score}점 (정답률 ${weakest.rate.toFixed(0)}%)</div>
         </div>
     `;
 
     document.getElementById('recommendationContent').innerHTML = content;
 }
-
 
 /* ========================================
    PDF 다운로드
@@ -542,12 +561,11 @@ async function downloadPDF() {
 
   const A4_WIDTH_MM = 210;
   const A4_HEIGHT_MM = 297;
-  const MARGIN_MM = 3; // 양쪽 여백
-  const MAX_WIDTH_MM = A4_WIDTH_MM - 2 * MARGIN_MM;  // 200 mm
-  const MAX_HEIGHT_MM = A4_HEIGHT_MM - 2 * MARGIN_MM; // 287 mm
+  const MARGIN_MM = 3;
+  const MAX_WIDTH_MM = A4_WIDTH_MM - 2 * MARGIN_MM;
+  const MAX_HEIGHT_MM = A4_HEIGHT_MM - 2 * MARGIN_MM;
 
   try {
-    // 1. html2canvas로 고해상도 캡처 (scale 2)
     const canvas = await html2canvas(resultPage, {
       scale: 2,
       useCORS: true,
@@ -561,30 +579,25 @@ async function downloadPDF() {
     const imgWidthPx = canvas.width;
     const imgHeightPx = canvas.height;
 
-    // 2. 픽셀 → mm 변환 (96 dpi 기준: 1 mm ≈ 3.7795 px)
-    const PX_TO_MM = 0.264583; // 1 px = 0.264583 mm
+    const PX_TO_MM = 0.264583;
     const imgWidthMM = imgWidthPx * PX_TO_MM;
     const imgHeightMM = imgHeightPx * PX_TO_MM;
 
-    // 3. 가로·세로 각각의 축소 비율 계산
     const scaleW = imgWidthMM > MAX_WIDTH_MM ? MAX_WIDTH_MM / imgWidthMM : 1;
     const scaleH = imgHeightMM > MAX_HEIGHT_MM ? MAX_HEIGHT_MM / imgHeightMM : 1;
 
-    // 4. 둘 중 더 작은 비율(= 더 많이 축소해야 하는 쪽) 적용
     const scale = Math.min(scaleW, scaleH);
 
     const finalW = imgWidthMM * scale;
     const finalH = imgHeightMM * scale;
 
-    // 5. 중앙 정렬 좌표
     const x = (A4_WIDTH_MM - finalW) / 2;
     const y = (A4_HEIGHT_MM - finalH) / 2;
 
-    console.log(`📐 원본: ${imgWidthMM.toFixed(1)}×${imgHeightMM.toFixed(1)} mm`);
-    console.log(`📐 축소 비율: ${(scale * 100).toFixed(1)}% (scaleW=${(scaleW*100).toFixed(1)}%, scaleH=${(scaleH*100).toFixed(1)}%)`);
-    console.log(`📐 최종: ${finalW.toFixed(1)}×${finalH.toFixed(1)} mm, 위치: (${x.toFixed(1)}, ${y.toFixed(1)})`);
+    console.log(`원본: ${imgWidthMM.toFixed(1)}×${imgHeightMM.toFixed(1)} mm`);
+    console.log(`축소 비율: ${(scale * 100).toFixed(1)}%`);
+    console.log(`최종: ${finalW.toFixed(1)}×${finalH.toFixed(1)} mm, 위치: (${x.toFixed(1)}, ${y.toFixed(1)})`);
 
-    // 6. PDF 생성
     const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
     pdf.addImage(imgData, 'PNG', x, y, finalW, finalH);
 
@@ -628,5 +641,3 @@ function shareResult() {
 function printResult() {
     window.print();
 }
-
-

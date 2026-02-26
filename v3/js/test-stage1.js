@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         questionBank: stage1QuestionBank,
         questionCount: 15,
         timeLimit: 30 * 60, // 30분
-        validation: createValidation(20, 2, 30), // 정답률 20%, 평균 2초, 총 30초
+        validation: createValidation(20, 1, 30), // 정답률 20%, 평균 1초, 총 30초
         nextPage: 'test-stage2.html'
     });
 

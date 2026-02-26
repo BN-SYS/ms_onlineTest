@@ -15,14 +15,42 @@
     <!-- A4 레이아웃 결과지 -->
     <div class="result-page-wrapper">
         <div class="result-page" id="resultPage">
-            <!-- 헤더 -->
-            <div class="result-page-header">
+            
+             <!-- ✅ 전문적인 인증서 배너 -->
+            <div class="result-banner">
+                <div class="banner-decoration-top"></div>
+                <div class="banner-content">
+                    <div class="banner-header">
+                        <div class="banner-seal">MENSA</div>
+                        <div class="banner-title-group">
+                            <h1 class="banner-main-title">COGNITIVE ABILITY ASSESSMENT</h1>
+                            <p class="banner-subtitle">Official Intelligence Quotient Report</p>
+                            <div class="banner-divider"></div>
+                            <p class="banner-korean">사고력 평가 인증서</p>
+                        </div>
+                    </div>
+                    <div class="banner-meta">
+                        <div class="banner-meta-item">
+                            <span class="meta-label">Test Date</span>
+                            <span class="meta-value" id="bannerDate">2026.02.24</span>
+                        </div>
+                        <div class="banner-meta-item">
+                            <span class="meta-label">Certification No.</span>
+                            <span class="meta-value" id="bannerCertNo">MENSA-2026-123456</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-decoration-bottom"></div>
+            </div>
+
+            <!-- 헤더 (배너 다음) -->
+            <!-- <div class="result-page-header">
                 <div class="logo-section">
                     <h1>Mensa-Style Cognitive Test</h1>
                     <p class="subtitle">Official Intelligence Assessment Report</p>
                 </div>
                 <div class="date-section" id="testDate"></div>
-            </div>
+            </div> -->
 
             <!-- 인증 정보 카드 -->
             <div class="cert-card">
@@ -38,13 +66,11 @@
                     <span class="cert-label">인증번호</span>
                     <span class="cert-value" id="certNumber">MENSA-2026-123456</span>
                 </div>
-                <!-- 진위확인코드 추가 -->
                 <div class="cert-item">
                     <span class="cert-label">진위확인코드</span>
                     <span class="cert-value" id="verifyCode">0-</span>
                 </div>
             </div>
-
 
             <!-- 종합 점수 섹션 -->
             <div class="score-section">
@@ -107,16 +133,16 @@
         <!-- 액션 버튼 (PDF 외부에 배치) -->
         <div class="action-buttons-wrapper">
             <button class="action-btn primary" onclick="downloadPDF()">
-                <span></span> PDF 다운로드
+                PDF 다운로드
             </button>
             <button class="action-btn" onclick="printResult()">
-                <span></span> 인쇄하기
+                인쇄하기
             </button>
             <button class="action-btn" onclick="shareResult()">
-                <span></span> 공유하기
+                공유하기
             </button>
             <button class="action-btn" onclick="location.href='index.html'">
-                <span></span> 홈으로
+                홈으로
             </button>
         </div>
     </div>

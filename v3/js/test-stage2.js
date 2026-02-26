@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         questionBank: stage2QuestionBank,
         questionCount: 5,
         timeLimit: 10 * 60, // 10분
-        validation: createValidation(20, 2, 10), // 정답률 20%, 평균 2초, 총 10초
+        validation: createValidation(20, 1, 10), // 정답률 20%, 평균 1초, 총 10초
         nextPage: 'test-stage3.html'
     });
 
