@@ -5,11 +5,11 @@ import { toast } from "./ui.js";
 export function requireAdmin() {
   AdminAPI.seedIfEmpty();
   const session = AdminAPI.getSession();
-  if (!session) {
-    // admin 내부 페이지에서만 사용
-    location.href = "login.html";
-    return null;
-  }
+  // if (!session) {
+  //   // admin 내부 페이지에서만 사용
+  //   location.href = "login.html";
+  //   return null;
+  // }
   return session;
 }
 
