@@ -44,7 +44,7 @@
     AdminAPI.seedIfEmpty();
 
     const session = AdminAPI.getSession();
-    if (session) location.href = "dashboard.html";
+    if (session) location.href = "question-manage.html";
 
     document.getElementById("btnLogin").addEventListener("click", () => {
       const email = document.getElementById("email").value.trim();
