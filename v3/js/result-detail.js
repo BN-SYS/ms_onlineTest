@@ -15,7 +15,13 @@ function loadDetailResult() {
     let scoreResult = JSON.parse(localStorage.getItem('scoreResult') || 'null');
     let certNumber = localStorage.getItem('certNumber');
     let verifyCode = localStorage.getItem('verifyCode');
-    
+
+    // '0000-0000'이면 무효 처리
+    if (verifyCode === '0000-0000') {
+        localStorage.removeItem('verifyCode');
+        verifyCode = null;
+    }
+
     if (!stage1) stage1 = createSampleStage1();
     if (!stage2) stage2 = createSampleStage2();
     if (!stage3) stage3 = createSampleStage3();
@@ -25,47 +31,47 @@ function loadDetailResult() {
     if (!testSettings) {
         testSettings = createSampleTestSettings();
     }
-    
+
     console.log('상세 결과 로드:', { stage1, stage2, stage3, userData, testSettings });
-    
+
     // 날짜 표시 (화면 + 배너 동기화)
     const now = new Date();
     const dateStr = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
-    
+
     const testDateElem = document.getElementById('testDate');
     if (testDateElem) {
         testDateElem.textContent = dateStr;
     }
-    
+
     // 배너 날짜 동기화
     const bannerDateElem = document.getElementById('bannerDate');
     if (bannerDateElem) {
         bannerDateElem.textContent = dateStr;
     }
-    
+
     // 개인정보 + 인증정보 (배너 포함)
     displayUserInfo(userData, certNumber, verifyCode);
-    
+
     // 점수 계산 (scoreResult가 없으면 재계산)
     if (!scoreResult) {
         scoreResult = calculateScore(stage1, stage2, stage3, userData.birthYear, testSettings);
     }
-    
+
     // 총 점수 표시
     document.getElementById('totalScore').textContent = scoreResult.totalScore + '점';
     document.getElementById('percentile').textContent = scoreResult.percentile;
-    
+
     // 레벨 평가
     displayLevel(scoreResult);
-    
+
     // 단계별 점수 (백분위 포함)
     displayStages(stage1, stage2, stage3, scoreResult);
-    
+
     // 그래프 생성 (백분위 표시)
     setTimeout(() => {
         createAllCharts(scoreResult);
     }, 100);
-    
+
     // 개선 가이드
     displayRecommendation(scoreResult, stage1, stage2, stage3);
 }
@@ -83,35 +89,35 @@ function createSampleUser() {
 }
 
 function createSampleStage1() {
-    return { 
-        stage: 1, 
-        correctCount: 12, 
-        totalQuestions: 15, 
-        correctRate: 80, 
-        totalTime: 450, 
-        avgTimePerQuestion: 30 
+    return {
+        stage: 1,
+        correctCount: 12,
+        totalQuestions: 15,
+        correctRate: 80,
+        totalTime: 450,
+        avgTimePerQuestion: 30
     };
 }
 
 function createSampleStage2() {
-    return { 
-        stage: 2, 
-        correctCount: 4, 
-        totalQuestions: 5, 
-        correctRate: 80, 
-        totalTime: 200, 
-        avgTimePerQuestion: 40 
+    return {
+        stage: 2,
+        correctCount: 4,
+        totalQuestions: 5,
+        correctRate: 80,
+        totalTime: 200,
+        avgTimePerQuestion: 40
     };
 }
 
 function createSampleStage3() {
-    return { 
-        stage: 3, 
-        correctCount: 3, 
-        totalQuestions: 5, 
-        correctRate: 60, 
-        totalTime: 225, 
-        avgTimePerQuestion: 45 
+    return {
+        stage: 3,
+        correctCount: 3,
+        totalQuestions: 5,
+        correctRate: 60,
+        totalTime: 225,
+        avgTimePerQuestion: 45
     };
 }
 
@@ -135,18 +141,24 @@ function createSampleTestSettings() {
     };
 }
 
-/* ========================================
-   개인정보 표시 (진위확인코드 + 배너 동기화)
-======================================== */
 function displayUserInfo(userData, certNumber, verifyCode) {
-    // certNumber와 verifyCode가 없으면 생성
+    const now = new Date();
+
+    // 이미 저장된 인증번호/코드가 있으면 재사용, 없으면 새로 생성
     if (!certNumber) {
-        const now = new Date();
+        certNumber = localStorage.getItem('certNumber');
+    }
+    if (!certNumber) {
         certNumber = `MS-${now.getFullYear()}-${String(Date.now()).slice(-6)}`;
         localStorage.setItem('certNumber', certNumber);
     }
-    if (!verifyCode) {
-        verifyCode = generateVerifyCode(userData.sessionId || Date.now().toString());
+
+    // verifyCode가 없거나 '0000-0000'이면 새로 생성
+    if (!verifyCode || verifyCode === '0000-0000') {
+        verifyCode = localStorage.getItem('verifyCode');
+    }
+    if (!verifyCode || verifyCode === '0000-0000') {
+        verifyCode = generateVerifyCode(userData.sessionId || userData.email || certNumber);
         localStorage.setItem('verifyCode', verifyCode);
     }
 
@@ -154,18 +166,18 @@ function displayUserInfo(userData, certNumber, verifyCode) {
     document.getElementById('userName').textContent = userData.name || '홍길동';
     document.getElementById('userBirth').textContent = (userData.birthYear || '1990') + '년생';
     document.getElementById('certNumber').textContent = certNumber;
-    
+
     const verifyCodeElem = document.getElementById('verifyCode');
     if (verifyCodeElem) {
         verifyCodeElem.textContent = verifyCode;
     }
-    
+
     // 배너 인증번호 동기화
     const bannerCertNoElem = document.getElementById('bannerCertNo');
     if (bannerCertNoElem) {
         bannerCertNoElem.textContent = certNumber;
     }
-    
+
     console.log('사용자 정보 표시:', { certNumber, verifyCode });
 }
 
@@ -173,18 +185,28 @@ function generateVerifyCode(input) {
     if (!input || input.length === 0) {
         input = Date.now().toString() + Math.random().toString();
     }
-    
+
+    // 입력값에 랜덤 솔트 추가해서 '0000-0000' 충돌 방지
+    input = input + '_' + input.length + '_salt';
+
     let hash = 0;
     for (let i = 0; i < input.length; i++) {
         const char = input.charCodeAt(i);
         hash = ((hash << 5) - hash) + char;
         hash = hash & hash;
     }
-    
+
+    // hash가 0이면 (충돌 방지) 타임스탬프 기반으로 재생성
+    if (hash === 0) {
+        hash = Date.now();
+    }
+
     const hexCode = Math.abs(hash).toString(16).toUpperCase();
     const paddedCode = hexCode.padStart(8, '0').slice(0, 8);
     const verifyCode = `${paddedCode.slice(0, 4)}-${paddedCode.slice(4, 8)}`;
-    
+
+    console.log('생성된 진위확인코드:', verifyCode);
+
     return verifyCode;
 }
 
@@ -194,7 +216,7 @@ function generateVerifyCode(input) {
 function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
     const currentYear = new Date().getFullYear();
     const age = currentYear - parseInt(birthYear || 1990);
-    
+
     // 연령 보정 점수 계산
     let ageAdjustment = 0;
     if (age < 30) {
@@ -208,41 +230,41 @@ function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
     } else {
         ageAdjustment = 16;
     }
-    
+
     console.log('연령 정보:', { age, ageAdjustment });
-    
+
     // 각 단계별 점수 계산
     const stage1Score = calculateStageScore(
-        stage1.correctCount, 
+        stage1.correctCount,
         testSettings.stage1.baseScore,
         testSettings.stage1.pointPerQuestion,
         ageAdjustment
     );
-    
+
     const stage2Score = calculateStageScore(
         stage2.correctCount,
         testSettings.stage2.baseScore,
         testSettings.stage2.pointPerQuestion,
         ageAdjustment
     );
-    
+
     const stage3Score = calculateStageScore(
         stage3.correctCount,
         testSettings.stage3.baseScore,
         testSettings.stage3.pointPerQuestion,
         ageAdjustment
     );
-    
+
     // 종합 점수 (3단계 평균)
     const totalScore = Math.round((stage1Score + stage2Score + stage3Score) / 3);
-    
+
     console.log('단계별 점수:', {
         stage1Score,
         stage2Score,
         stage3Score,
         totalScore
     });
-    
+
     return {
         totalScore: totalScore,
         percentile: getPercentile(totalScore),
@@ -259,7 +281,7 @@ function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
 function calculateStageScore(correctCount, baseScore, pointPerQuestion, ageAdjustment) {
     const rawScore = baseScore + (correctCount * pointPerQuestion) + ageAdjustment;
     const finalScore = Math.min(100, rawScore);
-    
+
     return finalScore;
 }
 
@@ -315,26 +337,26 @@ function displayLevel(scoreResult) {
 ======================================== */
 function displayStages(s1, s2, s3, scoreResult) {
     const stages = [
-        { 
-            title: '1단계: 시각 추론', 
-            correct: s1.correctCount, 
-            total: s1.totalQuestions, 
+        {
+            title: '1단계: 시각 추론',
+            correct: s1.correctCount,
+            total: s1.totalQuestions,
             rate: s1.correctRate,
             score: scoreResult.stage1Score,
             percentile: scoreResult.stage1Percentile
         },
-        { 
-            title: '2단계: 논리 사고', 
-            correct: s2.correctCount, 
-            total: s2.totalQuestions, 
+        {
+            title: '2단계: 논리 사고',
+            correct: s2.correctCount,
+            total: s2.totalQuestions,
             rate: s2.correctRate,
             score: scoreResult.stage2Score,
             percentile: scoreResult.stage2Percentile
         },
-        { 
-            title: '3단계: 지식 응용', 
-            correct: s3.correctCount, 
-            total: s3.totalQuestions, 
+        {
+            title: '3단계: 지식 응용',
+            correct: s3.correctCount,
+            total: s3.totalQuestions,
             rate: s3.correctRate,
             score: scoreResult.stage3Score,
             percentile: scoreResult.stage3Percentile
@@ -358,13 +380,13 @@ function generateNormalDistribution(mean, stdDev, points = 80) {
     const start = Math.max(0, mean - 4 * stdDev);
     const end = Math.min(100, mean + 4 * stdDev);
     const step = (end - start) / points;
-    
+
     for (let x = start; x <= end; x += step) {
         const exponent = -0.5 * Math.pow((x - mean) / stdDev, 2);
         const y = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
         data.push({ x: Math.round(x * 10) / 10, y: y });
     }
-    
+
     return data;
 }
 
@@ -374,11 +396,11 @@ function generateNormalDistribution(mean, stdDev, points = 80) {
 function createCompactChart(canvasId, userScore, percentile, mean = 70, stdDev = 12) {
     const ctx = document.getElementById(canvasId);
     if (!ctx) return null;
-    
+
     const distributionData = generateNormalDistribution(mean, stdDev);
-    const userY = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * 
-                  Math.exp(-0.5 * Math.pow((userScore - mean) / stdDev, 2));
-    
+    const userY = (1 / (stdDev * Math.sqrt(2 * Math.PI))) *
+        Math.exp(-0.5 * Math.pow((userScore - mean) / stdDev, 2));
+
     return new Chart(ctx, {
         type: 'line',
         data: {
@@ -410,7 +432,7 @@ function createCompactChart(canvasId, userScore, percentile, mean = 70, stdDev =
             aspectRatio: 2.5,
             plugins: {
                 legend: { display: false },
-                tooltip: { 
+                tooltip: {
                     enabled: true,
                     callbacks: {
                         label: (context) => `점수: ${userScore}점`
@@ -450,7 +472,7 @@ function createAllCharts(scoreResult) {
     createCompactChart('stage1Chart', scoreResult.stage1Score, scoreResult.stage1Percentile);
     createCompactChart('stage2Chart', scoreResult.stage2Score, scoreResult.stage2Percentile);
     createCompactChart('stage3Chart', scoreResult.stage3Score, scoreResult.stage3Percentile);
-    
+
     // 백분위 텍스트 추가
     addPercentileLabels(scoreResult);
 }
@@ -462,7 +484,7 @@ function addPercentileLabels(scoreResult) {
         { id: 'stage2Chart', percentile: scoreResult.stage2Percentile, score: scoreResult.stage2Score },
         { id: 'stage3Chart', percentile: scoreResult.stage3Percentile, score: scoreResult.stage3Score }
     ];
-    
+
     labels.forEach(label => {
         const chartBox = document.getElementById(label.id)?.closest('.chart-box');
         if (chartBox) {
@@ -540,80 +562,80 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
    고화질 PDF 다운로드
 ======================================== */
 async function downloadPDF() {
-  if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
-    alert('PDF 라이브러리를 로드하는 중입니다.\n잠시 후 다시 시도해주세요.');
-    return;
-  }
-
-  const button = event?.target?.closest('.action-btn');
-  const originalHTML = button ? button.innerHTML : '';
-  
-  if (button) {
-    button.innerHTML = 'PDF 생성 중...';
-    button.disabled = true;
-  }
-
-  const resultPage = document.getElementById('resultPage');
-  if (!resultPage) {
-    alert('결과 페이지를 찾을 수 없습니다.');
-    return;
-  }
-
-  // PDF 렌더링 모드 ON (테두리 추가)
-  resultPage.classList.add('pdf-rendering');
-
-  const A4_WIDTH_MM = 210;
-  const A4_HEIGHT_MM = 297;
-
-  try {
-    // CSS 적용 대기
-    await new Promise(resolve => setTimeout(resolve, 150));
-
-    // 고해상도 캡처 (scale 3 = 3배 해상도)
-    const canvas = await html2canvas(resultPage, {
-      scale: 3,       
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-      windowWidth: resultPage.scrollWidth,
-      windowHeight: resultPage.scrollHeight,
-      imageTimeout: 0,    
-      removeContainer: true,
-      letterRendering: true, 
-    });
-
-    // 고품질 이미지로 변환 (JPEG 품질 최대)
-    const imgData = canvas.toDataURL('image/jpeg', 1.0); // 품질 1.0 (최고)
-
-    // PDF 생성 (compress: false = 압축 안 함)
-    const pdf = new jspdf.jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-      compress: false,      // 압축 비활성화 (화질 우선)
-      precision: 16         // 정밀도 증가
-    });
-
-    // 이미지를 A4에 맞춤 (압축 없음)
-    pdf.addImage(imgData, 'JPEG', 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM, undefined, 'FAST');
-
-    const fileName = `MensaStyle_Test_Report_${Date.now()}.pdf`;
-    pdf.save(fileName);
-
-    console.log('고화질 PDF 다운로드 완료:', fileName);
-
-  } catch (err) {
-    console.error('❌ PDF 생성 실패:', err);
-    alert('PDF 생성 중 오류가 발생했습니다.\n다시 시도해주세요.');
-  } finally {
-    // PDF 렌더링 모드 OFF
-    resultPage.classList.remove('pdf-rendering');
-    
-    if (button) {
-      button.innerHTML = originalHTML;
-      button.disabled = false;
+    if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+        alert('PDF 라이브러리를 로드하는 중입니다.\n잠시 후 다시 시도해주세요.');
+        return;
     }
-  }
+
+    const button = event?.target?.closest('.action-btn');
+    const originalHTML = button ? button.innerHTML : '';
+
+    if (button) {
+        button.innerHTML = 'PDF 생성 중...';
+        button.disabled = true;
+    }
+
+    const resultPage = document.getElementById('resultPage');
+    if (!resultPage) {
+        alert('결과 페이지를 찾을 수 없습니다.');
+        return;
+    }
+
+    // PDF 렌더링 모드 ON (테두리 추가)
+    resultPage.classList.add('pdf-rendering');
+
+    const A4_WIDTH_MM = 210;
+    const A4_HEIGHT_MM = 297;
+
+    try {
+        // CSS 적용 대기
+        await new Promise(resolve => setTimeout(resolve, 150));
+
+        // 고해상도 캡처 (scale 3 = 3배 해상도)
+        const canvas = await html2canvas(resultPage, {
+            scale: 3,
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff',
+            windowWidth: resultPage.scrollWidth,
+            windowHeight: resultPage.scrollHeight,
+            imageTimeout: 0,
+            removeContainer: true,
+            letterRendering: true,
+        });
+
+        // 고품질 이미지로 변환 (JPEG 품질 최대)
+        const imgData = canvas.toDataURL('image/jpeg', 1.0); // 품질 1.0 (최고)
+
+        // PDF 생성 (compress: false = 압축 안 함)
+        const pdf = new jspdf.jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4',
+            compress: false,      // 압축 비활성화 (화질 우선)
+            precision: 16         // 정밀도 증가
+        });
+
+        // 이미지를 A4에 맞춤 (압축 없음)
+        pdf.addImage(imgData, 'JPEG', 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM, undefined, 'FAST');
+
+        const fileName = `MensaStyle_Test_Report_${Date.now()}.pdf`;
+        pdf.save(fileName);
+
+        console.log('고화질 PDF 다운로드 완료:', fileName);
+
+    } catch (err) {
+        console.error('❌ PDF 생성 실패:', err);
+        alert('PDF 생성 중 오류가 발생했습니다.\n다시 시도해주세요.');
+    } finally {
+        // PDF 렌더링 모드 OFF
+        resultPage.classList.remove('pdf-rendering');
+
+        if (button) {
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+        }
+    }
 }
 
 
@@ -624,12 +646,12 @@ function shareResult() {
     const score = document.getElementById('totalScore').textContent;
     const percentile = document.getElementById('percentile').textContent;
     const text = `나의 멘사 테스트 점수는 ${score}! (${percentile}) 멘사 온라인 테스트로 확인하세요!`;
-    
+
     if (navigator.share) {
-        navigator.share({ 
-            title: '멘사 온라인 테스트 결과', 
-            text: text, 
-            url: window.location.origin 
+        navigator.share({
+            title: '멘사 온라인 테스트 결과',
+            text: text,
+            url: window.location.origin
         }).catch(err => console.log('공유 취소:', err));
     } else {
         navigator.clipboard.writeText(text + '\n' + window.location.origin)
