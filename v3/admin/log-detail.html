@@ -5,6 +5,118 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>응시 로그 상세 - 멘사코리아 관리자</title>
   <link rel="stylesheet" href="../css/admin.css" />
+  <style>
+    /* 추가 스타일 */
+    .user-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .user-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .user-info-label {
+      font-size: 12px;
+      color: #666;
+      font-weight: 600;
+    }
+    .user-info-value {
+      font-size: 14px;
+      color: #1a1a2e;
+      font-weight: 700;
+    }
+    .qa-detail-section {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .qa-item {
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+    .qa-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e9ecef;
+    }
+    .qa-question {
+      font-weight: 700;
+      color: #1a1a2e;
+      font-size: 15px;
+    }
+    .qa-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .qa-status.correct {
+      background: #d4edda;
+      color: #155724;
+    }
+    .qa-status.incorrect {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .qa-body {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .qa-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .qa-field-label {
+      font-size: 11px;
+      color: #666;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .qa-field-value {
+      font-size: 13px;
+      color: #1a1a2e;
+    }
+    .badge-pass {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #d4edda;
+      color: #155724;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-fail {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #f8d7da;
+      color: #721c24;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
   <div class="admin-container">
@@ -19,11 +131,46 @@
           <p id="subtitle">세션 기준으로 stage 1~3 기록과 문항별 응답을 확인합니다.</p>
         </div>
 
+        <!-- 사용자 정보 -->
         <div class="form-container" id="userPanel">
           <h3 style="margin-bottom:12px;">사용자 정보</h3>
-          <div id="userInfoGrid"></div>
+          <div class="user-info-grid">
+            <div class="user-info-item">
+              <span class="user-info-label">세션 ID</span>
+              <span class="user-info-value">SESSION-2026-001234</span>
+            </div>
+            <div class="user-info-item">
+              <span class="user-info-label">응시자명</span>
+              <span class="user-info-value">홍길동</span>
+            </div>
+            <div class="user-info-item">
+              <span class="user-info-label">이메일</span>
+              <span class="user-info-value">hong@example.com</span>
+            </div>
+            <div class="user-info-item">
+              <span class="user-info-label">생년월일</span>
+              <span class="user-info-value">1990년생 (만 36세)</span>
+            </div>
+            <div class="user-info-item">
+              <span class="user-info-label">응시 시작</span>
+              <span class="user-info-value">2026-02-27 14:35:22</span>
+            </div>
+            <div class="user-info-item">
+              <span class="user-info-label">최종 완료</span>
+              <span class="user-info-value">2026-02-27 15:42:18</span>
+            </div>
+            <div class="user-info-item">
+              <span class="user-info-label">IP 주소</span>
+              <span class="user-info-value">203.255.123.45</span>
+            </div>
+            <div class="user-info-item">
+              <span class="user-info-label">User Agent</span>
+              <span class="user-info-value">Chrome 120 / Windows</span>
+            </div>
+          </div>
         </div>
 
+        <!-- 단계별 요약 -->
         <div class="table-container" style="margin-top:20px;">
           <div class="table-header">
             <h3 class="table-title">단계별 요약</h3>
@@ -44,11 +191,44 @@
               </tr>
             </thead>
             <tbody id="stageSummaryBody">
-              <tr><td colspan="7" class="text-center">로딩 중...</td></tr>
+              <tr>
+                <td><strong>Stage 1</strong></td>
+                <td><span class="badge-pass">통과</span></td>
+                <td>12 / 15</td>
+                <td>80.0%</td>
+                <td>450</td>
+                <td>30.0</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" onclick="showStageDetail(1)">보기</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Stage 2</strong></td>
+                <td><span class="badge-pass">통과</span></td>
+                <td>8 / 15</td>
+                <td>53.3%</td>
+                <td>720</td>
+                <td>48.0</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" onclick="showStageDetail(2)">보기</button>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Stage 3</strong></td>
+                <td><span class="badge-fail">실패</span></td>
+                <td>6 / 15</td>
+                <td>40.0%</td>
+                <td>900</td>
+                <td>60.0</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" onclick="showStageDetail(3)">보기</button>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
 
+        <!-- 문항별 응답 상세 -->
         <div class="table-container" style="margin-top:20px;">
           <div class="table-header">
             <h3 class="table-title">문항별 응답 상세</h3>
@@ -56,7 +236,165 @@
           </div>
 
           <div id="qaDetailWrap">
-            <!-- JS로 렌더 -->
+            <!-- 기본 빈 상태 -->
+            <div class="empty-state" id="emptyState">
+              <p>📋 상단 테이블에서 <strong>"보기"</strong> 버튼을 클릭하면<br>해당 단계의 문항별 응답 상세를 확인할 수 있습니다.</p>
+            </div>
+
+            <!-- Stage 1 상세 (숨김 상태) -->
+            <div id="stage1Detail" class="qa-detail-section" style="display:none;">
+              <h4 style="margin-bottom:15px; color:#1a1a2e;">Stage 1 문항별 응답 (15문항)</h4>
+              
+              <!-- 문항 1 -->
+              <div class="qa-item">
+                <div class="qa-header">
+                  <span class="qa-question">Q1. 다음 중 규칙에 맞는 숫자는?</span>
+                  <span class="qa-status correct">정답</span>
+                </div>
+                <div class="qa-body">
+                  <div class="qa-field">
+                    <span class="qa-field-label">문항 ID</span>
+                    <span class="qa-field-value">Q-S1-001</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">사용자 답변</span>
+                    <span class="qa-field-value">42</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">정답</span>
+                    <span class="qa-field-value">42</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">소요 시간</span>
+                    <span class="qa-field-value">28초</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 문항 2 -->
+              <div class="qa-item">
+                <div class="qa-header">
+                  <span class="qa-question">Q2. 패턴을 완성하는 도형은?</span>
+                  <span class="qa-status incorrect">오답</span>
+                </div>
+                <div class="qa-body">
+                  <div class="qa-field">
+                    <span class="qa-field-label">문항 ID</span>
+                    <span class="qa-field-value">Q-S1-002</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">사용자 답변</span>
+                    <span class="qa-field-value">C</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">정답</span>
+                    <span class="qa-field-value">B</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">소요 시간</span>
+                    <span class="qa-field-value">45초</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 문항 3 -->
+              <div class="qa-item">
+                <div class="qa-header">
+                  <span class="qa-question">Q3. 다음 수열의 다음 항은?</span>
+                  <span class="qa-status correct">정답</span>
+                </div>
+                <div class="qa-body">
+                  <div class="qa-field">
+                    <span class="qa-field-label">문항 ID</span>
+                    <span class="qa-field-value">Q-S1-003</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">사용자 답변</span>
+                    <span class="qa-field-value">89</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">정답</span>
+                    <span class="qa-field-value">89</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">소요 시간</span>
+                    <span class="qa-field-value">32초</span>
+                  </div>
+                </div>
+              </div>
+
+              <p style="text-align:center; margin-top:20px; color:#999; font-size:13px;">
+                ... 총 15문항 중 일부만 표시 (실제론 전체 표시)
+              </p>
+            </div>
+
+            <!-- Stage 2 상세 (숨김 상태) -->
+            <div id="stage2Detail" class="qa-detail-section" style="display:none;">
+              <h4 style="margin-bottom:15px; color:#1a1a2e;">Stage 2 문항별 응답 (15문항)</h4>
+              
+              <div class="qa-item">
+                <div class="qa-header">
+                  <span class="qa-question">Q16. 논리 추론 문제</span>
+                  <span class="qa-status correct">정답</span>
+                </div>
+                <div class="qa-body">
+                  <div class="qa-field">
+                    <span class="qa-field-label">문항 ID</span>
+                    <span class="qa-field-value">Q-S2-001</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">사용자 답변</span>
+                    <span class="qa-field-value">A</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">정답</span>
+                    <span class="qa-field-value">A</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">소요 시간</span>
+                    <span class="qa-field-value">52초</span>
+                  </div>
+                </div>
+              </div>
+
+              <p style="text-align:center; margin-top:20px; color:#999; font-size:13px;">
+                ... Stage 2 문항 상세 (생략)
+              </p>
+            </div>
+
+            <!-- Stage 3 상세 (숨김 상태) -->
+            <div id="stage3Detail" class="qa-detail-section" style="display:none;">
+              <h4 style="margin-bottom:15px; color:#1a1a2e;">Stage 3 문항별 응답 (15문항)</h4>
+              
+              <div class="qa-item">
+                <div class="qa-header">
+                  <span class="qa-question">Q31. 고난이도 패턴 문제</span>
+                  <span class="qa-status incorrect">오답</span>
+                </div>
+                <div class="qa-body">
+                  <div class="qa-field">
+                    <span class="qa-field-label">문항 ID</span>
+                    <span class="qa-field-value">Q-S3-001</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">사용자 답변</span>
+                    <span class="qa-field-value">D</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">정답</span>
+                    <span class="qa-field-value">C</span>
+                  </div>
+                  <div class="qa-field">
+                    <span class="qa-field-label">소요 시간</span>
+                    <span class="qa-field-value">78초</span>
+                  </div>
+                </div>
+              </div>
+
+              <p style="text-align:center; margin-top:20px; color:#999; font-size:13px;">
+                ... Stage 3 문항 상세 (생략)
+              </p>
+            </div>
           </div>
         </div>
 
@@ -66,6 +404,28 @@
 
   <script src="../js/include.js"></script>
   <script src="../js/admin-common.js"></script>
-  <script src="../js/admin-log-detail.js"></script>
+  
+  <script>
+    // 단계별 상세 표시 함수
+    function showStageDetail(stage) {
+      // 모든 상세 숨김
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('stage1Detail').style.display = 'none';
+      document.getElementById('stage2Detail').style.display = 'none';
+      document.getElementById('stage3Detail').style.display = 'none';
+
+      // 선택한 단계만 표시
+      const targetId = 'stage' + stage + 'Detail';
+      document.getElementById(targetId).style.display = 'block';
+
+      // 힌트 문구 업데이트
+      document.getElementById('detailHint').textContent = 'Stage ' + stage + ' 문항별 응답';
+      document.getElementById('detailHint').style.color = '#d4af37';
+      document.getElementById('detailHint').style.fontWeight = '600';
+
+      // 부드럽게 스크롤
+      document.getElementById('qaDetailWrap').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  </script>
 </body>
 </html>

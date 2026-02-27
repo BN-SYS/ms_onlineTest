@@ -792,7 +792,7 @@ canvas {
     .banner-seal {
         width: 55px;
         height: 55px;
-        font-size: 11px;
+        font-size: 24px;
     }
 
     .banner-seal::before {

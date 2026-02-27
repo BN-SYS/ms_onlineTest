@@ -4,143 +4,559 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>테스트 시작 전 동의 - 멘사형 사고력 온라인 테스트</title>
+    <title>멘사형 사고력 온라인 테스트</title>
     <link rel="stylesheet" href="css/common.css">
-        <link rel="stylesheet" href="css/consent.css">
     <style>
-        .consent-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 40px;
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #d4af37;
+            --bg-gray: #f8f9fa;
+            --border-color: #dee2e6;
+            --text-dark: #333;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
         }
 
-        .consent-header {
+        /* 메인 컨테이너 - 헤더 여백과 정렬 */
+        .main-container {
+            margin-top: 70px;
+            padding-bottom: 200px;
+            padding-left: 20px;
+            /* ✅ 추가 */
+            padding-right: 20px;
+            /* ✅ 추가 */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: calc(100vh - 270px);
+        }
+
+        /* 좌측 섹션 - 내부 패딩 조정 */
+        .left-section {
+            background: white;
+            color: var(--text-dark);
+            padding: 50px 40px;
+            /* ✅ 좌우 60px → 40px */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+            border-right: 1px solid var(--border-color);
+        }
+
+        /* 우측 섹션 - 내부 패딩 조정 */
+        .right-section {
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 50px 40px;
+            /* ✅ 좌우 60px → 40px */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .intro-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .intro-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            line-height: 1.3;
+            color: var(--primary-color);
+        }
+
+        .intro-content .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* 특징 카드 */
+        .features-compact {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .feature-compact {
+            background: var(--bg-gray);
+            padding: 18px 20px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            font-size: 0.9rem;
             text-align: center;
-            margin-bottom: 40px;
+            transition: all 0.3s;
         }
 
-        .consent-header h1 {
+        .feature-compact:hover {
+            background: white;
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+        }
+
+        .feature-compact strong {
+            display: block;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-compact span {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        /* 샘플 문제 박스 */
+        .sample-box-compact {
+            background: var(--bg-gray);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 10;
+        }
+
+        .sample-label {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--secondary-color), #f4d77e);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+        }
+
+        .sample-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        .sample-sequence {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: 8px;
+            margin: 25px 0;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            border: 2px solid var(--secondary-color);
+        }
+
+        .sample-options-compact {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .sample-option-compact {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        .sample-option-compact:hover {
+            background: var(--bg-gray);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+        }
+
+        .sample-option-compact.correct {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-color: #28a745;
+            color: white;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .sample-option-compact.wrong {
+            background: #ffe5e5;
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .sample-hint-compact {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-top: 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.6;
+            color: #1976D2;
+        }
+
+        .sample-hint-compact strong {
+            color: #1976D2;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* 우측 섹션 */
+        .right-section {
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 50px 40px;
+            /* 내부 여백 축소 */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .consent-header-compact {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .consent-header-compact h2 {
             font-size: 2rem;
             margin-bottom: 10px;
             color: var(--primary-color);
+            font-weight: 800;
         }
 
-        .consent-box {
-            background: var(--bg-gray);
-            padding: 30px;
+        .consent-header-compact p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* 알림 박스 */
+        .info-notice {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 4px solid #2196F3;
+            padding: 18px 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+        }
+
+        .info-notice strong {
+            color: #1976D2;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .info-notice ul {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+        }
+
+        .info-notice li {
+            padding: 4px 0;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .info-notice li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2196F3;
+            font-weight: 700;
+        }
+
+        /* 동의 박스 */
+        .consent-box-compact {
+            background: white;
+            padding: 25px;
             border-radius: 12px;
-            margin-bottom: 30px;
-            max-height: 400px;
+            margin-bottom: 25px;
+            max-height: 200px;
             overflow-y: auto;
+            font-size: 0.88rem;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        .consent-box h3 {
-            margin-bottom: 15px;
+        .consent-box-compact h3 {
+            margin-bottom: 12px;
             color: var(--primary-color);
+            font-size: 1.05rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .consent-box ul {
+        .consent-box-compact ul {
             list-style: none;
             padding-left: 0;
+            margin: 0;
         }
 
-        .consent-box li {
-            padding: 8px 0;
+        .consent-box-compact li {
+            padding: 7px 0;
             padding-left: 20px;
             position: relative;
+            line-height: 1.6;
+            color: #555;
         }
 
-        .consent-box li:before {
+        .consent-box-compact li:before {
             content: "•";
             position: absolute;
             left: 0;
+            color: var(--secondary-color);
+            font-weight: 700;
+            font-size: 1.2rem;
         }
 
-        .warning-box {
-            background: #fff3cd;
+        /* 경고 박스 */
+        .warning-box-compact {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe5a1 100%);
             border-left: 4px solid #ffc107;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 8px;
+            padding: 18px 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
         }
 
-        .warning-box strong {
+        .warning-box-compact strong {
             color: #856404;
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 1rem;
         }
 
-        .form-group {
-            margin-bottom: 25px;
+        /* 폼 그룹 */
+        .form-group-compact {
+            margin-bottom: 18px;
         }
 
-        .form-group label {
+        .form-group-compact label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--text-dark);
+            font-size: 0.95rem;
         }
 
         .required {
             color: #e74c3c;
         }
 
-        .form-group input {
+        .form-group-compact input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-
-        .checkbox-group {
-            margin: 30px 0;
-            padding: 20px;
+            padding: 12px 16px;
             border: 2px solid var(--border-color);
             border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-sizing: border-box;
+            background: white;
         }
 
-        .checkbox-label {
+        .form-group-compact input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
+        }
+
+        .form-group-compact input::placeholder {
+            color: #aaa;
+        }
+
+        /* 체크박스 그룹 */
+        .checkbox-group-compact {
+            margin: 25px 0;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: white;
+        }
+
+        .checkbox-label-compact {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             cursor: pointer;
             margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 0.93rem;
         }
 
-        .checkbox-label:last-child {
+        .checkbox-label-compact:hover {
+            background: var(--bg-gray);
+        }
+
+        .checkbox-label-compact:last-child {
             margin-bottom: 0;
         }
 
-        .checkbox-label input {
+        .checkbox-label-compact input {
             width: 20px;
             height: 20px;
             cursor: pointer;
+            accent-color: var(--secondary-color);
         }
 
-        .start-btn {
+        /* 시작 버튼 */
+        .start-btn-compact {
             width: 100%;
             padding: 18px;
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), #16213e);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1.2rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(26, 26, 46, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
-        .start-btn:hover {
-            background: var(--secondary-color);
+        .start-btn-compact::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
-        .start-btn:disabled {
-            background: #ccc;
+        .start-btn-compact:hover:not(:disabled)::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .start-btn-compact:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(26, 26, 46, 0.4);
+        }
+
+        .start-btn-compact:disabled {
+            background: linear-gradient(135deg, #ccc, #999);
             cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .start-btn-compact span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 스크롤바 */
+        .consent-box-compact::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .consent-box-compact::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .consent-box-compact::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+
+        .consent-box-compact::-webkit-scrollbar-thumb:hover {
+            background: #b8972d;
+        }
+
+        /* 푸터가 겹치지 않도록 */
+        #footer-placeholder {
+            margin-top: 0;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding-bottom: 50px;
+            }
+
+            .left-section {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .features-compact {
+                grid-template-columns: 1fr;
+            }
+
+            .sample-options-compact {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin-top: 60px;
+                padding-bottom: 30px;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .left-section,
+            .right-section {
+                padding: 30px 20px;
+            }
+
+            .intro-content h1 {
+                font-size: 1.9rem;
+            }
+
+            .sample-sequence {
+                font-size: 1.5rem;
+                letter-spacing: 5px;
+            }
+
+            .sample-options-compact {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -149,86 +565,160 @@
     <!-- 헤더 -->
     <div id="header-placeholder"></div>
 
-    <div class="consent-container">
-        <div class="consent-header">
-            <h1>테스트 시작 전 안내</h1>
-            <p>정확한 검사를 위해 아래 내용을 확인해주세요</p>
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+
+        <!-- 좌측 섹션 -->
+        <div class="left-section">
+            <div class="intro-content">
+                <h1>멘사형 사고력<br>온라인 테스트</h1>
+                <p class="subtitle">당신의 잠재력을 확인해보세요</p>
+
+                <div class="features-compact">
+                    <div class="feature-compact">
+                        <span>총 25문항 무료</span>
+                    </div>
+                    <div class="feature-compact">
+                        <span>1단계 30분</span>
+                    </div>
+                    <div class="feature-compact">
+                        <span>상세 리포트</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 샘플 문제 -->
+            <div class="sample-box-compact">
+                <span class="sample-label">예제 문제</span>
+                <div class="sample-question">
+                    다음 수열의 규칙을 찾아 빈칸에 들어갈 숫자를 고르세요.
+                </div>
+
+                <div class="sample-sequence">
+                    2 &nbsp; 5 &nbsp; 10 &nbsp; 17 &nbsp; 26 &nbsp; ?
+                </div>
+
+                <div class="sample-options-compact">
+                    <div class="sample-option-compact" onclick="selectSample(this, false)">A. 35</div>
+                    <div class="sample-option-compact" onclick="selectSample(this, true)">B. 37</div>
+                    <div class="sample-option-compact" onclick="selectSample(this, false)">C. 39</div>
+                    <div class="sample-option-compact" onclick="selectSample(this, false)">D. 41</div>
+                </div>
+
+                <div class="sample-hint-compact" id="sampleHint">
+                    <strong>💡 정답 해설</strong>
+                    각 항의 차이: 3, 5, 7, 9, 11... (홀수씩 증가)<br>
+                    <strong>따라서 26 + 11 = 37</strong>
+                </div>
+            </div>
         </div>
 
-        <div class="consent-box">
-            <h3>테스트 안내사항</h3>
-            <ul>
-                <li>총 3단계, 25문제로 구성되어 있습니다 (1단계 15문제, 2·3단계 각 5문제)</li>
-                <li>제한시간은 1단계 30분, 2·3단계는 각 5분입니다.</li>
-                <li>중간 저장 기능은 제공되지 않습니다.</li>
-                <li>문제 풀이 중 인터넷 검색 등은 본인에게 불리할 수 있습니다.</li>
-                <li>비정상적인 응시 패턴 감지 시 테스트가 중단될 수 있습니다.</li>
-            </ul>
+        <!-- 우측 섹션 -->
+        <div class="right-section">
+            <div class="consent-header-compact">
+                <h2>테스트 시작 전 안내</h2>
+                <p>정확한 검사를 위해 아래 내용을 확인해주세요</p>
+            </div>
 
-            <h3 style="margin-top: 30px;">결제 안내</h3>
-            <ul>
-                <li>테스트 응시는 무료이나, 결과 확인을 위해서는 결제가 필요합니다.</li>
-                <li>기본 결과 (점수+퍼센트): 19,900원</li>
-                <li>상세 리포트: 24,900원</li>
-                <li>기본 결과 결제 후 차액으로 상세 리포트 업그레이드 가능</li>
-            </ul>
+            <div class="info-notice">
+                <strong>중요 안내</strong>
+                <ul>
+                    <li>총 3단계 25문제 (1단계 15문제, 2·3단계 각 5문제)</li>
+                    <li>제한시간: 1단계 30분, 2·3단계 각 5분</li>
+                    <li>중간 저장 불가, 집중된 환경에서 응시하세요</li>
+                </ul>
+            </div>
 
-            <h3 style="margin-top: 30px;">개인정보 처리</h3>
-            <ul>
-                <li>수집항목: 이름, 출생연도, 이메일, IP주소</li>
-                <li>이용목적: 테스트 결과 제공 및 통계 분석</li>
-                <li>보유기간: 결과 제공 후 1년</li>
-                <li>결과는 이메일로 발송되며 사이트에서는 1회만 확인 가능합니다.</li>
-            </ul>
+            <div class="consent-box-compact">
+                <h3>테스트 안내</h3>
+                <ul>
+                    <li>총 3단계, 25문제로 구성</li>
+                    <li>제한시간 내 완료 필수</li>
+                    <li>비정상 패턴 감지 시 중단될 수 있음</li>
+                </ul>
+
+                <h3 style="margin-top:18px;">결제 안내</h3>
+                <ul>
+                    <li>응시 무료, 결과 확인 시 결제</li>
+                    <li>기본 결과: 19,900원 / 상세: 24,900원</li>
+                    <li>업그레이드 가능 (차액 결제)</li>
+                </ul>
+
+                <h3 style="margin-top:18px;">개인정보 처리</h3>
+                <ul>
+                    <li>수집: 이름, 출생연도, 이메일, IP</li>
+                    <li>목적: 결과 제공 및 통계 (보유 1년)</li>
+                </ul>
+            </div>
+
+            <div class="warning-box-compact">
+                <strong>중요 안내</strong>
+                본 테스트는 <strong>멘사 공식 입회 테스트가 아닙니다.</strong> 결과는 참고용입니다.
+            </div>
+
+            <form id="consentForm">
+                <div class="form-group-compact">
+                    <label>이름 <span class="required">*</span></label>
+                    <input type="text" name="name" required placeholder="홍길동">
+                </div>
+
+                <div class="form-group-compact">
+                    <label>출생연도 <span class="required">*</span></label>
+                    <input type="number" name="birthYear" required placeholder="1990" min="1900" max="2024">
+                </div>
+
+                <div class="form-group-compact">
+                    <label>이메일 <span class="required">*</span></label>
+                    <input type="email" name="email" required placeholder="example@email.com">
+                </div>
+
+                <div class="checkbox-group-compact">
+                    <label class="checkbox-label-compact">
+                        <input type="checkbox" required id="agree1">
+                        <span>개인정보 수집 및 이용에 동의합니다.</span>
+                    </label>
+                    <label class="checkbox-label-compact">
+                        <input type="checkbox" required id="agree2">
+                        <span>본 테스트가 공식 입회 테스트가 아님을 확인했습니다.</span>
+                    </label>
+                    <label class="checkbox-label-compact">
+                        <input type="checkbox" required id="agree3">
+                        <span>문제 유출 및 부정행위 시 법적 책임이 있음을 확인했습니다.</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="start-btn-compact" id="startBtn" disabled>
+                    <span>테스트 시작하기 →</span>
+                </button>
+            </form>
         </div>
 
-        <div class="warning-box">
-            <strong>중요 안내</strong>
-            <p>본 테스트는 <strong>멘사 공식 입회 테스트가 아닙니다.</strong>
-                결과는 참고용이며, 실제 멘사 입회를 위해서는 별도의 공식 테스트를 응시하셔야 합니다.</p>
-        </div>
-
-        <form id="consentForm">
-            <div class="form-group">
-                <label>이름 <span class="required">*</span></label>
-                <input type="text" name="name" required placeholder="홍길동">
-            </div>
-
-            <div class="form-group">
-                <label>출생연도 <span class="required">*</span></label>
-                <input type="number" name="birthYear" required placeholder="1990" min="1900" max="2024">
-            </div>
-
-            <div class="form-group">
-                <label>이메일 <span class="required">*</span></label>
-                <input type="email" name="email" required placeholder="example@email.com">
-            </div>
-
-            <div class="checkbox-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" required id="agree1">
-                    <span>개인정보 수집 및 이용에 동의합니다.</span>
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" required id="agree2">
-                    <span>본 테스트가 공식 입회 테스트가 아님을 확인했습니다.</span>
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" required id="agree3">
-                    <span>문제 유출 및 부정행위 시 법적 책임이 있음을 확인했습니다.</span>
-                </label>
-            </div>
-
-            <button type="submit" class="start-btn" id="startBtn">테스트 시작하기</button>
-        </form>
     </div>
 
     <!-- 푸터 -->
     <div id="footer-placeholder"></div>
 
-    <!-- include.js 추가 -->
+    <!-- Scripts -->
     <script src="js/include.js"></script>
     <script>
+        // 샘플 문제 선택
+        function selectSample(element, isCorrect) {
+            const options = document.querySelectorAll('.sample-option-compact');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+                document.getElementById('sampleHint').style.display = 'block';
+            } else {
+                element.classList.add('wrong');
+                options[1].classList.add('correct');
+                document.getElementById('sampleHint').style.display = 'block';
+            }
+        }
+
+        // 폼 제출
         document.getElementById('consentForm').addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -237,19 +727,16 @@
                 name: formData.get('name'),
                 birthYear: parseInt(formData.get('birthYear')),
                 email: formData.get('email'),
-                ip: '127.0.0.1', // 실제로는 서버에서
+                ip: '127.0.0.1',
                 timestamp: new Date().toISOString(),
-                sessionId: Date.now() // 세션 고유 번호
+                sessionId: Date.now()
             };
 
-            // 로컬 스토리지에 저장
             localStorage.setItem('userData', JSON.stringify(userData));
-
-            // 1단계 테스트로 이동
             location.href = 'test-stage1.html';
         });
 
-        // 버튼 활성화 체크
+        // 체크박스 검증
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         const startBtn = document.getElementById('startBtn');
 
@@ -260,8 +747,15 @@
             });
         });
 
-        // 초기 비활성화
-        startBtn.disabled = true;
+        // 헤더 스크롤 효과
+        window.addEventListener('scroll', function () {
+            const header = document.querySelector('.header');
+            if (header && window.scrollY > 50) {
+                header.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+            } else if (header) {
+                header.style.boxShadow = 'none';
+            }
+        });
     </script>
 </body>
 
