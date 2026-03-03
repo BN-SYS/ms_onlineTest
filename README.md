@@ -1,6 +1,11 @@
 # 멘사 온라인 테스트 시스템
 
-## [프로토타입 보기](https://bn-sys.github.io/ms_onlineTest/v3)
+## [전체 프로토타입 보기](https://bn-sys.github.io/ms_onlineTest/v3)
+## [응시자정보 입력](https://bn-sys.github.io/ms_onlineTest/v3/consent.html)
+## [결제상품 선택](https://bn-sys.github.io/ms_onlineTest/v3/payment.html)
+## [기본 결과](https://bn-sys.github.io/ms_onlineTest/v3/result-basic.html)
+## [상세 결과](https://bn-sys.github.io/ms_onlineTest/v3/result-detail.html)
+
 
 ## 요구사항 요약
 
