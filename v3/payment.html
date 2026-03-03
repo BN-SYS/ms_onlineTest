@@ -20,10 +20,9 @@
             <p class="description">지금 바로 <strong>나의 결과</strong>를 확인하세요</p>
         </div>
 
-
         <div class="payment-options">
-            <!-- 기본 결과 -->
-            <div class="payment-card" onclick="selectPayment('basic')">
+            <!-- ✅ 기본 결과 - 카드 클릭 시 결제 진행 -->
+            <div class="payment-card" onclick="processPayment('basic')">
                 <div class="card-tag">빠른 확인</div>
                 <h3>기본 결과</h3>
                 
@@ -35,6 +34,7 @@
                     <div class="price">
                         14,900<small>원</small>
                     </div>
+                    <div class="price-description" style="color: white;">-</div>
                 </div>
 
                 <ul class="benefits-list">
@@ -43,13 +43,14 @@
                     <li>이메일 즉시 발송 (5분 이내)</li>
                 </ul>
 
-                <button class="payment-btn" onclick="event.stopPropagation(); processPayment('basic')">
+                <!-- ✅ stopPropagation 제거 (카드 클릭과 동일하게 동작) -->
+                <button class="payment-btn" onclick="processPayment('basic')">
                     <span class="btn-text">지금 바로 결제하고 결과 확인</span>
                 </button>
             </div>
 
-            <!-- 상세 리포트 -->
-            <div class="payment-card premium" onclick="selectPayment('detail')">
+            <!-- ✅ 상세 리포트 - 카드 클릭 시 결제 진행 -->
+            <div class="payment-card premium" onclick="processPayment('detail')">
                 <div class="most-popular">
                     <span>83%가 선택</span>
                 </div>
@@ -79,7 +80,8 @@
                     <span class="comparison-value">3배 더 많은 정보</span>
                 </div>
 
-                <button class="payment-btn premium-btn" onclick="event.stopPropagation(); processPayment('detail')">
+                <!-- ✅ stopPropagation 제거 -->
+                <button class="payment-btn premium-btn" onclick="processPayment('detail')">
                     <span class="btn-text">상세 리포트로 완벽 분석하기</span>
                 </button>
             </div>
@@ -92,6 +94,7 @@
 
     <!-- include.js 추가 -->
     <script src="js/include.js"></script>
+    <script src="js/payment.js"></script> <!-- ✅ 결제 로직 스크립트 추가 -->
 </body>
 
 </html>

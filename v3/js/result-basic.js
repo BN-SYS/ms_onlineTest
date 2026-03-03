@@ -438,7 +438,7 @@ function shareResult() {
 ======================================== */
 function upgradeToDetail() {
     // 결제 확인 팝업
-    const confirmMsg = `상세 리포트 업그레이드\n\n결제 금액: 5,000원\n\n추가 제공 내용:\n- 표준편차 그래프 4개\n- 단계별 상세 분석\n- 개선 방향 가이드\n- PDF 다운로드\n\n결제를 진행하시겠습니까?`;
+    const confirmMsg = `상세 리포트 업그레이드\n\n결제 금액: 9,000원\n\n추가 제공 내용:\n- 분석 그래프 4개\n- 단계별 분석\n- 개선 방향 가이드\n- PDF 다운로드\n\n결제를 진행하시겠습니까?`;
 
     if (confirm(confirmMsg)) {
         // 결제 진행 표시
