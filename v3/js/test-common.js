@@ -337,7 +337,7 @@ class TestManager {
 
     // 마지막 문제면 제출 확인, 아니면 자동 다음
     if (this.currentQuestionIndex === this.selectedQuestions.length - 1) {
-      if (confirm('마지막 문제입니다. 제출하시겠습니까?')) {
+      if (confirm(`${this.config.stage}단계 마지막 문제입니다. 제출하시겠습니까?`)) {
         this.submitStage();
       }
     } else {
