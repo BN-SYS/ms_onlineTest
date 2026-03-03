@@ -27,24 +27,35 @@
             <div class="sample-box-compact">
                 <span class="sample-label">예제 문제</span>
                 <div class="sample-question">
-                    다음 수열의 규칙을 찾아 빈칸에 들어갈 숫자를 고르세요.
+                    Q. 물음표(?)로 표시된 곳에 들어갈 가장 적절한 정답을 보기 중에 선택하세요.
                 </div>
 
-                <div class="sample-sequence">
-                    2 &nbsp; 5 &nbsp; 10 &nbsp; 17 &nbsp; 26 &nbsp; ?
+                <!-- 샘플 문제 이미지 -->
+                <div class="sample-image-container">
+                    <img src="image/sample.jpg" alt="샘플 문제" class="sample-question-image">
                 </div>
 
-                <div class="sample-options-compact">
-                    <div class="sample-option-compact" onclick="selectSample(this, false)">A. 35</div>
-                    <div class="sample-option-compact" onclick="selectSample(this, true)">B. 37</div>
-                    <div class="sample-option-compact" onclick="selectSample(this, false)">C. 39</div>
-                    <div class="sample-option-compact" onclick="selectSample(this, false)">D. 41</div>
+                <!-- 샘플 보기 (이미지) -->
+                <div class="sample-options-image">
+                    <div class="sample-option-image" onclick="selectSample(this, false, 1)">
+                        <img src="image/sample_01.jpg" alt="보기 1">
+                    </div>
+                    <div class="sample-option-image" onclick="selectSample(this, true, 2)">
+                        <img src="image/sample_02.jpg" alt="보기 2">
+                    </div>
+                    <div class="sample-option-image" onclick="selectSample(this, false, 3)">
+                        <img src="image/sample_03.jpg" alt="보기 3">
+                    </div>
+                    <div class="sample-option-image" onclick="selectSample(this, false, 4)">
+                        <img src="image/sample_04.jpg" alt="보기 4">
+                    </div>
                 </div>
 
                 <div class="sample-hint-compact" id="sampleHint">
-                    <strong>💡 정답 해설</strong>
-                    각 항의 차이: 3, 5, 7, 9, 11... (홀수씩 증가)<br>
-                    <strong>따라서 26 + 11 = 37</strong>
+                    <strong>💡 정답 해설</strong><br>
+                    첫 번째 식: □ + ● = (□ 안의 ●)<br>
+                    두 번째 식: ◇ 안의 ● - ◇ = ?<br>
+                    <strong>따라서 정답은 B. ●</strong>
                 </div>
             </div>
         </div>
