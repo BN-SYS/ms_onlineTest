@@ -76,44 +76,44 @@
     color: white;
 }
 
+/* ========================================
+   배너 헤더 - 날짜를 온라인 테스트 결과와 일렬 배치
+======================================== */
+
 .banner-header {
     display: flex;
-    align-items: center;
-    gap: 25px;
-    margin-bottom: 16px;
+    align-items: flex-start;
+    gap: 20px;
+    position: relative;
 }
 
 /* MENSA 씰 */
 .banner-seal {
-    width: 65px;
-    height: 65px;
-    border: 3px solid #d4af37;
-    border-radius: 50%;
+    width: 120px;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #d4af37;
-    background: rgba(212, 175, 55, 0.1);
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
     flex-shrink: 0;
     position: relative;
+    overflow: hidden;
+    padding: 0;
 }
 
-.banner-seal::before {
-    content: '';
-    position: absolute;
-    width: 55px;
-    height: 55px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 50%;
+.banner-seal img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
 }
 
 /* 타이틀 그룹 */
 .banner-title-group {
     flex: 1;
+    padding-right: 0; /* 패딩 제거 */
+    color: #ffffff;
+    margin-top: 16px;
 }
 
 .banner-main-title {
@@ -121,7 +121,6 @@
     font-weight: 700;
     margin: 0 0 6px 0;
     letter-spacing: 2px;
-    color: #ffffff;
     font-family: 'Georgia', serif;
     text-transform: uppercase;
     line-height: 1.2;
@@ -130,58 +129,64 @@
 .banner-subtitle {
     font-size: 11px;
     font-weight: 400;
-    margin: 0 0 8px 0;
-    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 12px 0;
     font-family: 'Arial', sans-serif;
     letter-spacing: 1px;
+    font-style: italic;
 }
 
-/* 구분선 */
+/* 구분선 제거 */
 .banner-divider {
-    width: 70px;
-    height: 2px;
-    background: linear-gradient(90deg, #d4af37 0%, transparent 100%);
-    margin: 8px 0;
+    display: none;
+}
+
+/* 온라인 테스트 결과 + 날짜 일렬 배치 */
+.banner-korean-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 4px;
+    margin-top: 8px;
 }
 
 .banner-korean {
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
     margin: 0;
-    color: rgba(255, 255, 255, 0.9);
     letter-spacing: 0.5px;
 }
 
-/* 메타 정보 - 우측 정렬 */
-.banner-meta {
+.banner-date-inline {
     display: flex;
-    justify-content: flex-end;
-    gap: 35px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
 }
 
-.banner-meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: flex-end;
-}
-
-.meta-label {
-    font-size: 9px;
+.banner-date-inline .date-label {
+    font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.6);
-    font-family: 'Arial', sans-serif;
 }
 
-.meta-value {
-    font-size: 12px;
-    font-weight: 600;
-    color: #d4af37;
-    letter-spacing: 0.5px;
+.banner-date-inline .date-value {
+    font-size: 13px;
+    font-weight: 800;
     font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+    color: #d4af37;
+}
+
+/* 배너 날짜 박스 숨김 */
+.banner-date-box {
+    display: none;
+}
+
+/* 기존 배너 메타 숨김 */
+.banner-meta {
+    display: none;
 }
 
 /* ========================================
@@ -193,6 +198,7 @@
     padding-right: 18mm;
 }
 
+.result-page>.user-info-card:first-of-type,
 .result-page>.cert-card:first-of-type {
     margin-top: 15px;
 }
@@ -203,7 +209,7 @@
 }
 
 /* ========================================
-   기존 헤더 숨김
+   베이직 결과 헤더 - 타이틀과 날짜 일렬 배치
 ======================================== */
 
 .result-page-header {
@@ -213,40 +219,141 @@
 .result-page.basic-result .result-page-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    padding-bottom: 10px;
-    border-bottom: 3px solid #1a1a2e;
-    margin-bottom: 15px;
+    align-items: center;
+    padding: 20px 0 15px 0;
+    border-bottom: 2px solid #1a1a2e;
+    margin-bottom: 20px;
 }
 
 .result-page.basic-result {
     padding: 15mm 18mm;
 }
 
-.logo-section h1 {
-    font-size: 28px;
-    font-weight: 800;
-    color: #1a1a2e;
-    margin: 0;
-    letter-spacing: 1.2px;
+.header-title-section {
+    flex: 1;
 }
 
-.subtitle {
-    font-size: 11px;
+.header-title-section h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin: 0 0 4px 0;
+    letter-spacing: 1px;
+    line-height: 1.2;
+}
+
+.header-subtitle {
+    font-size: 12px;
     color: #666;
-    margin: 3px 0 0 0;
+    margin: 0;
     font-weight: 500;
 }
 
-.date-section {
-    font-size: 11px;
-    color: #d4af37;
-    text-align: right;
-    font-weight: 600;
+.header-date-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.date-label {
+    font-size: 9px;
+    color: #999;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.date-value {
+    font-size: 13px;
+    color: #1a1a2e;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
 }
 
 /* ========================================
-   인증 정보 카드
+   테스트 메타 정보 (날짜 + 소요시간) - 사용 안함
+======================================== */
+
+.test-meta-info {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 30px;
+    padding: 0 0 12px 0;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+    margin-bottom: 15px;
+}
+
+.meta-date,
+.meta-time {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.test-meta-info .meta-label {
+    font-size: 9px;
+    color: #999;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.test-meta-info .meta-value {
+    font-size: 12px;
+    color: #1a1a2e;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+}
+
+/* ========================================
+   사용자 정보 카드
+======================================== */
+
+.user-info-card {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.05) 0%, rgba(212, 175, 55, 0.08) 100%);
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+}
+
+.info-label {
+    font-size: 10px;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 13px;
+    color: #1a1a2e;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.verification-code {
+    font-family: 'Courier New', monospace;
+    color: #d4af37;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+/* ========================================
+   인증 정보 카드 (기존 호환)
 ======================================== */
 
 .cert-card {
@@ -287,7 +394,6 @@
     font-weight: 700;
     word-break: break-word;
 }
-
 
 /* ========================================
    종합 점수 섹션 (detail)
@@ -330,14 +436,69 @@
 }
 
 .score-percentile {
-    color: #ffffff;  /* 흰색으로 변경 */
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 8px;
 }
 
+.score-rank {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-top: 8px;
+}
 
 /* ========================================
-   종합 점수 섹션 (basic)
+   종합 점수 섹션 (basic) - 새 구조
 ======================================== */
 
+.total-score-section {
+    padding: 0;
+    margin: 0 0 15px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.main-score-display {
+    width: 100%;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white;
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.main-score-display .score-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 12px;
+}
+
+.main-score-display .score-value {
+    font-size: 56px;
+    font-weight: 700;
+    color: #d4af37;
+    line-height: 1;
+}
+
+.main-score-display .score-unit {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-left: 8px;
+}
+
+.main-score-display .score-percentile {
+    font-size: 18px;
+    color: #ffffff;
+    margin-top: 12px;
+    font-weight: 600;
+}
+
+/* 기존 호환성 유지 */
 .score-section.basic {
     display: block;
     padding: 0;
@@ -367,8 +528,50 @@
 }
 
 /* ========================================
-   해석 섹션 (Interpretation Section)
+   결과 해석 섹션
 ======================================== */
+
+.result-interpretation-section {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #d4af37;
+}
+
+.interpretation-content {
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.03) 0%, rgba(212, 175, 55, 0.05) 100%);
+    padding: 16px;
+    border-radius: 10px;
+    border-left: 4px solid #d4af37;
+    line-height: 1.7;
+}
+
+.interpretation-content h4 {
+    font-size: 15px;
+    color: #1a1a2e;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+
+.interpretation-content p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #555;
+    margin: 0;
+}
+
+/* ========================================
+   기존 해석 섹션 (호환성)
+======================================== */
+
 .interpretation-section {
     margin-bottom: 15px;
     width: 100%;
@@ -394,7 +597,6 @@
     color: #1a1a2e;
 }
 
-/* 베이직 결과용 해석 박스 */
 .interpretation-section.basic {
     width: 100%;
     box-sizing: border-box;
@@ -427,8 +629,101 @@
 }
 
 /* ========================================
-   업그레이드 CTA (Upgrade Call-To-Action)
+   업그레이드 프로모션 섹션
 ======================================== */
+
+.upgrade-promotion-section {
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.03) 0%, rgba(212, 175, 55, 0.08) 100%);
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.promotion-header h3 {
+    font-size: 18px;
+    color: #1a1a2e;
+    margin: 0 0 6px 0;
+    font-weight: 700;
+}
+
+.promotion-subtitle {
+    font-size: 11px;
+    color: #666;
+    margin: 0 0 15px 0;
+}
+
+.promotion-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.feature-icon {
+    color: #27ae60;
+    font-weight: 900;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.feature-text {
+    font-size: 11px;
+    color: #1a1a2e;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.upgrade-button {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    border: 2px solid #d4af37;
+    padding: 14px 35px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.upgrade-button:hover {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
+}
+
+.button-text {
+    font-size: 14px;
+}
+
+.button-arrow {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* ========================================
+   기존 업그레이드 CTA (호환성)
+======================================== */
+
 .upgrade-cta {
     background: linear-gradient(135deg, rgba(26, 26, 46, 0.03) 0%, rgba(212, 175, 55, 0.08) 100%);
     border: 2px solid #d4af37;
@@ -458,30 +753,6 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
     margin-bottom: 15px;
-}
-
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    background: white;
-    padding: 9px 11px;
-    border-radius: 8px;
-    text-align: left;
-    box-shadow: 0 2px 4px rgba(212, 175, 55, 0.1);
-    border: 1px solid rgba(212, 175, 55, 0.1);
-}
-
-.feature-icon {
-    font-size: 16px;
-    flex-shrink: 0;
-}
-
-.feature-text {
-    font-size: 11px;
-    color: #1a1a2e;
-    font-weight: 600;
-    line-height: 1.3;
 }
 
 .upgrade-btn {
@@ -544,33 +815,24 @@
 }
 
 /* ========================================
-   단계별 성적
+   단계별 성적 - 5개 일렬 배치 (데스크톱)
 ======================================== */
 
 .stages-section {
     margin-bottom: 16px;
 }
 
-.section-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin: 0 0 10px 0;
-    padding-bottom: 6px;
-    border-bottom: 2px solid #d4af37;
-}
-
 .stages-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
 }
 
 .stage-item {
     background: white;
     border: 2px solid rgba(212, 175, 55, 0.2);
     border-radius: 10px;
-    padding: 11px;
+    padding: 10px 8px;
     text-align: center;
     transition: all 0.3s;
 }
@@ -582,29 +844,37 @@
 }
 
 .stage-item h5 {
-    font-size: 11px;
+    font-size: 10px;
     color: #666;
     margin: 0 0 6px 0;
     font-weight: 600;
+    line-height: 1.2;
 }
 
 .stage-score {
-    font-size: 19px;
+    font-size: 18px;
     color: #1a1a2e;
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
 }
 
 .stage-rate {
-    font-size: 10px;
+    font-size: 9px;
     color: #999;
 }
 
 .stage-percentile {
-    font-size: 9px;
+    font-size: 8px;
     color: #d4af37;
     font-weight: 600;
     margin-top: 3px;
+}
+
+.stage-detail {
+    font-size: 8px;
+    color: #666;
+    margin-top: 4px;
+    line-height: 1.3;
 }
 
 /* ========================================
@@ -689,27 +959,43 @@ canvas {
 }
 
 /* ========================================
-   푸터
+   푸터 - 작은 문구로 수정
 ======================================== */
 
 .result-page-footer {
     text-align: center;
-    font-size: 9px;
+    font-size: 10px;
     color: #999;
     border-top: 1px solid rgba(212, 175, 55, 0.2);
     padding-top: 10px;
     margin-top: auto;
+    line-height: 1.8;
+}
+
+.footer-disclaimer {
+    font-size: 10px;
+    color: #666;
+    margin: 0 0 6px 0;
 }
 
 .footer-notice {
-    margin-top: 4px;
-    color: #666;
+    font-size: 10px;
+    color: #999;
+    margin: 0 0 4px 0;
+}
+
+.footer-warning {
+    font-size: 10px;
+    color: #d4af37;
+    margin: 0;
+    font-weight: 600;
 }
 
 /* ========================================
    액션 버튼
 ======================================== */
 
+.action-buttons-container,
 .action-buttons-wrapper {
     display: flex;
     justify-content: center;
@@ -718,6 +1004,7 @@ canvas {
     flex-wrap: wrap;
 }
 
+.action-button,
 .action-btn {
     background: white;
     border: 2px solid rgba(212, 175, 55, 0.3);
@@ -728,13 +1015,21 @@ canvas {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
+.action-button:hover,
 .action-btn:hover {
     background: rgba(212, 175, 55, 0.05);
     border-color: #d4af37;
     color: #1a1a2e;
     transform: translateY(-2px);
+}
+
+.button-icon {
+    font-size: 16px;
 }
 
 .action-btn.primary {
@@ -771,14 +1066,44 @@ canvas {
         padding: 15px;
     }
 
-    /* basic-result 직계 자식 전체 너비 통일 */
-    .result-page.basic-result > * {
+    .result-page.basic-result>* {
         width: 100%;
         box-sizing: border-box;
     }
 
+    /* 헤더 반응형 */
+    .result-page.basic-result .result-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 15px 0 12px 0;
+    }
+
+    .header-title-section h1 {
+        font-size: 20px;
+    }
+
+    .header-subtitle {
+        font-size: 11px;
+    }
+
+    .header-date-section {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .date-label {
+        font-size: 8px;
+    }
+
+    .date-value {
+        font-size: 12px;
+    }
+
+    /* 배너 반응형 */
     .banner-content {
-        padding: 20px 20px 18px 20px;
+        padding: 70px 20px 18px 20px;
+        /* 상단 패딩 증가 */
     }
 
     .banner-header {
@@ -786,18 +1111,18 @@ canvas {
         align-items: center;
         text-align: center;
         gap: 12px;
-        margin-bottom: 15px;
+        padding-top: 0;
+        /* 패딩 제거 */
+    }
+
+    .banner-title-group {
+        padding-right: 0;
+        /* 패딩 제거 */
     }
 
     .banner-seal {
-        width: 55px;
-        height: 55px;
-        font-size: 24px;
-    }
-
-    .banner-seal::before {
-        width: 45px;
-        height: 45px;
+        width: 100px;
+        height: 100px;
     }
 
     .banner-main-title {
@@ -817,14 +1142,31 @@ canvas {
         margin: 6px auto;
     }
 
-    .banner-meta {
-        justify-content: center;
-        gap: 25px;
-        flex-wrap: wrap;
+    .banner-date-box {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        left: auto;
+        padding: 10px 16px;
     }
 
-    .banner-meta-item {
-        align-items: center;
+    .banner-date-label {
+        font-size: 8px;
+    }
+
+    .banner-date-value {
+        font-size: 14px;
+    }
+
+    .test-meta-info {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+    }
+
+    .user-info-card {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 
     .cert-card {
@@ -837,7 +1179,6 @@ canvas {
         grid-template-columns: 1fr;
     }
 
-    /* detail score-section */
     .score-section {
         grid-template-columns: 1fr;
         gap: 10px;
@@ -851,7 +1192,7 @@ canvas {
         font-size: 40px;
     }
 
-    /* basic score-section - 다른 요소와 동일한 너비 */
+    .total-score-section,
     .score-section.basic {
         display: block;
         width: 100%;
@@ -860,26 +1201,29 @@ canvas {
         margin: 0 0 15px 0;
     }
 
+    .main-score-display,
     .score-section.basic .main-score-box.large {
         width: 100%;
         box-sizing: border-box;
     }
 
-    /* basic 해석 섹션 - 다른 요소와 동일한 너비 */
+    .result-interpretation-section,
     .interpretation-section.basic,
     .interpretation-section.basic .interpretation-box.simple,
     .result-page.basic-result .section-title,
+    .upgrade-promotion-section,
     .upgrade-cta {
         width: 100%;
         box-sizing: border-box;
     }
 
+    .promotion-features,
     .upgrade-features {
         grid-template-columns: 1fr;
     }
 
     .stages-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
     }
 
@@ -888,14 +1232,30 @@ canvas {
         gap: 10px;
     }
 
+    .action-buttons-container,
     .action-buttons-wrapper {
         flex-direction: column;
         padding: 0 15px;
     }
 
+    .action-button,
     .action-btn {
         width: 100%;
         justify-content: center;
+    }
+
+    /* 푸터 반응형 */
+    .result-page-footer {
+        font-size: 8px;
+    }
+
+    .footer-disclaimer {
+        font-size: 8px;
+    }
+
+    .footer-notice,
+    .footer-warning {
+        font-size: 8px;
     }
 }
 
@@ -904,20 +1264,33 @@ canvas {
 ======================================== */
 
 @media (max-width: 480px) {
+
+    /* 헤더 반응형 */
+    .header-title-section h1 {
+        font-size: 18px;
+        letter-spacing: 0.5px;
+    }
+
+    .header-subtitle {
+        font-size: 10px;
+    }
+
+    .date-value {
+        font-size: 11px;
+    }
+
+    /* 배너 반응형 */
     .banner-content {
-        padding: 18px 15px 16px 15px;
+        padding: 60px 15px 16px 15px;
+    }
+
+    .banner-header {
+        padding-top: 0;
     }
 
     .banner-seal {
-        width: 50px;
-        height: 50px;
-        font-size: 10px;
-        border-width: 2px;
-    }
-
-    .banner-seal::before {
-        width: 40px;
-        height: 40px;
+        width: 80px;
+        height: 80px;
     }
 
     .banner-main-title {
@@ -933,25 +1306,38 @@ canvas {
         font-size: 12px;
     }
 
-    .banner-meta {
-        gap: 18px;
+    .banner-date-box {
+        top: 12px;
+        right: 12px;
+        padding: 8px 14px;
     }
 
-    .meta-label {
-        font-size: 8px;
+    .banner-date-label {
+        font-size: 7px;
     }
 
-    .meta-value {
-        font-size: 11px;
+    .banner-date-value {
+        font-size: 13px;
     }
 
-    /* basic-result 직계 자식 전체 너비 통일 */
-    .result-page.basic-result > * {
+    .test-meta-info {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        padding: 0 0 10px 0;
+    }
+
+    .result-page.basic-result>* {
         width: 100%;
         box-sizing: border-box;
     }
 
-    /* basic score-section - 다른 요소와 동일한 너비 */
+    .user-info-card {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .total-score-section,
     .score-section.basic {
         display: block;
         width: 100%;
@@ -960,18 +1346,44 @@ canvas {
         margin: 0 0 15px 0;
     }
 
+    .main-score-display,
     .score-section.basic .main-score-box.large {
         width: 100%;
         box-sizing: border-box;
     }
 
-    /* basic 해석 섹션 - 다른 요소와 동일한 너비 */
+    .main-score-display .score-value {
+        font-size: 48px;
+    }
+
+    .result-interpretation-section,
     .interpretation-section.basic,
     .interpretation-section.basic .interpretation-box.simple,
     .result-page.basic-result .section-title,
+    .upgrade-promotion-section,
     .upgrade-cta {
         width: 100%;
         box-sizing: border-box;
+    }
+
+    .stages-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    /* 푸터 반응형 */
+    .result-page-footer {
+        font-size: 7px;
+        padding-top: 10px;
+    }
+
+    .footer-disclaimer {
+        font-size: 7px;
+    }
+
+    .footer-notice,
+    .footer-warning {
+        font-size: 7px;
     }
 }
 
@@ -1016,6 +1428,13 @@ canvas {
         box-shadow: none;
     }
 
+    .banner-date-box {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: linear-gradient(135deg, #d4af37 0%, #c4992d 100%) !important;
+    }
+
+    .action-buttons-container,
     .action-buttons-wrapper,
     #header-placeholder,
     #footer-placeholder {
@@ -1024,6 +1443,16 @@ canvas {
 
     .result-page-footer {
         padding-bottom: 15mm;
+        font-size: 8px;
+    }
+
+    .footer-disclaimer {
+        font-size: 9px;
+    }
+
+    .footer-notice,
+    .footer-warning {
+        font-size: 8px;
     }
 }
 

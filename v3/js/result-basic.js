@@ -103,8 +103,8 @@ function loadBasicResult() {
         console.log('종합점수 표시:', scoreResult.totalScore);
     }
     if (percentileElem) {
-        percentileElem.textContent = scoreResult.percentile;
-        console.log('백분위 표시:', scoreResult.percentile);
+        percentileElem.textContent = scoreResult.scoreRank;  // 상위권/중위권/하위권 표시
+        console.log('등급 표시:', scoreResult.scoreRank);
     }
 
     // 단계별 점수 표시
@@ -219,6 +219,7 @@ function generateVerifyCode(input) {
 
     return verifyCode;
 }
+
 /* ========================================
    점수 계산 (100점 만점 + 연령 보정)
 ======================================== */
@@ -267,22 +268,23 @@ function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
     // 종합 점수 (3단계 평균)
     const totalScore = Math.round((stage1Score + stage2Score + stage3Score) / 3);
 
+    // 점수 기반 등급 판정
+    const scoreRank = getScoreRank(totalScore);
+
     console.log('단계별 점수:', {
         stage1Score,
         stage2Score,
         stage3Score,
-        totalScore
+        totalScore,
+        scoreRank
     });
 
     return {
         totalScore: totalScore,
-        percentile: getPercentile(totalScore),
+        scoreRank: scoreRank,  // 상위권/중위권/하위권
         stage1Score: stage1Score,
-        stage1Percentile: getPercentile(stage1Score),
         stage2Score: stage2Score,
-        stage2Percentile: getPercentile(stage2Score),
         stage3Score: stage3Score,
-        stage3Percentile: getPercentile(stage3Score),
         ageAdjustment: ageAdjustment
     };
 }
@@ -310,17 +312,12 @@ function calculateStageScore(correctCount, baseScore, pointPerQuestion, ageAdjus
 }
 
 /* ========================================
-   백분위 계산 (100점 만점 기준)
+   점수 기반 등급 (상위권/중위권/하위권)
 ======================================== */
-function getPercentile(score) {
-    if (score >= 95) return '상위 1%';
-    if (score >= 90) return '상위 2%';
-    if (score >= 85) return '상위 5%';
-    if (score >= 75) return '상위 10%';
-    if (score >= 65) return '상위 25%';
-    if (score >= 55) return '상위 50%';
-    if (score >= 45) return '하위 50%';
-    return '하위 75%';
+function getScoreRank(score) {
+    if (score >= 85) return '상위권';
+    if (score >= 65) return '중위권';
+    return '하위권';
 }
 
 /* ========================================
@@ -349,7 +346,7 @@ function displayStageScores(scoreResult) {
 }
 
 /* ========================================
-   해석 표시
+   해석 표시 (상위권/중위권/하위권 기준)
 ======================================== */
 function displayInterpretation(scoreResult) {
     const container = document.getElementById('interpretationBox');
@@ -363,25 +360,25 @@ function displayInterpretation(scoreResult) {
 
     if (scoreResult.totalScore >= 95) {
         level = '최상위 수준';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 전체 응시자 중 <strong>${scoreResult.percentile}</strong>에 해당합니다. 멘사 회원 수준의 뛰어난 지능을 보유하고 계십니다. 공식 멘사 입회 테스트 합격 가능성이 매우 높습니다.`;
+        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 멘사 회원 수준의 뛰어난 지능을 보유하고 계십니다. 공식 멘사 입회 테스트 합격 가능성이 매우 높습니다.`;
     } else if (scoreResult.totalScore >= 90) {
         level = '매우 우수';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.percentile}</strong>에 해당합니다. 우수한 인지 능력을 가지고 계십니다. 멘사 공식 테스트에 도전해보시길 권장드립니다.`;
+        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 우수한 인지 능력을 가지고 계십니다. 멘사 공식 테스트에 도전해보시길 권장드립니다.`;
     } else if (scoreResult.totalScore >= 85) {
         level = '우수';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.percentile}</strong>에 해당합니다. 평균보다 훨씬 높은 인지 능력을 보유하고 있으며, 논리적 사고와 문제 해결 능력이 뛰어납니다.`;
+        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 평균보다 훨씬 높은 인지 능력을 보유하고 있으며, 논리적 사고와 문제 해결 능력이 뛰어납니다.`;
     } else if (scoreResult.totalScore >= 75) {
         level = '평균 상위';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.percentile}</strong>에 해당합니다. 평균 이상의 능력을 보유하고 계십니다. 추가 학습과 훈련을 통해 더욱 발전할 수 있습니다.`;
+        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 평균 이상의 능력을 보유하고 계십니다. 추가 학습과 훈련을 통해 더욱 발전할 수 있습니다.`;
     } else if (scoreResult.totalScore >= 65) {
         level = '평균 중상';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.percentile}</strong>에 해당합니다. 평균 수준의 인지 능력을 가지고 계십니다. 꾸준한 노력으로 향상 가능합니다.`;
+        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 평균 수준의 인지 능력을 가지고 계십니다. 꾸준한 노력으로 향상 가능합니다.`;
     } else if (scoreResult.totalScore >= 55) {
         level = '평균';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 평균 수준입니다. 일반적인 인지 능력을 가지고 있으며, 충분한 휴식 후 재응시하시면 더 좋은 결과를 얻으실 수 있습니다.`;
+        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 일반적인 인지 능력을 가지고 있으며, 충분한 휴식 후 재응시하시면 더 좋은 결과를 얻으실 수 있습니다.`;
     } else {
         level = '발전 가능';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>입니다. 아직 발전 가능성이 많습니다. 충분한 휴식 후 재도전을 권장합니다.`;
+        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 아직 발전 가능성이 많습니다. 충분한 휴식 후 재도전을 권장합니다.`;
     }
 
     container.innerHTML = `
@@ -389,7 +386,7 @@ function displayInterpretation(scoreResult) {
         <p>${description}</p>
     `;
 
-    console.log('해석 표시 완료:', { level, totalScore: scoreResult.totalScore });
+    console.log('해석 표시 완료:', { level, totalScore: scoreResult.totalScore, scoreRank: scoreResult.scoreRank });
 }
 
 /* ========================================
@@ -420,8 +417,8 @@ function shareResult() {
     }
 
     const score = totalScoreElem.textContent;
-    const percentile = percentileElem.textContent;
-    const text = `나의 멘사 테스트 점수는 ${score}! (${percentile}) 멘사 온라인 테스트로 확인하세요!`;
+    const rank = percentileElem.textContent;  // 상위권/중위권/하위권
+    const text = `나의 멘사 테스트 점수는 ${score} (${rank})! 멘사 온라인 테스트로 확인하세요!`;
 
     if (navigator.share) {
         navigator.share({

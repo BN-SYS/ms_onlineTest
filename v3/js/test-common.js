@@ -1,6 +1,6 @@
 /* ========================================
    js/test-common.js
-   전체 단계 공통 로직 + 검증 팩토리
+   전체 단계 공통 로직 + 검증 팩토리 + 우클릭 방지
 ======================================== */
 
 class TestManager {
@@ -18,6 +18,9 @@ class TestManager {
 
   /* ========== 초기화 ========== */
   init() {
+    // ✅ 우클릭 방지 초기화
+    this.initSecurityMeasures();
+
     if (!this.validatePreviousStages()) {
       alert('잘못된 접근입니다. 이전 단계가 완료되지 않았습니다.');
       location.href = 'index.html';
@@ -38,6 +41,90 @@ class TestManager {
     this.startTimer();
     this.questionStartTimes[0] = Date.now();
     this.updateNavigationButtons();
+  }
+
+  /* ========== ✅ 보안 조치 초기화 (우클릭 방지 등) ========== */
+  initSecurityMeasures() {
+    // 1. 우클릭(컨텍스트 메뉴) 방지
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    }, false);
+
+    // 2. 개발자 도구 단축키 방지
+    document.addEventListener('keydown', function(e) {
+      // F12
+      if (e.key === 'F12') {
+        e.preventDefault();
+        return false;
+      }
+      // Ctrl+Shift+I (개발자 도구)
+      if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+        e.preventDefault();
+        return false;
+      }
+      // Ctrl+Shift+J (콘솔)
+      if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+        e.preventDefault();
+        return false;
+      }
+      // Ctrl+U (소스 보기)
+      if (e.ctrlKey && e.key === 'U') {
+        e.preventDefault();
+        return false;
+      }
+      // Ctrl+S (저장)
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        return false;
+      }
+      // Ctrl+Shift+C (요소 선택)
+      if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+        e.preventDefault();
+        return false;
+      }
+    }, false);
+
+    // 3. 드래그 방지
+    document.addEventListener('dragstart', function(e) {
+      e.preventDefault();
+      return false;
+    }, false);
+
+    // 4. 이미지 드래그 방지 (추가 보안)
+    document.addEventListener('DOMContentLoaded', function() {
+      const images = document.querySelectorAll('img');
+      images.forEach(img => {
+        img.ondragstart = function() { return false; };
+        img.oncontextmenu = function() { return false; };
+      });
+    });
+
+    // 5. 선택 방지 CSS 동적 추가
+    if (!document.getElementById('security-style')) {
+      const style = document.createElement('style');
+      style.id = 'security-style';
+      style.textContent = `
+        body {
+          user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+        }
+        img {
+          pointer-events: none;
+          user-select: none;
+          -webkit-user-drag: none;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // 6. 콘솔 경고 메시지
+    console.clear();
+    console.log('%c⚠️ 경고', 'color: red; font-size: 40px; font-weight: bold;');
+    console.log('%c이 페이지의 콘솔을 사용하여 테스트를 조작하는 것은 부정행위입니다.\n모든 활동이 기록되고 있습니다.', 
+                'color: orange; font-size: 16px;');
   }
 
   /* ========== 이전 단계 검증 ========== */
@@ -140,6 +227,9 @@ class TestManager {
       questionImg.onerror = () => {
         questionImg.src = 'https://via.placeholder.com/750x400?text=이미지+로드+실패';
       };
+      // ✅ 이미지 보안 속성 추가
+      questionImg.ondragstart = function() { return false; };
+      questionImg.oncontextmenu = function() { return false; };
     }
 
     // 문제 번호
@@ -183,6 +273,14 @@ class TestManager {
              onerror="this.src='https://via.placeholder.com/140?text=보기+${choice.id}'" />
       `;
       item.onclick = () => this.selectChoice(choice.id, questionId);
+      
+      // ✅ 보기 이미지 보안 속성 추가
+      const img = item.querySelector('img');
+      if (img) {
+        img.ondragstart = function() { return false; };
+        img.oncontextmenu = function() { return false; };
+      }
+      
       grid.appendChild(item);
     });
   }
@@ -276,33 +374,52 @@ class TestManager {
   }
 
   /* ========== 단계 제출 + 채점 + 검증 ========== */
-  submitStage() {
+ /* ========================================
+   js/test-common.js 수정 버전
+   submitStage 메서드 수정
+======================================== */
+
+/* ========== 단계 제출 + 채점 + 검증 ========== */
+submitStage() {
     clearInterval(this.timerInterval);
 
     // 현재 문제 미응답 시 null 처리
     if (!this.userAnswers[this.currentQuestionIndex]) {
-      this.userAnswers[this.currentQuestionIndex] = null;
-      this.questionEndTimes[this.currentQuestionIndex] = Date.now();
+        this.userAnswers[this.currentQuestionIndex] = null;
+        this.questionEndTimes[this.currentQuestionIndex] = Date.now();
     }
 
+    // ✅ 3단계 마지막 문제 제출 시 메타인지 모달 표시
+    if (this.config.stage === 3) {
+        console.log('3단계 완료 - 메타인지 모달 표시');
+        showMetacognitionModal();
+        return; // 여기서 중단, 모달에서 제출 완료 시 processSubmission() 호출됨
+    }
+
+    // 3단계가 아닌 경우 바로 제출 처리
+    this.processSubmission();
+}
+
+// ✅ 실제 제출 처리 로직 (메타인지 모달 완료 후 호출됨)
+processSubmission() {
     // 채점
     let correctCount = 0;
     let totalTime = 0;
     let answeredCount = 0;
 
     this.selectedQuestions.forEach((question, i) => {
-      const answer = this.userAnswers[i];
-      if (answer && typeof answer === 'object' && answer.choiceId) {
-        const correctChoice = question.choices.find((c) => c.isCorrect);
-        if (correctChoice && answer.choiceId === correctChoice.id) {
-          correctCount++;
+        const answer = this.userAnswers[i];
+        if (answer && typeof answer === 'object' && answer.choiceId) {
+            const correctChoice = question.choices.find((c) => c.isCorrect);
+            if (correctChoice && answer.choiceId === correctChoice.id) {
+                correctCount++;
+            }
+            const qTime = (answer.endTime - answer.startTime) / 1000;
+            totalTime += qTime;
+            answeredCount++;
+        } else {
+            // null → 오답
         }
-        const qTime = (answer.endTime - answer.startTime) / 1000;
-        totalTime += qTime;
-        answeredCount++;
-      } else {
-        // null → 오답
-      }
     });
 
     const correctRate = (correctCount / this.selectedQuestions.length) * 100;
@@ -318,114 +435,102 @@ class TestManager {
 
     // 검증 로직 (있을 경우)
     if (this.config.validation) {
-      const validationResult = this.config.validation(correctRate, avgTimePerQuestion, actualTotalTime);
-      if (!validationResult.passed) {
-        alert(validationResult.message);
-        // 실패 로그 저장
-        this.saveLog({
-          stage: this.config.stage,
-          passed: false,
-          reason: validationResult.reason,
-          correctCount,
-          correctRate: parseFloat(correctRate.toFixed(1)),
-          totalTime: actualTotalTime,
-          avgTimePerQuestion: parseFloat(avgTimePerQuestion.toFixed(1)),
-          answeredCount,
-          totalQuestions: this.selectedQuestions.length
-        });
-
-        // 1단계 실패: 회원정보 유지, 세션·재시도 정보만 갱신
-        if (this.config.stage === 1) {
-          const proceed = confirm(
-            '1단계 검증 실패하였습니다.\n회원정보는 유지되지만, 새로운 세션으로 1단계를 다시 시작합니다.\n계속하시겠습니까?'
-          );
-          if (proceed) {
-            // 기존 userData 불러오기
-            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-            // 새 세션 ID 생성
-            userData.sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).slice(2, 11);
-            // 재시도 횟수 증가
-            userData.retryCount = (userData.retryCount || 0) + 1;
-            userData.lastRetryReason = validationResult.reason;
-            userData.lastRetryTime = new Date().toISOString();
-            // 저장
-            localStorage.setItem('userData', JSON.stringify(userData));
-            // stage1Result만 삭제
-            localStorage.removeItem('stage1Result');
-            // 재시작 로그
+        const validationResult = this.config.validation(correctRate, avgTimePerQuestion, actualTotalTime);
+        if (!validationResult.passed) {
+            alert(validationResult.message);
+            // 실패 로그 저장
             this.saveLog({
-              stage: this.config.stage,
-              action: 'retry_started',
-              sessionId: userData.sessionId,
-              retryCount: userData.retryCount,
-              reason: validationResult.reason
+                stage: this.config.stage,
+                passed: false,
+                reason: validationResult.reason,
+                correctCount,
+                correctRate: parseFloat(correctRate.toFixed(1)),
+                totalTime: actualTotalTime,
+                avgTimePerQuestion: parseFloat(avgTimePerQuestion.toFixed(1)),
+                answeredCount,
+                totalQuestions: this.selectedQuestions.length
             });
-            // 페이지 새로고침 (1단계 첫 문제부터 시작)
-            location.reload();
-          } else {
-            location.href = 'index.html';
-          }
-          return;
-        }
 
-        // 2·3단계 실패: 해당 단계만 재시작
-        const proceed = confirm(
-          `${this.config.stage}단계 검증 실패\n이 단계를 다시 시작하시겠습니까?`
-        );
-        if (proceed) {
-          // 단계별 재시도 카운터 증가
-          const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-          const retryKey = `stage${this.config.stage}RetryCount`;
-          userData[retryKey] = (userData[retryKey] || 0) + 1;
-          localStorage.setItem('userData', JSON.stringify(userData));
-          // 해당 단계 결과 삭제
-          localStorage.removeItem(`stage${this.config.stage}Result`);
-          // 재시작 로그
-          this.saveLog({
-            stage: this.config.stage,
-            action: 'retry_started',
-            retryCount: userData[retryKey],
-            reason: validationResult.reason
-          });
-          // 페이지 새로고침
-          location.reload();
-        } else {
-          location.href = 'index.html';
+            // 1단계 실패: 회원정보 유지, 세션·재시도 정보만 갱신
+            if (this.config.stage === 1) {
+                const proceed = confirm(
+                    '1단계 검증 실패하였습니다.\n회원정보는 유지되지만, 새로운 세션으로 1단계를 다시 시작합니다.\n계속하시겠습니까?'
+                );
+                if (proceed) {
+                    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                    userData.sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).slice(2, 11);
+                    userData.retryCount = (userData.retryCount || 0) + 1;
+                    userData.lastRetryReason = validationResult.reason;
+                    userData.lastRetryTime = new Date().toISOString();
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                    localStorage.removeItem('stage1Result');
+                    this.saveLog({
+                        stage: this.config.stage,
+                        action: 'retry_started',
+                        sessionId: userData.sessionId,
+                        retryCount: userData.retryCount,
+                        reason: validationResult.reason
+                    });
+                    location.reload();
+                } else {
+                    location.href = 'index.html';
+                }
+                return;
+            }
+
+            // 2·3단계 실패: 해당 단계만 재시작
+            const proceed = confirm(
+                `${this.config.stage}단계 검증 실패\n이 단계를 다시 시작하시겠습니까?`
+            );
+            if (proceed) {
+                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                const retryKey = `stage${this.config.stage}RetryCount`;
+                userData[retryKey] = (userData[retryKey] || 0) + 1;
+                localStorage.setItem('userData', JSON.stringify(userData));
+                localStorage.removeItem(`stage${this.config.stage}Result`);
+                this.saveLog({
+                    stage: this.config.stage,
+                    action: 'retry_started',
+                    retryCount: userData[retryKey],
+                    reason: validationResult.reason
+                });
+                location.reload();
+            } else {
+                location.href = 'index.html';
+            }
+            return;
         }
-        return;
-      }
     }
-
 
     // 검증 통과: 결과 저장
     const stageResult = {
-      stage: this.config.stage,
-      questions: this.selectedQuestions.map((q) => q.id),
-      answers: this.userAnswers,
-      correctCount,
-      correctRate: parseFloat(correctRate.toFixed(1)),
-      totalTime: actualTotalTime,
-      avgTimePerQuestion: parseFloat(avgTimePerQuestion.toFixed(1)),
-      answeredCount,
-      totalQuestions: this.selectedQuestions.length,
-      passed: true
+        stage: this.config.stage,
+        questions: this.selectedQuestions.map((q) => q.id),
+        answers: this.userAnswers,
+        correctCount,
+        correctRate: parseFloat(correctRate.toFixed(1)),
+        totalTime: actualTotalTime,
+        avgTimePerQuestion: parseFloat(avgTimePerQuestion.toFixed(1)),
+        answeredCount,
+        totalQuestions: this.selectedQuestions.length,
+        passed: true
     };
 
-    // submitStage() 내부, stageResult 생성 직전에 추가
+    // 문제 스냅샷 생성
     const questionSnapshots = this.selectedQuestions.map(q => {
-      const correct = q.choices?.find(c => c.isCorrect);
-      return {
-        questionId: q.id,
-        questionText: q.questionText || null,      // (차기) 텍스트형 대비
-        questionImage: q.questionImage || null,
-        correctChoiceId: correct ? correct.id : null,
-        choices: (q.choices || []).map(c => ({
-          id: c.id,
-          text: c.text || null,                   // (차기) 텍스트형 대비
-          image: c.image || null,
-          isCorrect: !!c.isCorrect
-        }))
-      };
+        const correct = q.choices?.find(c => c.isCorrect);
+        return {
+            questionId: q.id,
+            questionText: q.questionText || null,
+            questionImage: q.questionImage || null,
+            correctChoiceId: correct ? correct.id : null,
+            choices: (q.choices || []).map(c => ({
+                id: c.id,
+                text: c.text || null,
+                image: c.image || null,
+                isCorrect: !!c.isCorrect
+            }))
+        };
     });
 
     // stageResult에 포함
@@ -433,10 +538,10 @@ class TestManager {
     localStorage.setItem(`stage${this.config.stage}Result`, JSON.stringify(stageResult));
     this.saveLog(stageResult);
 
-    // alert(`${this.config.stage}단계 완료!\n정답: ${correctCount} / ${this.selectedQuestions.length}`);
     alert(`${this.config.stage}단계 완료!`);
     location.href = this.config.nextPage;
-  }
+}
+
 
   /* ========== 로그 저장 ========== */
   saveLog(data) {
@@ -467,7 +572,7 @@ function createValidation(minCorrectRate, minAvgTime, minTotalTime) {
       return {
         passed: false,
         reason: 'low_correct_rate',
-        message: `정답률이 너무 낮습니다.\n(기준: ${minCorrectRate}% 이상, 현재: ${correctRate.toFixed(1)}%)`
+        message: `정답률이 너무 낮습니다.\n해당 단계 재응시가 필요합니다.`
       };
     }
     // 2) 평균 시간 검증 (답변한 문제가 있을 때만)
@@ -475,7 +580,7 @@ function createValidation(minCorrectRate, minAvgTime, minTotalTime) {
       return {
         passed: false,
         reason: 'too_fast',
-        message: `비정상적인 응시 패턴 감지\n(평균 ${avgTimePerQuestion.toFixed(1)}초/문제 → 최소 ${minAvgTime}초 필요)`
+        message: `비정상적인 응시 패턴 감지되었습니다.\n해당 단계 재응시가 필요합니다.`
       };
     }
     // 3) 총 시간 검증
@@ -483,7 +588,7 @@ function createValidation(minCorrectRate, minAvgTime, minTotalTime) {
       return {
         passed: false,
         reason: 'too_fast_total',
-        message: `총 응시 시간이 너무 짧습니다.\n(최소 ${minTotalTime}초 필요, 현재 ${totalTime}초)`
+        message: `총 응시 시간이 너무 짧습니다.\n해당 단계 재응시가 필요합니다.`
       };
     }
     return { passed: true };

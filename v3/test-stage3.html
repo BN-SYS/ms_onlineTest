@@ -7,6 +7,7 @@
     <title>3단계 테스트 - 멘사 온라인 테스트</title>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/test.css">
+    <link rel="stylesheet" href="css/metacognition-modal.css"> <!-- ✅ 모달 스타일 추가 -->
 </head>
 
 <body>
@@ -17,19 +18,19 @@
         <!-- 단계 표시 -->
         <div class="stage-indicator">
             <div class="stage-steps">
-                <div class="stage-step completed"> <!-- 1단계 완료 -->
+                <div class="stage-step completed">
                     <div class="stage-number">1</div>
                     <div class="stage-label">시각 추론</div>
                 </div>
-                <div class="stage-connector"></div>
-                <div class="stage-step completed"> <!-- 2단계 완료 -->
+                <div class="stage-connector completed"></div>
+                <div class="stage-step completed">
                     <div class="stage-number">2</div>
                     <div class="stage-label">논리 사고</div>
                 </div>
                 <div class="stage-connector"></div>
-                <div class="stage-step active"> <!-- 3단계 활성화 -->
+                <div class="stage-step active">
                     <div class="stage-number">3</div>
-                    <div class="stage-label">종합 평가</div>
+                    <div class="stage-label">종합 인지</div>
                 </div>
             </div>
         </div>
@@ -44,8 +45,11 @@
             <div class="question-number">
                 <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span>
             </div>
+            <div class="site-url">
+                <span id="siteUrl">test.mensakorea.kr</span>
+            </div>
             <div class="timer" id="timer">
-                ⏱️ <span id="timeDisplay">00:00</span>
+                ⏱<span id="timeDisplay">00:00</span>
             </div>
         </div>
 
@@ -66,7 +70,7 @@
             💡 <strong>답을 선택하면 자동으로 다음 문제로 넘어갑니다</strong>
         </div>
 
-        <!-- 네비게이션 버튼 (이전 버튼 추가) -->
+        <!-- 네비게이션 버튼 -->
         <div class="navigation-buttons">
             <button class="nav-btn prev-btn" id="prevBtn" onclick="previousQuestion()">
                 ← 이전 문제
@@ -80,14 +84,114 @@
         </div>
     </div>
 
+    <!-- ✅ 메타인지 측정 모달 -->
+    <div class="metacognition-modal" id="metacognitionModal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <!-- 모달 헤더 -->
+            <div class="modal-header">
+                <h2>🧠 테스트를 마치셨습니다!</h2>
+                <p class="modal-subtitle">결과 확인 전, 본인의 예상 성적을 입력해주세요</p>
+                <div class="modal-info">
+                    <span class="info-icon">💡</span>
+                    <span class="info-text">메타인지(자기 인식 능력)는 높은 지능의 중요한 요소입니다</span>
+                </div>
+            </div>
+
+            <!-- 질문 섹션 -->
+            <div class="modal-body">
+                <!-- 질문 1: 예상 정답 개수 -->
+                <div class="question-item">
+                    <div class="question-header">
+                        <span class="question-badge">Q1</span>
+                        <h3>전체 25문제 중 몇 문제를 맞췄다고 생각하시나요?</h3>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <input 
+                                type="number" 
+                                id="expectedCorrect" 
+                                class="modal-input" 
+                                min="0" 
+                                max="25" 
+                                placeholder="예: 18"
+                            >
+                            <span class="input-unit">문제</span>
+                        </div>
+                        <p class="input-hint">💡 0 ~ 25 사이의 숫자를 입력해주세요</p>
+                        <p class="input-error" id="errorCorrect" style="display: none;">⚠️ 0에서 25 사이의 숫자를 입력해주세요</p>
+                    </div>
+                </div>
+
+                <!-- 질문 2: 예상 백분위 -->
+                <div class="question-item">
+                    <div class="question-header">
+                        <span class="question-badge">Q2</span>
+                        <h3>본인의 성적이 상위 몇 %라고 생각하시나요?</h3>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <span class="input-prefix">상위</span>
+                            <input 
+                                type="number" 
+                                id="expectedPercentile" 
+                                class="modal-input" 
+                                min="1" 
+                                max="100" 
+                                placeholder="예: 10"
+                            >
+                            <span class="input-unit">%</span>
+                        </div>
+                        <p class="input-hint">💡 낮을수록 높은 순위 (예: 상위 5% = 매우 우수)</p>
+                        <p class="input-error" id="errorPercentile" style="display: none;">⚠️ 1에서 100 사이의 숫자를 입력해주세요</p>
+                    </div>
+
+                    <!-- 참고 가이드 -->
+                    <div class="reference-guide">
+                        <div class="guide-title">📊 참고 가이드</div>
+                        <div class="guide-list">
+                            <div class="guide-item">
+                                <span class="guide-label">상위 1~2%</span>
+                                <span class="guide-desc">천재 수준 (멘사 기준)</span>
+                            </div>
+                            <div class="guide-item">
+                                <span class="guide-label">상위 5~10%</span>
+                                <span class="guide-desc">매우 우수</span>
+                            </div>
+                            <div class="guide-item">
+                                <span class="guide-label">상위 25%</span>
+                                <span class="guide-desc">평균 이상</span>
+                            </div>
+                            <div class="guide-item">
+                                <span class="guide-label">상위 50%</span>
+                                <span class="guide-desc">평균 수준</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 모달 푸터 -->
+            <div class="modal-footer">
+                <button class="modal-submit-btn" id="modalSubmitBtn" onclick="submitMetacognition()">
+                    <span class="btn-icon">✓</span>
+                    <span class="btn-text">완료하기</span>
+                </button>
+                <p class="modal-notice">
+                    ※ 입력하신 정보는 메타인지 분석에만 사용되며, 실제 점수에는 영향을 주지 않습니다
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- 푸터 -->
     <div id="footer-placeholder"></div>
 
-    <!-- include.js 추가 -->
+    <!-- Scripts -->
     <script src="js/include.js"></script>
-    <!-- 테스트 공통 로직 추가 -->
     <script src="js/test-common.js"></script>
     <script src="js/test-stage3.js"></script>
+    <script src="js/metacognition-modal.js"></script> <!-- ✅ 모달 로직 추가 -->
 </body>
 
 </html>

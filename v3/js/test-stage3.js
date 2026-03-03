@@ -1,3 +1,8 @@
+/* ========================================
+   js/test-stage3.js
+   3단계 테스트 초기화 및 문제은행
+======================================== */
+
 // ========================================
 // 3단계 문제은행 (5개 샘플 문제)
 // ========================================
@@ -64,15 +69,18 @@ const stage3QuestionBank = [
 // 3단계 초기화
 // ========================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    testManager = new TestManager({
-        stage: 3,
-        questionBank: stage3QuestionBank,
-        questionCount: 5,
-        timeLimit: 10 * 60, // 10분
-        validation: createValidation(20, 1, 10), // 정답률 20%, 평균 1초, 총 10초
-        nextPage: 'payment.html'
-    });
+// ✅ testManager를 전역 변수로 선언 (단일 선언)
+window.testManager = new TestManager({
+    stage: 3,
+    questionBank: stage3QuestionBank, // ✅ 올바른 변수명
+    questionCount: 5,
+    timeLimit: 10*60, // ✅ 3단계는 시간 제한 없음 (필요시 10*60으로 변경)
+    validation: createValidation(20, 1, 10), // ✅ 정답률 20%, 평균 1초, 총 10초
+    nextPage: 'payment.html' // ✅ 3단계 완료 후 결제 페이지로 이동
+});
 
-    testManager.init();
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('✅ 3단계 테스트 초기화 시작');
+    window.testManager.init();
 });

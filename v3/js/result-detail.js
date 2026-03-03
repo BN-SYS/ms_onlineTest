@@ -16,6 +16,9 @@ function loadDetailResult() {
     let certNumber = localStorage.getItem('certNumber');
     let verifyCode = localStorage.getItem('verifyCode');
 
+    // 예상 점수 (테스트 후 입력된 값)
+    let expectedScore = JSON.parse(localStorage.getItem('expectedScore') || 'null');
+
     // '0000-0000'이면 무효 처리
     if (verifyCode === '0000-0000') {
         localStorage.removeItem('verifyCode');
@@ -32,7 +35,7 @@ function loadDetailResult() {
         testSettings = createSampleTestSettings();
     }
 
-    console.log('상세 결과 로드:', { stage1, stage2, stage3, userData, testSettings });
+    console.log('상세 결과 로드:', { stage1, stage2, stage3, userData, testSettings, expectedScore });
 
     // 날짜 표시 (화면 + 배너 동기화)
     const now = new Date();
@@ -54,17 +57,17 @@ function loadDetailResult() {
 
     // 점수 계산 (scoreResult가 없으면 재계산)
     if (!scoreResult) {
-        scoreResult = calculateScore(stage1, stage2, stage3, userData.birthYear, testSettings);
+        scoreResult = calculateScore(stage1, stage2, stage3, userData.birthYear, testSettings, expectedScore);
     }
 
-    // 총 점수 표시
+    // 총 점수 표시 (백분위 대신 상위권/중위권/하위권 표시)
     document.getElementById('totalScore').textContent = scoreResult.totalScore + '점';
-    document.getElementById('percentile').textContent = scoreResult.percentile;
+    document.getElementById('scoreRank').textContent = scoreResult.scoreRank;
 
     // 레벨 평가
     displayLevel(scoreResult);
 
-    // 단계별 점수 (백분위 포함)
+    // 단계별 점수 (5개 항목: 시각추론, 논리사고, 지식응용, 작업속도, 메타인지)
     displayStages(stage1, stage2, stage3, scoreResult);
 
     // 그래프 생성 (백분위 표시)
@@ -211,9 +214,9 @@ function generateVerifyCode(input) {
 }
 
 /* ========================================
-   점수 계산 (100점 만점 + 연령 보정)
+   점수 계산 (100점 만점 + 연령 보정 + 작업속도 + 메타인지)
 ======================================== */
-function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
+function calculateScore(stage1, stage2, stage3, birthYear, testSettings, expectedScore) {
     const currentYear = new Date().getFullYear();
     const age = currentYear - parseInt(birthYear || 1990);
 
@@ -255,18 +258,33 @@ function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
         ageAdjustment
     );
 
+    // 작업속도 점수 계산 (총 소요시간 기반)
+    const totalTime = stage1.totalTime + stage2.totalTime + stage3.totalTime;
+    const speedScore = calculateSpeedScore(totalTime);
+
+    // 메타인지 점수 계산 (예상 점수 vs 실제 점수 차이)
+    const avgScore = Math.round((stage1Score + stage2Score + stage3Score) / 3);
+    const metacognitionScore = calculateMetacognitionScore(expectedScore, avgScore);
+
     // 종합 점수 (3단계 평균)
     const totalScore = Math.round((stage1Score + stage2Score + stage3Score) / 3);
+
+    // 점수 기반 등급 판정 (상위권/중위권/하위권)
+    const scoreRank = getScoreRank(totalScore);
 
     console.log('단계별 점수:', {
         stage1Score,
         stage2Score,
         stage3Score,
-        totalScore
+        speedScore,
+        metacognitionScore,
+        totalScore,
+        scoreRank
     });
 
     return {
         totalScore: totalScore,
+        scoreRank: scoreRank,
         percentile: getPercentile(totalScore),
         stage1Score: stage1Score,
         stage1Percentile: getPercentile(stage1Score),
@@ -274,6 +292,11 @@ function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
         stage2Percentile: getPercentile(stage2Score),
         stage3Score: stage3Score,
         stage3Percentile: getPercentile(stage3Score),
+        speedScore: speedScore,
+        speedPercentile: getPercentile(speedScore),
+        metacognitionScore: metacognitionScore,
+        metacognitionPercentile: getPercentile(metacognitionScore),
+        totalTime: totalTime,
         ageAdjustment: ageAdjustment
     };
 }
@@ -283,6 +306,68 @@ function calculateStageScore(correctCount, baseScore, pointPerQuestion, ageAdjus
     const finalScore = Math.min(100, rawScore);
 
     return finalScore;
+}
+
+/**
+ * 작업속도 점수 계산
+ * - 총 소요시간이 짧을수록 높은 점수 부여
+ * - 기준: 875초(약 14분 35초) = 100점
+ * - 1750초(약 29분) = 50점
+ * - 그 이상은 비례 감소
+ */
+function calculateSpeedScore(totalTime) {
+    const optimalTime = 875; // 최적 시간 (초)
+    const maxTime = 1750; // 기준 최대 시간 (초)
+
+    if (totalTime <= optimalTime) {
+        return 100;
+    } else if (totalTime >= maxTime) {
+        return Math.max(30, 100 - Math.floor((totalTime - maxTime) / 30)); // 최소 30점
+    } else {
+        // 선형 감소
+        const score = 100 - Math.floor(((totalTime - optimalTime) / (maxTime - optimalTime)) * 50);
+        return Math.max(30, score);
+    }
+}
+
+/**
+ * 메타인지 점수 계산
+ * - 예상 점수와 실제 점수 차이가 작을수록 높은 점수
+ * - 오차 0 = 100점
+ * - 오차 10점 이내 = 80~100점
+ * - 오차 20점 이내 = 60~80점
+ * - 오차 30점 이상 = 40~60점
+ */
+function calculateMetacognitionScore(expectedScore, actualScore) {
+    if (!expectedScore || expectedScore <= 0) {
+        // 예상 점수가 없으면 기본 50점 부여
+        return 50;
+    }
+
+    const diff = Math.abs(expectedScore - actualScore);
+
+    if (diff === 0) {
+        return 100;
+    } else if (diff <= 5) {
+        return 95 - diff;
+    } else if (diff <= 10) {
+        return 90 - (diff - 5) * 2;
+    } else if (diff <= 20) {
+        return 80 - (diff - 10);
+    } else if (diff <= 30) {
+        return 70 - (diff - 20);
+    } else {
+        return Math.max(30, 50 - (diff - 30));
+    }
+}
+
+/**
+ * 점수 기반 등급 (상위권/중위권/하위권)
+ */
+function getScoreRank(score) {
+    if (score >= 85) return '상위권';
+    if (score >= 65) return '중위권';
+    return '하위권';
 }
 
 function getPercentile(score) {
@@ -333,33 +418,31 @@ function displayLevel(scoreResult) {
 }
 
 /* ========================================
-   단계별 점수 표시 (백분위 추가)
+   단계별 점수 표시 (5개 항목: 시각추론, 논리사고, 종합인지, 작업속도, 메타인지)
 ======================================== */
 function displayStages(s1, s2, s3, scoreResult) {
     const stages = [
         {
             title: '1단계: 시각 추론',
-            correct: s1.correctCount,
-            total: s1.totalQuestions,
-            rate: s1.correctRate,
-            score: scoreResult.stage1Score,
-            percentile: scoreResult.stage1Percentile
+            score: scoreResult.stage1Score
         },
         {
             title: '2단계: 논리 사고',
-            correct: s2.correctCount,
-            total: s2.totalQuestions,
-            rate: s2.correctRate,
-            score: scoreResult.stage2Score,
-            percentile: scoreResult.stage2Percentile
+            score: scoreResult.stage2Score
         },
         {
-            title: '3단계: 지식 응용',
-            correct: s3.correctCount,
-            total: s3.totalQuestions,
-            rate: s3.correctRate,
-            score: scoreResult.stage3Score,
-            percentile: scoreResult.stage3Percentile
+            title: '3단계: 종합 인지',
+            score: scoreResult.stage3Score
+        },
+        {
+            title: '작업 속도',
+            score: scoreResult.speedScore,
+            detail: `총 소요시간: ${formatTime(scoreResult.totalTime)}`
+        },
+        {
+            title: '메타인지',
+            score: scoreResult.metacognitionScore,
+            detail: '자기 인식 정확도'
         }
     ];
 
@@ -367,9 +450,18 @@ function displayStages(s1, s2, s3, scoreResult) {
         <div class="stage-item">
             <h5>${s.title}</h5>
             <div class="stage-score">${s.score}점</div>
-            <div class="stage-percentile">${s.percentile}</div>
+            ${s.detail ? `<div class="stage-detail">${s.detail}</div>` : ''}
         </div>
     `).join('');
+}
+
+/**
+ * 초 → 분:초 형식 변환
+ */
+function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = seconds % 60;
+    return `${min}분 ${sec}초`;
 }
 
 /* ========================================
@@ -393,7 +485,7 @@ function generateNormalDistribution(mean, stdDev, points = 80) {
 /* ========================================
    Chart.js 그래프 생성 (통일된 톤앤매너)
 ======================================== */
-function createCompactChart(canvasId, userScore, percentile, mean = 70, stdDev = 12) {
+function createCompactChart(canvasId, userScore, mean = 70, stdDev = 12) {
     const ctx = document.getElementById(canvasId);
     if (!ctx) return null;
 
@@ -464,25 +556,25 @@ function createCompactChart(canvasId, userScore, percentile, mean = 70, stdDev =
 }
 
 /* ========================================
-   모든 그래프 생성 (백분위 포함)
+   모든 그래프 생성
 ======================================== */
 function createAllCharts(scoreResult) {
-    // 각 그래프에 백분위 표시
-    createCompactChart('totalChart', scoreResult.totalScore, scoreResult.percentile);
-    createCompactChart('stage1Chart', scoreResult.stage1Score, scoreResult.stage1Percentile);
-    createCompactChart('stage2Chart', scoreResult.stage2Score, scoreResult.stage2Percentile);
-    createCompactChart('stage3Chart', scoreResult.stage3Score, scoreResult.stage3Percentile);
+    // 각 그래프 생성
+    createCompactChart('totalChart', scoreResult.totalScore);
+    createCompactChart('stage1Chart', scoreResult.stage1Score);
+    createCompactChart('stage2Chart', scoreResult.stage2Score);
+    createCompactChart('stage3Chart', scoreResult.stage3Score);
 
-    // 백분위 텍스트 추가
+    // 점수 텍스트 추가 (상위 % 제외)
     addPercentileLabels(scoreResult);
 }
 
 function addPercentileLabels(scoreResult) {
     const labels = [
-        { id: 'totalChart', percentile: scoreResult.percentile, score: scoreResult.totalScore },
-        { id: 'stage1Chart', percentile: scoreResult.stage1Percentile, score: scoreResult.stage1Score },
-        { id: 'stage2Chart', percentile: scoreResult.stage2Percentile, score: scoreResult.stage2Score },
-        { id: 'stage3Chart', percentile: scoreResult.stage3Percentile, score: scoreResult.stage3Score }
+        { id: 'totalChart', score: scoreResult.totalScore },
+        { id: 'stage1Chart', score: scoreResult.stage1Score },
+        { id: 'stage2Chart', score: scoreResult.stage2Score },
+        { id: 'stage3Chart', score: scoreResult.stage3Score }
     ];
 
     labels.forEach(label => {
@@ -492,7 +584,7 @@ function addPercentileLabels(scoreResult) {
             if (!existingLabel) {
                 const percentileLabel = document.createElement('p');
                 percentileLabel.className = 'chart-percentile';
-                percentileLabel.textContent = `${label.score}점 (${label.percentile})`;
+                percentileLabel.textContent = `${label.score}점`;  // 점수만 표시
                 chartBox.appendChild(percentileLabel);
             }
         }
@@ -518,7 +610,7 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
         content = `
             <h4>멘사 가입 준비 가이드</h4>
             <ul>
-                <li>공식 멘사 테스트를 통해 정식 회원 자격을 취득하실 것을 권장합니다.</li>
+                <li>오프라인으로 진행되는 멘사 입회 테스트에 응시하여, 자신의 능력을 정식으로 확인해보시기 바랍니다.</li>
                 <li>${strongest.name}이(가) 강점입니다 (${strongest.score}점). 전문 분야 개발을 추천합니다.</li>
                 <li>고난도 논리 퍼즐과 수학 문제로 지속적인 두뇌 훈련을 하세요.</li>
                 <li>모든 영역에서 균형잡힌 발전을 유지하세요.</li>
@@ -544,6 +636,25 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
                 <li>단계별로 체계적인 학습 계획을 세워 실행하세요.</li>
                 <li>매일 10-15분씩 두뇌 훈련 문제를 풀어보세요.</li>
             </ul>
+        `;
+    }
+
+    // 작업속도 / 메타인지 피드백 추가
+    if (scoreResult.speedScore < 70) {
+        content += `
+            <div style="margin-top: 12px; padding: 10px; background: rgba(255,200,100,0.1); border-left: 3px solid #d4af37; border-radius: 4px;">
+                <strong>⏱ 작업속도 개선 TIP:</strong> 
+                문제를 빠르게 이해하고 답을 찾는 연습이 필요합니다. 시간 제한을 두고 반복 연습하세요.
+            </div>
+        `;
+    }
+
+    if (scoreResult.metacognitionScore < 70) {
+        content += `
+            <div style="margin-top: 12px; padding: 10px; background: rgba(100,150,255,0.1); border-left: 3px solid #5a7fc4; border-radius: 4px;">
+                <strong>🧠 메타인지 개선 TIP:</strong> 
+                자신의 실력을 객관적으로 파악하는 능력이 필요합니다. 문제 풀이 후 스스로 채점해보는 연습을 해보세요.
+            </div>
         `;
     }
 
@@ -644,8 +755,8 @@ async function downloadPDF() {
 ======================================== */
 function shareResult() {
     const score = document.getElementById('totalScore').textContent;
-    const percentile = document.getElementById('percentile').textContent;
-    const text = `나의 멘사 테스트 점수는 ${score}! (${percentile}) 멘사 온라인 테스트로 확인하세요!`;
+    const rank = document.getElementById('scoreRank').textContent;
+    const text = `나의 멘사 테스트 점수는 ${score} (${rank})! 멘사 온라인 테스트로 확인하세요!`;
 
     if (navigator.share) {
         navigator.share({
