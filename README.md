@@ -54,7 +54,7 @@
 
 ### 기획 배경
 
-- 기존 입회 테스트 외 별도 온라인 체험형 콘텐츠 신설 (테스트 작명 필요 / IQ 사용 금지)
+- 기존 입회 테스트 외 별도 온라인 체험형 콘텐츠 신설 (Mensa Korea Brain Challenge)
 - 멘사 브랜드 기반 온라인 테스트 서비스 제공
 - 무료 응시 → 결과 유료화 수익 모델
 
@@ -439,7 +439,7 @@ if (단계_점수 > 100) 단계_점수 = 100
 
 ```
 ┌────────────────────────────────┐
-│        {테스트명} Result        │
+│Mensa Korea Brain Challenge Result│
 ├────────────────────────────────┤
 │                                │
 │          점수: 78              │
@@ -553,8 +553,8 @@ if (단계_점수 > 100) 단계_점수 = 100
 **파일명 규칙**
 
 ```
-{테스트명}_Report_{이름}_{발급번호}.pdf
-예시: {테스트명}_Report_홍길동_MS-2026-123456.pdf
+MensaKoreaBrainChallenge_Report_{이름}_{발급번호}.pdf
+예시: MensaKoreaBrainChallenge_Report_홍길동_MS-2026-123456.pdf
 ```
 
 ---
@@ -580,27 +580,27 @@ if (단계_점수 > 100) 단계_점수 = 100
 **기본 결과 이메일**
 
 ```
-제목: [MENSAKOREA] {테스트명} 결과 안내
+제목: [MENSAKOREA] Mensa Korea Brain Challenge 결과 안내
 
 안녕하세요, {이름}님.
 기본 결과 파일이 첨부되어 있습니다.
 PDF 파일을 다운로드하여 확인해주세요.
 
 감사합니다.
-첨부: MensaKoreaBrainTest_Basic_홍길동.pdf
+첨부: MensaKoreaBrainChallenge_Basic_홍길동.pdf
 ```
 
 **상세 리포트 이메일**
 
 ```
-제목: [MENSAKOREA] {테스트명} 상세 리포트
+제목: [MENSAKOREA] Mensa Korea Brain Challenge 상세 리포트
 
 안녕하세요, {이름}님.
 상세 리포트가 첨부되어 있습니다.
 PDF 파일을 다운로드하여 확인해주세요.
 
 감사합니다.
-첨부: MensaKoreaBrainTest_Report_홍길동_MS-2026-123456.pdf
+첨부: MensaKoreaBrainChallenge_Report_홍길동_MS-2026-123456.pdf
 ```
 
 ---
