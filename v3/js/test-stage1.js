@@ -11,12 +11,15 @@ const stage1QuestionBank = [
             { id: 2, image: './image/stage1/q1-option2.jpg', isCorrect: false },
             { id: 3, image: './image/stage1/q1-option3.jpg', isCorrect: false },
             { id: 4, image: './image/stage1/q1-option4.jpg', isCorrect: false },
-            { id: 5, image: './image/stage1/q1-option5.jpg', isCorrect: false }
+            { id: 5, image: './image/stage1/q1-option5.jpg', isCorrect: false },
+            { id: 6, image: './image/stage1/q1-option6.jpg', isCorrect: false },
+            { id: 7, image: './image/stage1/q1-option7.jpg', isCorrect: false },
+            { id: 8, image: './image/stage1/q1-option8.jpg', isCorrect: false }
         ]
     },
     {
         id: 's1_q2',
-        questionImage: './image/stage1/question1.jpg',
+        questionImage: './image/stage1/question2.jpg',
         choices: [
             { id: 1, image: './image/stage1/q1-option1.jpg', isCorrect: true },
             { id: 2, image: './image/stage1/q1-option2.jpg', isCorrect: false },
@@ -27,7 +30,7 @@ const stage1QuestionBank = [
     },
     {
         id: 's1_q3',
-        questionImage: './image/stage1/question1.jpg',
+        questionImage: './image/stage1/question3.jpg',
         choices: [
             { id: 1, image: './image/stage1/q1-option1.jpg', isCorrect: true },
             { id: 2, image: './image/stage1/q1-option2.jpg', isCorrect: false },

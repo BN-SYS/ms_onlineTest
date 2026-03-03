@@ -3,6 +3,9 @@
    js/include.js
    ======================================== */
 
+// 결제 처리 중 플래그
+let isProcessingPayment = false;
+
 // 헤더/푸터 자동 로드
 document.addEventListener('DOMContentLoaded', function() {
     // 현재 페이지가 관리자 페이지인지 확인
@@ -132,24 +135,9 @@ function preventDuplicatePayment() {
     }
 }
 
-// 카드 선택
-function selectPayment(type) {
-    const cards = document.querySelectorAll('.payment-card');
-    cards.forEach(card => {
-        card.classList.remove('selected');
-    });
-    
-    // 클릭된 카드 선택 표시
-    event.currentTarget.classList.add('selected');
-    
-    // 선택 효과음 (선택사항)
-    playSelectionSound();
-}
-
 // 선택 효과음 (선택사항)
 function playSelectionSound() {
     // 간단한 클릭 피드백
-    // 필요시 오디오 파일 추가 가능
     if (navigator.vibrate) {
         navigator.vibrate(50); // 모바일에서 진동 피드백
     }
@@ -157,8 +145,18 @@ function playSelectionSound() {
 
 // 결제 처리
 function processPayment(type) {
+    // ✅ 이미 처리 중이면 무시
+    if (isProcessingPayment) {
+        console.log('⏳ 이미 결제 처리 중입니다.');
+        return;
+    }
+    
+    isProcessingPayment = true;
+    console.log('💳 결제 처리 시작:', type);
+    
     // 테스트 데이터 재검증
     if (!validateTestData()) {
+        isProcessingPayment = false;
         return;
     }
 
@@ -184,15 +182,15 @@ function processPayment(type) {
     const selectedPrice = prices[type];
     
     // 결제 확인 다이얼로그
-    const confirmMessage = `
-━━━━━━━━━━━━━━━━━━━━
+    const confirmMessage = `━━━━━━━━━━━━━━━━━━━━
 결제 금액: ${selectedPrice.discounted.toLocaleString()}원  (정상가 ${selectedPrice.original.toLocaleString()}원)
 ━━━━━━━━━━━━━━━━━━━━
 
-${selectedPrice.name} 결제를 진행하시겠습니까?
-    `.trim();
+${selectedPrice.name} 결제를 진행하시겠습니까?`;
 
     if (!confirm(confirmMessage)) {
+        isProcessingPayment = false; // ✅ 취소 시 플래그 해제
+        console.log('❌ 결제 취소됨');
         return;
     }
 
@@ -218,6 +216,8 @@ ${selectedPrice.name} 결제를 진행하시겠습니까?
 
         // 결제 정보 저장
         localStorage.setItem('paymentInfo', JSON.stringify(paymentInfo));
+        
+        console.log('✅ 결제 완료:', paymentInfo);
         
         // 결제 완료 처리
         hidePaymentProcessing();
@@ -359,25 +359,6 @@ function generateTransactionId() {
     const timestamp = date.getTime();
     const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
     return `TXN${timestamp}${random}`;
-}
-
-// 발급 번호 생성
-function generateCertificateNumber() {
-    const year = new Date().getFullYear();
-    const month = (new Date().getMonth() + 1).toString().padStart(2, '0');
-    const random = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-    return `MENSA-${year}${month}-${random}`;
-}
-
-// 진위 확인 코드 생성
-function generateVerificationCode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '';
-    for (let i = 0; i < 12; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-        if ((i + 1) % 4 === 0 && i < 11) code += '-';
-    }
-    return code;
 }
 
 /* ========================================
