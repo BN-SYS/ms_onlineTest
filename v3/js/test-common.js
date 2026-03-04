@@ -184,7 +184,7 @@ class TestManager {
           `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
         // 5분 남음 경고
         if (remaining === 300) {
-          alert('⏰ 5분 남았습니다!');
+          alert('⏱ 5분 남았습니다!');
           document.getElementById('timeDisplay').classList.add('warning');
         }
       }, 1000);
@@ -203,7 +203,7 @@ class TestManager {
 
   /* ========== 시간 초과 처리 ========== */
   handleTimeOver() {
-    alert('⏰ 제한 시간이 초과되었습니다. 자동으로 제출합니다.');
+    alert('⏱ 제한 시간이 초과되었습니다. 자동으로 제출합니다.');
     // 현재 문제부터 마지막까지 미답 처리
     for (let i = this.currentQuestionIndex; i < this.selectedQuestions.length; i++) {
       if (!this.userAnswers[i]) {

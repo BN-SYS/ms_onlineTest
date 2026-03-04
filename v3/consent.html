@@ -73,33 +73,21 @@
                     <li>총 3단계 25문제 (1단계 15문제, 2단계 5문제, 3단계 5문제)</li>
                     <li>제한시간: 1단계 30분, 2단계 5분, 3단계 5분</li>
                     <li>중간 저장 불가, 집중된 환경에서 응시하세요</li>
+                    <li><strong>본 테스트는 멘사 공식 입회 테스트가 아닙니다.</strong></li>
                 </ul>
             </div>
 
-            <div class="consent-box-compact">
-                <h3>테스트 안내</h3>
-                <ul>
-                    <li>총 3단계, 25문제로 구성</li>
-                    <li>제한시간 내 완료 필수</li>
-                    <li>비정상 패턴 감지 시 중단될 수 있음</li>
-                </ul>
-
+            <!-- <div class="consent-box-compact">
                 <h3 style="margin-top:10px;">결제 안내</h3>
                 <ul>
                     <li>응시 무료, 결과 확인 시 결제</li>
                     <li>기본 결과: 19,900원 / 상세: 24,900원</li>
                     <li>업그레이드 가능 (차액 결제)</li>
                 </ul>
-
-                <h3 style="margin-top:10px;">개인정보 처리</h3>
-                <ul>
-                    <li>수집: 이름, 출생연도, 이메일, IP</li>
-                    <li>목적: 결과 제공 및 통계 (보유 1년)</li>
-                </ul>
-            </div>
+            </div> -->
 
             <div class="warning-box-compact">
-                <strong>⚠️ 중요 안내</strong>
+                <strong>중요 안내</strong>
                 본 테스트는 멘사 공식 입회 테스트가 아닙니다.<br>결과는 참고용입니다.
             </div>
 
@@ -122,12 +110,16 @@
                 </div>
 
                 <div class="checkbox-group-compact">
+                    <!-- 첫 번째 약관: 토글 형식 -->
                     <label class="checkbox-label-compact">
                         <input type="checkbox" id="agree1" name="agree1" required>
                         <div>
-                            <strong>개인정보 수집 및 이용에 동의합니다. (필수)</strong>
-                            <!-- 상세 내용 (스크롤 가능) -->
-                            <div class="consent-detail-box">
+                            <div class="consent-toggle-header">
+                                <span>개인정보 수집 및 이용에 동의합니다. <strong style="color: red;">*</strong></span>
+                                <span class="toggle-icon" onclick="toggleConsentDetail(event)">▼</span>
+                            </div>
+                            <!-- 상세 내용 (토글) -->
+                            <div class="consent-detail-box" id="consentDetail">
                                 <h4>1. 개인정보의 수집 및 이용 목적</h4>
                                 <ul>
                                     <li>테스트 결과 제공 및 통계 분석</li>
@@ -158,12 +150,12 @@
 
                     <label class="checkbox-label-compact">
                         <input type="checkbox" id="agree2" required>
-                        <span>테스트 관련 이메일을 수신하는데 동의합니다. (필수)</span>
+                        <span>테스트 관련 이메일을 수신하는데 동의합니다. <strong style="color: red;">*</strong></span>
                     </label>
 
                     <label class="checkbox-label-compact">
                         <input type="checkbox" id="agree3" required>
-                        <span>문제 유출 및 부정행위 시 법적 책임이 있음을 확인했습니다. (필수)</span>
+                        <span>문제 유출 및 부정행위 시 법적 책임이 있음을 확인했습니다. <strong style="color: red;">*</strong></span>
                     </label>
                 </div>
 
@@ -181,14 +173,25 @@
     <!-- Scripts -->
     <script src="js/include.js"></script>
     <script>
+        // ✅ 토글 함수
+        function toggleConsentDetail(event) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            const detailBox = document.getElementById('consentDetail');
+            const toggleIcon = event.target;
+
+            detailBox.classList.toggle('open');
+            toggleIcon.classList.toggle('open');
+        }
+
         // ✅ 출생연도 드롭다운 생성 (1930 ~ 현재-8)
         function populateBirthYearDropdown() {
             const birthYearSelect = document.getElementById('birthYear');
             const currentYear = new Date().getFullYear();
-            const maxYear = currentYear - 8; // 현재-8
+            const maxYear = currentYear - 8;
             const minYear = 1930;
 
-            // 최근 연도부터 과거 순으로 정렬
             for (let year = maxYear; year >= minYear; year--) {
                 const option = document.createElement('option');
                 option.value = year;
@@ -196,9 +199,6 @@
                 birthYearSelect.appendChild(option);
             }
         }
-
-        // 페이지 로드 시 드롭다운 생성
-        window.addEventListener('DOMContentLoaded', populateBirthYearDropdown);
 
         // 예제 문제 선택
         function selectSample(element, isCorrect) {
@@ -219,51 +219,62 @@
             }
         }
 
-        // 폼 검증 및 제출
-        const form = document.getElementById('consentForm');
-        const startBtn = document.getElementById('startBtn');
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        const userName = document.getElementById('userName');
-        const birthYear = document.getElementById('birthYear');
-        const userEmail = document.getElementById('userEmail');
+        // ✅ DOMContentLoaded 안에 모든 초기화 로직 배치
+        window.addEventListener('DOMContentLoaded', function() {
+            // 출생연도 드롭다운 생성
+            populateBirthYearDropdown();
 
-        // 모든 필수 항목 확인
-        function checkFormValidity() {
-            const allCheckboxesChecked = Array.from(checkboxes).every(cb => cb.checked);
-            const nameValid = userName.value.trim().length > 0;
-            const yearValid = birthYear.value !== ''; // 드롭다운 선택 확인
-            const emailValid = userEmail.value.includes('@') && userEmail.value.includes('.');
+            // 폼 요소 가져오기
+            const form = document.getElementById('consentForm');
+            const startBtn = document.getElementById('startBtn');
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const userName = document.getElementById('userName');
+            const birthYear = document.getElementById('birthYear');
+            const userEmail = document.getElementById('userEmail');
 
-            if (allCheckboxesChecked && nameValid && yearValid && emailValid) {
-                startBtn.disabled = false;
-            } else {
-                startBtn.disabled = true;
+            // 모든 필수 항목 확인
+            function checkFormValidity() {
+                const allCheckboxesChecked = Array.from(checkboxes).every(cb => cb.checked);
+                const nameValid = userName.value.trim().length > 0;
+                const yearValid = birthYear.value !== '';
+                const emailValid = userEmail.value.includes('@') && userEmail.value.includes('.');
+
+                console.log('폼 검증:', {
+                    checkboxes: allCheckboxesChecked,
+                    name: nameValid,
+                    year: yearValid,
+                    email: emailValid
+                });
+
+                if (allCheckboxesChecked && nameValid && yearValid && emailValid) {
+                    startBtn.disabled = false;
+                } else {
+                    startBtn.disabled = true;
+                }
             }
-        }
 
-        // 이벤트 리스너
-        checkboxes.forEach(cb => cb.addEventListener('change', checkFormValidity));
-        userName.addEventListener('input', checkFormValidity);
-        birthYear.addEventListener('change', checkFormValidity); // input → change
-        userEmail.addEventListener('input', checkFormValidity);
+            // 이벤트 리스너 등록
+            checkboxes.forEach(cb => cb.addEventListener('change', checkFormValidity));
+            userName.addEventListener('input', checkFormValidity);
+            birthYear.addEventListener('change', checkFormValidity);
+            userEmail.addEventListener('input', checkFormValidity);
 
-        // 폼 제출
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
+            // 폼 제출
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
 
-            // 사용자 정보 저장
-            const userData = {
-                name: userName.value.trim(),
-                birthYear: parseInt(birthYear.value),
-                email: userEmail.value.trim(),
-                timestamp: new Date().toISOString()
-            };
+                const userData = {
+                    name: userName.value.trim(),
+                    birthYear: parseInt(birthYear.value),
+                    email: userEmail.value.trim(),
+                    timestamp: new Date().toISOString()
+                };
 
-            localStorage.setItem('userData', JSON.stringify(userData));
-            console.log('✅ 사용자 정보 저장:', userData);
+                localStorage.setItem('userData', JSON.stringify(userData));
+                console.log('✅ 사용자 정보 저장:', userData);
 
-            // 테스트 페이지로 이동
-            window.location.href = 'test-stage1.html';
+                window.location.href = 'test-stage1.html';
+            });
         });
     </script>
 </body>
