@@ -16,7 +16,10 @@ const stage3QuestionBank = [
             { id: 2, image: './image/stage2/q1-option2.jpg', isCorrect: false },
             { id: 3, image: './image/stage2/q1-option3.jpg', isCorrect: false },
             { id: 4, image: './image/stage2/q1-option4.jpg', isCorrect: false },
-            { id: 5, image: './image/stage2/q1-option5.jpg', isCorrect: false }
+            { id: 5, image: './image/stage2/q1-option5.jpg', isCorrect: false },
+            { id: 6, image: './image/stage2/q1-option6.jpg', isCorrect: false },
+            { id: 7, image: './image/stage2/q1-option7.jpg', isCorrect: false },
+            { id: 8, image: './image/stage2/q1-option8.jpg', isCorrect: false }
         ]
     },
     {
@@ -74,7 +77,7 @@ window.testManager = new TestManager({
     stage: 3,
     questionBank: stage3QuestionBank, // ✅ 올바른 변수명
     questionCount: 5,
-    timeLimit: 10*60, // ✅ 3단계는 시간 제한 없음 (필요시 10*60으로 변경)
+    timeLimit: 10 * 60, // ✅ 3단계는 시간 제한 없음 (필요시 10*60으로 변경)
     validation: createValidation(20, 1, 10), // ✅ 정답률 20%, 평균 1초, 총 10초
     nextPage: 'payment.html' // ✅ 3단계 완료 후 결제 페이지로 이동
 });
