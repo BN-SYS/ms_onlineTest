@@ -5,13 +5,11 @@
 .test-container {
     max-width: 1000px;
     margin: 10px auto;
-    /* ✅ 20px → 10px */
     padding: 15px;
-    /* ✅ 20px → 15px */
 }
 
 /* ========================================
-   단계 표시 - ✅ 최소화 버전
+   단계 표시
 ======================================== */
 
 .stage-indicator {
@@ -66,7 +64,7 @@
 .stage-step.completed .stage-number {
     background: #e0e0e0;
     color: #999;
-    border: 2px solid #d0d0d0;
+    border-color: #d0d0d0;
 }
 
 .stage-step.completed .stage-number::before {
@@ -84,9 +82,7 @@
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
     border: 2px solid #667eea;
-    /* ✅ 3px → 2px */
     box-shadow: 0 3px 12px rgba(102, 126, 234, 0.4);
-    /* ✅ 섀도우 축소 */
     animation: pulse-ring 2s infinite;
 }
 
@@ -94,19 +90,15 @@
     color: #667eea;
     font-weight: 700;
     font-size: 0.85rem;
-    /* ✅ 0.9rem → 0.85rem */
 }
 
 @keyframes pulse-ring {
     0% {
         box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
     }
-
     50% {
         box-shadow: 0 0 0 8px rgba(102, 126, 234, 0);
-        /* ✅ 10px → 8px */
     }
-
     100% {
         box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
     }
@@ -116,13 +108,10 @@
 .stage-connector {
     flex: 1;
     height: 2px;
-    /* ✅ 3px → 2px */
     background: #e0e0e0;
     margin: 0 12px;
-    /* ✅ 15px → 12px */
     position: relative;
     bottom: 16px;
-    /* ✅ 18px → 16px */
 }
 
 .stage-connector.completed {
@@ -130,18 +119,16 @@
 }
 
 /* ========================================
-   상단 진행바
+   진행바
 ======================================== */
 
 .progress-bar {
     width: 100%;
     height: 5px;
-    /* ✅ 6px → 5px */
     background: #e0e0e0;
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 10px;
-    /* ✅ 12px → 10px */
 }
 
 .progress-fill {
@@ -152,7 +139,7 @@
 }
 
 /* ========================================
-   ✅ 문제 번호 + 사이트 URL + 타이머 3단 배치
+   테스트 헤더 (문제번호 + URL + 타이머)
 ======================================== */
 
 .test-header {
@@ -160,21 +147,16 @@
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    /* ✅ 15px → 12px */
     margin-bottom: 12px;
-    /* ✅ 15px → 12px */
     padding: 0;
-
     white-space: nowrap;
 }
 
 .question-number {
     font-size: 0.9rem;
-    /* ✅ 0.95rem → 0.9rem */
     color: #666;
     font-weight: 600;
     padding: 5px 12px;
-    /* ✅ 6px 14px → 5px 12px */
     border-radius: 8px;
     background: white;
 }
@@ -184,10 +166,8 @@
     font-weight: 700;
 }
 
-/* ✅ 중앙 사이트 URL */
 .site-url {
     font-size: 0.85rem;
-    /* ✅ 0.9rem → 0.85rem */
     color: #999;
     font-weight: 500;
     text-align: center;
@@ -196,7 +176,6 @@
 
 .timer {
     font-size: 0.9rem;
-    /* ✅ 0.95rem → 0.9rem */
     font-weight: 700;
     color: #667eea;
     display: flex;
@@ -210,19 +189,12 @@
 }
 
 @keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 
 /* ========================================
-   문제 섹션 - ✅ 워터마크 추가
+   문제 섹션
 ======================================== */
 
 .question-section {
@@ -232,12 +204,9 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     margin: 0 auto 12px;
     padding: 15px;
-    /* ✅ 패딩 추가 */
     display: flex;
     flex-direction: column;
-    /* ✅ 세로 배치 */
     gap: 8px;
-    /* ✅ 이미지와 워터마크 간격 */
 }
 
 .question-image {
@@ -256,7 +225,7 @@
     display: block;
 }
 
-/* ✅ 응시번호 & URL을 이미지 아래로 배치 */
+/* 워터마크 (응시번호 + URL) */
 .question-watermark {
     display: flex;
     justify-content: space-between;
@@ -280,9 +249,8 @@
     white-space: nowrap;
 }
 
-
 /* ========================================
-   보기 그리드 - ✅ 대폭 축소
+   보기 그리드
 ======================================== */
 
 .choices-grid {
@@ -297,9 +265,7 @@
 .choice-item {
     cursor: pointer;
     border: 2px solid #e0e0e0;
-    /* ✅ 3px → 2px */
     border-radius: 10px;
-    /* ✅ 12px → 10px */
     padding: 10px;
     transition: all 0.3s;
     text-align: center;
@@ -310,67 +276,48 @@
     justify-content: center;
     width: 100%;
     max-width: 150px;
-    /* ✅ 180px → 160px */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
-    /* ✅ 섀도우 축소 */
 }
 
 .choice-item:hover {
     border-color: #667eea;
     transform: translateY(-2px);
-    /* ✅ -3px → -2px */
     box-shadow: 0 5px 14px rgba(102, 126, 234, 0.3);
-    /* ✅ 섀도우 축소 */
 }
 
 .choice-item.selected {
     border-color: #667eea;
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
     box-shadow: 0 5px 16px rgba(102, 126, 234, 0.4);
-    /* ✅ 섀도우 축소 */
     animation: selectPulse 0.3s ease;
 }
 
 @keyframes selectPulse {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 .choice-item img {
     width: 100%;
     height: auto;
     max-width: 120px;
-    /* ✅ 140px → 120px */
     margin: 0 auto;
     border-radius: 6px;
-    /* ✅ 8px → 6px */
 }
 
 /* ========================================
-   자동 넘김 안내 문구 - ✅ 축소
+   자동 넘김 안내
 ======================================== */
 
 .auto-next-notice {
     text-align: center;
     padding: 10px 15px;
-    /* ✅ 12px 18px → 10px 15px */
     background: rgba(102, 126, 234, 0.05);
     border-radius: 8px;
-    /* ✅ 10px → 8px */
     margin-bottom: 12px;
-    /* ✅ 15px → 12px */
     color: #666;
     font-size: 0.85rem;
-    /* ✅ 0.9rem → 0.85rem */
     border: 1px solid rgba(102, 126, 234, 0.1);
 }
 
@@ -380,32 +327,26 @@
 }
 
 /* ========================================
-   네비게이션 버튼 - ✅ 축소
+   네비게이션 버튼
 ======================================== */
 
 .navigation-buttons {
     display: flex;
     gap: 12px;
-    /* ✅ 15px → 12px */
     justify-content: center;
     align-items: center;
     margin-top: 12px;
-    /* ✅ 15px → 12px */
 }
 
 .nav-btn {
     padding: 10px 25px;
-    /* ✅ 12px 30px → 10px 25px */
     border: none;
     border-radius: 8px;
-    /* ✅ 10px → 8px */
     font-size: 0.95rem;
-    /* ✅ 1rem → 0.95rem */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    /* ✅ 섀도우 축소 */
 }
 
 .prev-btn {
@@ -417,7 +358,6 @@
     background: #5a6268;
     transform: translateY(-2px);
     box-shadow: 0 3px 10px rgba(108, 117, 125, 0.3);
-    /* ✅ 섀도우 축소 */
 }
 
 .prev-btn:disabled {
@@ -436,38 +376,19 @@
     background: #764ba2;
     transform: translateY(-2px);
     box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
-    /* ✅ 섀도우 축소 */
 }
 
 .submit-btn {
     background: #28a745;
     color: white;
     padding: 10px 35px;
-    /* ✅ 12px 40px → 10px 35px */
     box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
-    /* ✅ 섀도우 축소 */
 }
 
 .submit-btn:hover {
     background: #218838;
     transform: translateY(-2px);
     box-shadow: 0 5px 14px rgba(40, 167, 69, 0.4);
-    /* ✅ 섀도우 축소 */
-}
-
-/* ========================================
-   ✅ 우클릭 방지
-======================================== */
-
-body {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
-img {
-    pointer-events: none;
 }
 
 /* ========================================
@@ -477,59 +398,46 @@ img {
 @media (max-width: 1024px) {
     .test-container {
         padding: 12px;
-        /* ✅ 15px → 12px */
     }
 
     .stage-indicator {
         padding: 15px 20px;
-        /* ✅ 18px 25px → 15px 20px */
     }
 
     .stage-number {
         width: 42px;
-        /* ✅ 45px → 42px */
         height: 42px;
         font-size: 1.1rem;
-        /* ✅ 1.2rem → 1.1rem */
     }
 
     .stage-label {
         font-size: 0.75rem;
-        /* ✅ 0.8rem → 0.75rem */
     }
 
     .stage-step.active .stage-label {
         font-size: 0.8rem;
-        /* ✅ 0.85rem → 0.8rem */
     }
 
     .question-section {
         padding: 18px;
-        /* ✅ 25px → 18px */
     }
 
     .question-image img {
         max-width: 480px;
-        /* ✅ 550px → 480px */
     }
 
     .choices-grid {
         max-width: 650px;
-        /* ✅ 700px → 650px */
         gap: 10px;
-        /* ✅ 12px → 10px */
     }
 
     .choice-item {
         padding: 10px;
-        /* ✅ 12px → 10px */
         max-width: 145px;
-        /* ✅ 160px → 145px */
     }
 
     .choice-item img {
         max-width: 110px;
-        /* ✅ 120px → 110px */
     }
 }
 
@@ -546,135 +454,91 @@ img {
         padding: 12px 10px;
     }
 
-    /* ✅ 모바일에서도 가로 일렬 배치 유지 */
     .stage-steps {
         flex-direction: row;
-        /* ✅ column → row */
         gap: 8px;
-        /* ✅ 12px → 8px (간격 축소) */
         justify-content: center;
-        /* ✅ 중앙 정렬 */
         align-items: center;
-        /* ✅ 수직 중앙 */
     }
 
-    /* ✅ 연결선 표시 (일렬 배치용) */
     .stage-connector {
         display: block;
-        /* ✅ none → block */
         flex: 0 0 auto;
-        /* ✅ 크기 고정 */
         width: 30px;
-        /* ✅ 좁은 연결선 */
         height: 2px;
         background: #e0e0e0;
         margin: 0 5px;
-        /* ✅ 좌우 간격 */
         position: static;
-        /* ✅ relative 해제 */
         bottom: auto;
     }
 
-    .stage-connector.completed {
-        background: #d0d0d0;
-    }
-
-    /* ✅ 단계 아이템 세로 배치 (번호 위, 라벨 아래) */
     .stage-step {
         width: auto;
-        /* ✅ 100% → auto */
         flex-direction: column;
-        /* ✅ row → column */
         justify-content: center;
-        /* ✅ 중앙 정렬 */
         align-items: center;
-        /* ✅ 중앙 정렬 */
         gap: 4px;
-        /* ✅ 10px → 4px (번호-라벨 간격 축소) */
         flex-shrink: 0;
-        /* ✅ 줄어들지 않게 */
     }
 
     .stage-number {
         width: 36px;
-        /* ✅ 38px → 36px (더 컴팩트) */
         height: 36px;
         font-size: 0.95rem;
-        /* ✅ 1rem → 0.95rem */
     }
 
     .stage-label {
         font-size: 0.7rem;
-        /* ✅ 0.8rem → 0.7rem (더 작게) */
         text-align: center;
-        /* ✅ left → center */
         white-space: nowrap;
-        /* ✅ 줄바꿈 방지 */
     }
 
     .stage-step.active .stage-label {
         font-size: 0.75rem;
-        /* ✅ 0.85rem → 0.75rem */
     }
 
     .test-header {
         display: flex;
         flex-direction: row;
-        /* ✅ column → row */
         justify-content: space-between;
-        /* ✅ 양쪽 정렬 */
         align-items: center;
-        /* ✅ 중앙 정렬 */
         gap: 8px;
-        /* ✅ 간격 조정 */
         flex-wrap: wrap;
-        /* ✅ 필요시 줄바꿈 */
     }
 
     .question-number {
         font-size: 0.75rem;
-        /* ✅ 0.8rem → 0.75rem (더 컴팩트) */
         padding: 4px 8px;
         white-space: nowrap;
-        /* ✅ 줄바꿈 방지 */
     }
 
     .site-url {
         font-size: 0.7rem;
-        /* ✅ 폰트 축소 */
         text-align: center;
-        /* ✅ 중앙 정렬 */
         flex: 1;
-        /* ✅ 남은 공간 차지 */
         white-space: nowrap;
-        /* ✅ 줄바꿈 방지 */
         overflow: hidden;
-        /* ✅ 넘침 숨김 */
         text-overflow: ellipsis;
-        /* ✅ ... 처리 */
         min-width: 0;
-        /* ✅ flex 축소 허용 */
     }
 
     .timer {
         font-size: 0.75rem;
-        /* ✅ 0.8rem → 0.75rem */
         white-space: nowrap;
-        /* ✅ 줄바꿈 방지 */
     }
 
-     .question-section {
+    .question-section {
         padding: 12px;
     }
-    
+
     .question-watermark {
         padding: 3px 6px;
     }
-    
+
     .test-number {
         font-size: 0.65rem;
     }
-    
+
     .test-url {
         font-size: 0.7rem;
     }
@@ -682,28 +546,22 @@ img {
     .choices-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
-        /* ✅ 12px → 10px */
         max-width: 100%;
         margin-bottom: 12px;
-        /* ✅ 15px → 12px */
     }
 
     .choice-item {
         padding: 10px;
-        /* ✅ 12px → 10px */
         max-width: none;
     }
 
     .choice-item img {
         max-width: 100px;
-        /* ✅ 110px → 100px */
     }
 
     .auto-next-notice {
         font-size: 0.75rem;
-        /* ✅ 0.8rem → 0.75rem */
         padding: 8px 10px;
-        /* ✅ 10px 12px → 8px 10px */
     }
 
     .navigation-buttons {
@@ -713,11 +571,8 @@ img {
     .nav-btn {
         flex: 1;
         min-width: 100px;
-        /* ✅ 110px → 100px */
         padding: 9px 16px;
-        /* ✅ 10px 18px → 9px 16px */
         font-size: 0.85rem;
-        /* ✅ 0.9rem → 0.85rem */
     }
 
     .submit-btn {
@@ -731,64 +586,52 @@ img {
 
 @media (max-width: 480px) {
     .stage-number {
-        width: 34px;
-        /* ✅ 36px → 34px */
-        height: 34px;
-        font-size: 0.95rem;
-        /* ✅ 1rem → 0.95rem */
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
     }
 
     .stage-label {
-        font-size: 0.75rem;
-        /* ✅ 0.8rem → 0.75rem */
+        font-size: 0.65rem;
     }
 
     .stage-step.active .stage-label {
-        font-size: 0.8rem;
-        /* ✅ 0.85rem → 0.8rem */
+        font-size: 0.7rem;
     }
 
     .question-section {
         padding: 10px;
     }
-    
+
     .test-number {
         font-size: 0.6rem;
     }
-    
+
     .test-url {
         font-size: 0.65rem;
     }
 
     .choices-grid {
         gap: 8px;
-        /* ✅ 10px → 8px */
     }
 
     .choice-item {
         padding: 8px;
-        /* ✅ 유지 */
     }
 
     .choice-item img {
         max-width: 90px;
-        /* ✅ 95px → 90px */
     }
 
     .nav-btn {
         min-width: 90px;
-        /* ✅ 95px → 90px */
         padding: 8px 12px;
-        /* ✅ 9px 14px → 8px 12px */
         font-size: 0.8rem;
-        /* ✅ 0.85rem → 0.8rem */
     }
 
     .auto-next-notice {
         font-size: 0.7rem;
-        /* ✅ 0.75rem → 0.7rem */
         padding: 7px 8px;
-        /* ✅ 8px → 7px 8px */
     }
 }
 
@@ -809,20 +652,9 @@ img {
 }
 
 @keyframes dots {
-
-    0%,
-    20% {
-        content: '.';
-    }
-
-    40% {
-        content: '..';
-    }
-
-    60%,
-    100% {
-        content: '...';
-    }
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
 }
 
 .error-message {

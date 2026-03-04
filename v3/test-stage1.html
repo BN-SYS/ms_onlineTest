@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,94 +7,19 @@
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/test.css">
 </head>
-
 <body>
     <!-- 헤더 -->
     <div id="header-placeholder"></div>
 
-    <div class="test-container">
-        <!-- 단계 표시 -->
-        <div class="stage-indicator">
-            <div class="stage-steps">
-                <div class="stage-step active">
-                    <div class="stage-number">1</div>
-                    <div class="stage-label">시각 추론</div>
-                </div>
-                <div class="stage-connector"></div>
-                <div class="stage-step">
-                    <div class="stage-number">2</div>
-                    <div class="stage-label">논리 사고</div>
-                </div>
-                <div class="stage-connector"></div>
-                <div class="stage-step">
-                    <div class="stage-number">3</div>
-                    <div class="stage-label">종합 인지</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 상단 진행바 -->
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressBar"></div>
-        </div>
-
-        <!-- 문제 번호 + 사이트 URL + 타이머 -->
-        <div class="test-header">
-            <div class="question-number">
-                <span id="currentQuestion">1</span> / <span id="totalQuestions">15</span>
-            </div>
-            <div class="site-url">
-                <span id="siteUrl">test.mensakorea.kr</span>
-            </div>
-            <div class="timer" id="timer">
-                ⏱<span id="timeDisplay">30:00</span>
-            </div>
-        </div>
-
-        <!-- 문제 영역 -->
-        <div class="question-section">
-            <div class="question-image">
-                <img id="questionImg" src="" alt="문제 이미지">
-            </div>
-            <!-- ✅ 응시번호 & URL을 이미지 외부로 분리 -->
-            <div class="question-watermark">
-                <span class="test-number" id="testNumber">ONT-1234</span>
-                <span class="test-url">test.mensakorea.kr</span>
-            </div>
-        </div>
-
-        <!-- 보기 영역 -->
-        <div class="choices-grid" id="choicesGrid">
-            <!-- JS로 동적 생성 -->
-        </div>
-
-        <!-- 자동 넘김 안내 문구 -->
-        <div class="auto-next-notice">
-            💡 <strong>답을 선택하면 자동으로 다음 문제로 넘어갑니다</strong>
-        </div>
-
-        <!-- 네비게이션 버튼 -->
-        <div class="navigation-buttons">
-            <button class="nav-btn prev-btn" id="prevBtn" onclick="previousQuestion()">
-                ← 이전 문제
-            </button>
-            <button class="nav-btn next-btn" id="nextBtn" onclick="nextQuestion()">
-                다음 문제 →
-            </button>
-            <button class="nav-btn submit-btn" id="submitBtn" onclick="submitTest()" style="display:none;">
-                제출하기
-            </button>
-        </div>
-    </div>
+    <!-- 테스트 컨테이너 (동적 생성) -->
+    <div id="test-container-wrapper"></div>
 
     <!-- 푸터 -->
     <div id="footer-placeholder"></div>
 
-    <!-- include.js 추가 -->
+    <!-- Scripts -->
     <script src="js/include.js"></script>
-    <!-- 테스트 공통 로직 추가 -->
     <script src="js/test-common.js"></script>
     <script src="js/test-stage1.js"></script>
 </body>
-
 </html>

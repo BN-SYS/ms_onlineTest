@@ -1,139 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3단계 테스트 - 멘사 온라인 테스트</title>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/test.css">
-    <link rel="stylesheet" href="css/metacognition-modal.css"> <!-- ✅ 모달 스타일 추가 -->
+    <link rel="stylesheet" href="css/metacognition-modal.css"> <!-- 모달 스타일 -->
 </head>
-
 <body>
     <!-- 헤더 -->
     <div id="header-placeholder"></div>
 
-    <div class="test-container">
-        <!-- 단계 표시 -->
-        <div class="stage-indicator">
-            <div class="stage-steps">
-                <div class="stage-step completed">
-                    <div class="stage-number">1</div>
-                    <div class="stage-label">시각 추론</div>
-                </div>
-                <div class="stage-connector completed"></div>
-                <div class="stage-step completed">
-                    <div class="stage-number">2</div>
-                    <div class="stage-label">논리 사고</div>
-                </div>
-                <div class="stage-connector"></div>
-                <div class="stage-step active">
-                    <div class="stage-number">3</div>
-                    <div class="stage-label">종합 인지</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 상단 진행바 -->
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressBar"></div>
-        </div>
-
-        <!-- 문제 번호 및 타이머 -->
-        <div class="test-header">
-            <div class="question-number">
-                <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span>
-            </div>
-            <div class="site-url">
-                <span id="siteUrl">test.mensakorea.kr</span>
-            </div>
-            <div class="timer" id="timer">
-                ⏱<span id="timeDisplay">00:00</span>
-            </div>
-        </div>
-
-        <!-- 문제 영역 -->
-        <div class="question-section">
-            <div class="question-image">
-                <img id="questionImg" src="" alt="문제 이미지">
-            </div>
-            <!-- ✅ 응시번호 & URL을 이미지 외부로 분리 -->
-            <div class="question-watermark">
-                <span class="test-number" id="testNumber">ONT-1234</span>
-                <span class="test-url">test.mensakorea.kr</span>
-            </div>
-        </div>
-
-        <!-- 보기 영역 -->
-        <div class="choices-grid" id="choicesGrid">
-            <!-- JS로 동적 생성 -->
-        </div>
-
-        <!-- 자동 넘김 안내 문구 -->
-        <div class="auto-next-notice">
-            💡 <strong>답을 선택하면 자동으로 다음 문제로 넘어갑니다</strong>
-        </div>
-
-        <!-- 네비게이션 버튼 -->
-        <div class="navigation-buttons">
-            <button class="nav-btn prev-btn" id="prevBtn" onclick="previousQuestion()">
-                ← 이전 문제
-            </button>
-            <button class="nav-btn next-btn" id="nextBtn" onclick="nextQuestion()">
-                다음 문제 →
-            </button>
-            <button class="nav-btn submit-btn" id="submitBtn" onclick="submitTest()" style="display:none;">
-                제출하기
-            </button>
-        </div>
-    </div>
-
-    <!-- ✅ 메타인지 측정 모달 (예상 정답수만) -->
-    <div class="metacognition-modal" id="metacognitionModal" style="display: none;">
-        <div class="modal-overlay"></div>
-        <div class="modal-content">
-            <!-- 모달 헤더 -->
-            <div class="modal-header">
-                <h2>테스트를 마치셨습니다!</h2>
-                <p class="modal-subtitle">결과 확인 전, 본인의 예상 성적을 입력해주세요.</p>
-                <div class="modal-info">
-                    <span class="info-icon">※</span>
-                    <span class="info-text">메타인지(자기 인식 능력)는 높은 지능의 중요한 요소입니다.</span>
-                </div>
-            </div>
-
-            <!-- 질문 섹션 -->
-            <div class="modal-body">
-                <!-- 질문: 예상 정답 개수 -->
-                <div class="question-item">
-                    <div class="question-header">
-                        <span class="question-badge">Q</span>
-                        <h3>전체 25문제 중 몇 문제를 맞췄다고 생각하시나요?</h3>
-                    </div>
-                    <div class="input-group">
-                        <div class="input-wrapper">
-                            <input type="number" id="expectedCorrect" class="modal-input" min="0" max="25"
-                                placeholder="예: 18">
-                            <span class="input-unit">문제</span>
-                        </div>
-                        <p class="input-hint">0 ~ 25 사이의 숫자를 입력해주세요</p>
-                        <p class="input-error" id="errorCorrect" style="display: none;">
-                            0에서 25 사이의 숫자를 입력해주세요
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 모달 푸터 -->
-            <div class="modal-footer">
-                <button class="modal-submit-btn" id="modalSubmitBtn" onclick="submitMetacognition()">
-                    <span class="btn-icon">✓</span>
-                    <span class="btn-text">완료하기</span>
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- 테스트 컨테이너 (동적 생성, 메타인지 모달 포함) -->
+    <div id="test-container-wrapper"></div>
 
     <!-- 푸터 -->
     <div id="footer-placeholder"></div>
@@ -142,7 +22,5 @@
     <script src="js/include.js"></script>
     <script src="js/test-common.js"></script>
     <script src="js/test-stage3.js"></script>
-    <script src="js/metacognition-modal.js"></script> <!-- ✅ 모달 로직 추가 -->
 </body>
-
 </html>

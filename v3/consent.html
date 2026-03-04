@@ -51,6 +51,7 @@
                     </div>
                 </div>
 
+
                 <div class="sample-hint-compact" id="sampleHint">
                     <strong>💡 정답 해설</strong><br>
                     첫 번째 식: □ + ● = (□ 안의 ●)<br>
@@ -85,7 +86,7 @@
                     <li>업그레이드 가능 (차액 결제)</li>
                 </ul>
             </div> -->
-<!-- 
+            <!-- 
             <div class="warning-box-compact">
                 <strong>중요 안내</strong>
                 본 테스트는 멘사 공식 입회 테스트가 아닙니다.<br>결과는 참고용입니다.
@@ -172,111 +173,8 @@
 
     <!-- Scripts -->
     <script src="js/include.js"></script>
-    <script>
-        // ✅ 토글 함수
-        function toggleConsentDetail(event) {
-            event.stopPropagation();
-            event.preventDefault();
+    <script src="js/consent.js"></script>
 
-            const detailBox = document.getElementById('consentDetail');
-            const toggleIcon = event.target;
-
-            detailBox.classList.toggle('open');
-            toggleIcon.classList.toggle('open');
-        }
-
-        // ✅ 출생연도 드롭다운 생성 (1930 ~ 현재-8)
-        function populateBirthYearDropdown() {
-            const birthYearSelect = document.getElementById('birthYear');
-            const currentYear = new Date().getFullYear();
-            const maxYear = currentYear - 8;
-            const minYear = 1930;
-
-            for (let year = maxYear; year >= minYear; year--) {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year + '년';
-                birthYearSelect.appendChild(option);
-            }
-        }
-
-        // 예제 문제 선택
-        function selectSample(element, isCorrect) {
-            const allOptions = document.querySelectorAll('.sample-option-image');
-            allOptions.forEach(opt => {
-                opt.style.pointerEvents = 'none';
-            });
-
-            if (isCorrect) {
-                element.classList.add('correct');
-                document.getElementById('sampleHint').style.display = 'block';
-            } else {
-                element.classList.add('wrong');
-                setTimeout(() => {
-                    document.querySelector('.sample-option-image:nth-child(2)').classList.add('correct');
-                    document.getElementById('sampleHint').style.display = 'block';
-                }, 800);
-            }
-        }
-
-        // ✅ DOMContentLoaded 안에 모든 초기화 로직 배치
-        window.addEventListener('DOMContentLoaded', function() {
-            // 출생연도 드롭다운 생성
-            populateBirthYearDropdown();
-
-            // 폼 요소 가져오기
-            const form = document.getElementById('consentForm');
-            const startBtn = document.getElementById('startBtn');
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            const userName = document.getElementById('userName');
-            const birthYear = document.getElementById('birthYear');
-            const userEmail = document.getElementById('userEmail');
-
-            // 모든 필수 항목 확인
-            function checkFormValidity() {
-                const allCheckboxesChecked = Array.from(checkboxes).every(cb => cb.checked);
-                const nameValid = userName.value.trim().length > 0;
-                const yearValid = birthYear.value !== '';
-                const emailValid = userEmail.value.includes('@') && userEmail.value.includes('.');
-
-                console.log('폼 검증:', {
-                    checkboxes: allCheckboxesChecked,
-                    name: nameValid,
-                    year: yearValid,
-                    email: emailValid
-                });
-
-                if (allCheckboxesChecked && nameValid && yearValid && emailValid) {
-                    startBtn.disabled = false;
-                } else {
-                    startBtn.disabled = true;
-                }
-            }
-
-            // 이벤트 리스너 등록
-            checkboxes.forEach(cb => cb.addEventListener('change', checkFormValidity));
-            userName.addEventListener('input', checkFormValidity);
-            birthYear.addEventListener('change', checkFormValidity);
-            userEmail.addEventListener('input', checkFormValidity);
-
-            // 폼 제출
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                const userData = {
-                    name: userName.value.trim(),
-                    birthYear: parseInt(birthYear.value),
-                    email: userEmail.value.trim(),
-                    timestamp: new Date().toISOString()
-                };
-
-                localStorage.setItem('userData', JSON.stringify(userData));
-                console.log('✅ 사용자 정보 저장:', userData);
-
-                window.location.href = 'test-stage1.html';
-            });
-        });
-    </script>
 </body>
 
 </html>

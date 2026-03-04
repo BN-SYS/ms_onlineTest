@@ -1,5 +1,6 @@
 /* ========================================
-   js/result-basic.js - 점수 체계로 변경
+   js/result-basic.js
+   요구사항 명세 기반 점수 산출 로직 적용
 ======================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,235 +8,165 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadBasicResult() {
-    // localStorage에서 데이터 가져오기
+    console.log('=== 기본 결과 로드 시작 ===');
+
+    // ========================================
+    // 1. 데이터 수집
+    // ========================================
     let stage1 = JSON.parse(localStorage.getItem('stage1Result') || 'null');
     let stage2 = JSON.parse(localStorage.getItem('stage2Result') || 'null');
     let stage3 = JSON.parse(localStorage.getItem('stage3Result') || 'null');
-    let userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    let userData = JSON.parse(localStorage.getItem('userData') || 'null');
     let testSettings = JSON.parse(localStorage.getItem('testSettings') || 'null');
+    let metacognitionData = JSON.parse(localStorage.getItem('metacognitionData') || 'null');
 
-    // 데이터 없으면 샘플 데이터 사용
-    if (!stage1) stage1 = createSampleStage1();
-    if (!stage2) stage2 = createSampleStage2();
-    if (!stage3) stage3 = createSampleStage3();
-    if (!userData || Object.keys(userData).length === 0) {
+    // 실제 데이터 없으면 샘플 사용
+    const hasRealData = stage1 && stage2 && stage3 && userData;
+
+    if (!hasRealData) {
+        console.warn('⚠️ 실제 테스트 데이터가 없습니다. 샘플 데이터를 사용합니다.');
+        stage1 = createSampleStage1();
+        stage2 = createSampleStage2();
+        stage3 = createSampleStage3();
         userData = createSampleUser();
+        metacognitionData = createSampleMetacognition();
     }
+
     if (!testSettings) {
         testSettings = createSampleTestSettings();
     }
 
-    console.log('베이직 결과 로드:', { stage1, stage2, stage3, userData, testSettings });
+    console.log('로드된 데이터:', { stage1, stage2, stage3, userData, testSettings, metacognitionData });
 
-    // 날짜 표시
+    // ========================================
+    // 2. 날짜 및 인증정보 생성
+    // ========================================
     const now = new Date();
     const dateStr = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
-    const dateElem = document.getElementById('testDate');
-    if (dateElem) {
-        dateElem.textContent = dateStr;
-        console.log('날짜 표시:', dateStr);
-    }
 
-    // 이미 저장된 인증번호/코드가 있으면 재사용, 없으면 새로 생성
     let certNumber = localStorage.getItem('certNumber');
     let verifyCode = localStorage.getItem('verifyCode');
 
     if (!certNumber) {
+        // 발급번호: MS-{년도}-{일련번호 6자리}
         certNumber = `MS-${now.getFullYear()}-${String(Date.now()).slice(-6)}`;
         localStorage.setItem('certNumber', certNumber);
     }
+
     if (!verifyCode) {
+        // 진위확인 코드: {4자리}-{4자리}
         verifyCode = generateVerifyCode(userData.sessionId || userData.email || certNumber);
         localStorage.setItem('verifyCode', verifyCode);
     }
 
-    console.log('생성된 인증정보:', { certNumber, verifyCode });
+    // ========================================
+    // 3. 점수 계산 (요구사항 명세 기반)
+    // ========================================
+    const scoreResult = calculateComprehensiveScore(
+        stage1,
+        stage2,
+        stage3,
+        userData.birthYear,
+        testSettings,
+        metacognitionData
+    );
+
+    console.log('최종 점수 결과:', scoreResult);
+
+    // ========================================
+    // 4. UI 업데이트
+    // ========================================
+    
+    // 날짜 표시
+    const dateElem = document.getElementById('testDate');
+    if (dateElem) {
+        dateElem.textContent = dateStr;
+    }
 
     // 개인정보 표시
     const userNameElem = document.getElementById('userName');
     const userBirthElem = document.getElementById('userBirth');
-    const certNumberElem = document.getElementById('certNumber');
+    const totalTimeElem = document.getElementById('totalTime');
     const verifyCodeElem = document.getElementById('verifyCode');
 
     if (userNameElem) {
         userNameElem.textContent = userData.name || '홍길동';
-        console.log('이름 표시:', userNameElem.textContent);
-    } else {
-        console.error('userName 요소를 찾을 수 없습니다.');
     }
 
     if (userBirthElem) {
         userBirthElem.textContent = (userData.birthYear || '1990') + '년생';
-        console.log('생년월일 표시:', userBirthElem.textContent);
-    } else {
-        console.error('userBirth 요소를 찾을 수 없습니다.');
     }
 
-    if (certNumberElem) {
-        certNumberElem.textContent = certNumber;
-        console.log('인증번호 표시:', certNumberElem.textContent);
-    } else {
-        console.error('certNumber 요소를 찾을 수 없습니다.');
+    // 소요시간 표시
+    if (totalTimeElem) {
+        totalTimeElem.textContent = scoreResult.totalTimeFormatted;
+        console.log('소요시간 표시:', scoreResult.totalTimeFormatted);
     }
 
     if (verifyCodeElem) {
         verifyCodeElem.textContent = verifyCode;
-        console.log('진위확인코드 표시:', verifyCodeElem.textContent);
-    } else {
-        console.error('verifyCode 요소를 찾을 수 없습니다.');
-        // ID가 다를 수 있으니 다른 이름으로도 시도
-        const altVerifyCode = document.getElementById('verificationCode');
-        if (altVerifyCode) {
-            altVerifyCode.textContent = verifyCode;
-            console.log('진위확인코드 표시 (대체 ID):', verifyCode);
-        }
     }
 
-    // 점수 계산 (100점 만점)
-    const scoreResult = calculateScore(stage1, stage2, stage3, userData.birthYear, testSettings);
-
-    // 총 점수 표시
+    // 종합점수 표시
     const totalScoreElem = document.getElementById('totalScore');
-    const percentileElem = document.getElementById('percentile');
+    const percentileElem = document.getElementById('score-percentile');
 
     if (totalScoreElem) {
-        totalScoreElem.textContent = scoreResult.totalScore + '점';
-        console.log('종합점수 표시:', scoreResult.totalScore);
-    }
-    if (percentileElem) {
-        percentileElem.textContent = scoreResult.scoreRank;  // 상위권/중위권/하위권 표시
-        console.log('등급 표시:', scoreResult.scoreRank);
+        totalScoreElem.innerHTML = `${scoreResult.finalScore}<span class="score-unit">점</span>`;
+        console.log('종합점수 표시:', scoreResult.finalScore);
     }
 
-    // 단계별 점수 표시
-    displayStageScores(scoreResult);
+    if (percentileElem) {
+        percentileElem.textContent = scoreResult.rank;
+        console.log('등급 표시:', scoreResult.rank);
+    }
 
     // 해석 표시
     displayInterpretation(scoreResult);
 
-    // 결과 저장 (상세 리포트용)
-    localStorage.setItem('scoreResult', JSON.stringify(scoreResult));
-    localStorage.setItem('certNumber', certNumber);
-    localStorage.setItem('verifyCode', verifyCode);
+    // ========================================
+    // 5. 결과 저장 (상세 리포트용)
+    // ========================================
+    const fullResult = {
+        ...scoreResult,
+        certNumber,
+        verifyCode,
+        testDate: dateStr,
+        userData: userData,
+        stage1Data: stage1,
+        stage2Data: stage2,
+        stage3Data: stage3,
+        metacognitionData: metacognitionData
+    };
 
-    // 이메일 발송 (선택적)
-    sendEmailNotification();
+    localStorage.setItem('scoreResult', JSON.stringify(fullResult));
+    console.log('✅ 결과 저장 완료');
 }
 
 /* ========================================
-   샘플 데이터 생성
+   종합 점수 계산 (요구사항 명세 기준)
 ======================================== */
-function createSampleUser() {
-    const timestamp = Date.now();
-    return {
-        name: '홍길동',
-        email: `test${timestamp}@example.com`,
-        birthYear: '1990',
-        sessionId: `session_${timestamp}`
-    };
-}
+function calculateComprehensiveScore(stage1, stage2, stage3, birthYear, testSettings, metacognitionData) {
+    console.log('=== 종합 점수 계산 시작 ===');
 
-function createSampleStage1() {
-    return {
-        stage: 1,
-        correctCount: 12,
-        totalQuestions: 15,
-        correctRate: 80,
-        totalTime: 450,
-        avgTimePerQuestion: 30
-    };
-}
-
-function createSampleStage2() {
-    return {
-        stage: 2,
-        correctCount: 4,
-        totalQuestions: 5,
-        correctRate: 80,
-        totalTime: 200,
-        avgTimePerQuestion: 40
-    };
-}
-
-function createSampleStage3() {
-    return {
-        stage: 3,
-        correctCount: 3,
-        totalQuestions: 5,
-        correctRate: 60,
-        totalTime: 225,
-        avgTimePerQuestion: 45
-    };
-}
-
-function createSampleTestSettings() {
-    return {
-        stage1: {
-            questionCount: 15,
-            baseScore: 40,
-            pointPerQuestion: 4
-        },
-        stage2: {
-            questionCount: 5,
-            baseScore: 60,
-            pointPerQuestion: 8
-        },
-        stage3: {
-            questionCount: 5,
-            baseScore: 60,
-            pointPerQuestion: 8
-        }
-    };
-}
-
-/* ========================================
-   진위확인 코드 생성
-======================================== */
-function generateVerifyCode(input) {
-    if (!input || input.length === 0) {
-        input = Date.now().toString() + Math.random().toString();
-    }
-
-    // 입력값에 랜덤 솔트 추가해서 '0000-0000' 충돌 방지
-    input = input + '_' + input.length + '_salt';
-
-    let hash = 0;
-    for (let i = 0; i < input.length; i++) {
-        const char = input.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-
-    // hash가 0이면 (충돌 방지) 타임스탬프 기반으로 재생성
-    if (hash === 0) {
-        hash = Date.now();
-    }
-
-    const hexCode = Math.abs(hash).toString(16).toUpperCase();
-    const paddedCode = hexCode.padStart(8, '0').slice(0, 8);
-    const verifyCode = `${paddedCode.slice(0, 4)}-${paddedCode.slice(4, 8)}`;
-
-    console.log('생성된 진위확인코드:', verifyCode);
-
-    return verifyCode;
-}
-
-/* ========================================
-   점수 계산 (100점 만점 + 연령 보정)
-======================================== */
-function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
     const currentYear = new Date().getFullYear();
     const age = currentYear - parseInt(birthYear || 1990);
 
-    // 연령 보정 점수 계산
+    // ========================================
+    // 1. 연령 보정값 계산
+    // ========================================
     let ageAdjustment = 0;
-    if (age < 30) {
-        ageAdjustment = 0;
-    } else if (age < 40) {
-        ageAdjustment = 4;
-    } else if (age < 50) {
+    if (age <= 13) {
         ageAdjustment = 8;
-    } else if (age < 60) {
+    } else if (age <= 18) {
+        ageAdjustment = 4;
+    } else if (age <= 29) {
+        ageAdjustment = 0;
+    } else if (age <= 39) {
+        ageAdjustment = 4;
+    } else if (age <= 49) {
+        ageAdjustment = 8;
+    } else if (age <= 59) {
         ageAdjustment = 12;
     } else {
         ageAdjustment = 16;
@@ -243,7 +174,9 @@ function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
 
     console.log('연령 정보:', { age, ageAdjustment });
 
-    // 각 단계별 점수 계산
+    // ========================================
+    // 2. 단계별 점수 계산 (연령 보정 적용)
+    // ========================================
     const stage1Score = calculateStageScore(
         stage1.correctCount,
         testSettings.stage1.baseScore,
@@ -265,27 +198,94 @@ function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
         ageAdjustment
     );
 
-    // 종합 점수 (3단계 평균)
-    const totalScore = Math.round((stage1Score + stage2Score + stage3Score) / 3);
+    console.log('단계별 점수 (연령 보정 후):', { stage1Score, stage2Score, stage3Score });
 
-    // 점수 기반 등급 판정
-    const scoreRank = getScoreRank(totalScore);
+    // ========================================
+    // 3. 작업속도 점수 계산 (연령 보정 적용)
+    // ========================================
+    const totalTimeSeconds = (stage1.totalTime || 0) + (stage2.totalTime || 0) + (stage3.totalTime || 0);
+    const totalTimeFormatted = formatTime(totalTimeSeconds);
 
-    console.log('단계별 점수:', {
+    // 제한시간 및 최소소요시간 (관리자 설정값, 초 단위)
+    const timeLimit = (testSettings.stage1.timeLimit || 30) * 60 +
+                      (testSettings.stage2.timeLimit || 10) * 60 +
+                      (testSettings.stage3.timeLimit || 10) * 60;
+
+    const minRequiredTime = (testSettings.stage1.minRequiredTime || 5) * 60 +
+                            (testSettings.stage2.minRequiredTime || 2) * 60 +
+                            (testSettings.stage3.minRequiredTime || 2) * 60;
+
+    let speedScore = 0;
+
+    if (totalTimeSeconds <= minRequiredTime) {
+        speedScore = 100;
+    } else if (totalTimeSeconds <= timeLimit) {
+        // 선형 환산: 60~100점 구간
+        speedScore = Math.max(60, 100 - ((totalTimeSeconds - minRequiredTime) / (timeLimit - minRequiredTime)) * 40);
+    } else {
+        // 제한시간 초과 (비정상이지만 만약 발생하면)
+        speedScore = 60;
+    }
+
+    // 연령 보정 적용
+    speedScore = Math.min(100, speedScore + ageAdjustment);
+
+    console.log('작업속도 점수 (연령 보정 후):', speedScore);
+
+    // ========================================
+    // 4. 메타인지 점수 계산 (연령 보정 미적용)
+    // ========================================
+    let metacognitionScore = 0;
+
+    if (metacognitionData && metacognitionData.expectedCorrect !== undefined) {
+        const expectedCorrect = metacognitionData.expectedCorrect;
+        const actualCorrect = stage1.correctCount + stage2.correctCount + stage3.correctCount;
+        const error = Math.abs(expectedCorrect - actualCorrect);
+
+        metacognitionScore = Math.max(0, 100 - (error * 4));
+    } else {
+        // 메타인지 데이터 없으면 0점
+        metacognitionScore = 0;
+    }
+
+    console.log('메타인지 점수 (연령 보정 없음):', metacognitionScore);
+
+    // ========================================
+    // 5. 가중 종합점수 계산
+    // ========================================
+    // 1단계 × 3, 나머지 각 × 1, 합산 / 7
+    const rawScore = (stage1Score * 3 + stage2Score * 1 + stage3Score * 1 + speedScore * 1 + metacognitionScore * 1) / 7;
+
+    console.log('가중 종합점수 (상향 보정 전):', rawScore);
+
+    // ========================================
+    // 6. 전체 상향 보정 적용
+    // ========================================
+    const upwardAdjustment = testSettings.upwardAdjustment || 5;
+    const finalScore = Math.min(100, Math.round(rawScore + upwardAdjustment));
+
+    console.log('최종 종합점수 (상향 보정 후):', finalScore);
+
+    // ========================================
+    // 7. 등급 판정
+    // ========================================
+    const rank = getRank(finalScore);
+
+    console.log('등급:', rank);
+
+    return {
         stage1Score,
         stage2Score,
         stage3Score,
-        totalScore,
-        scoreRank
-    });
-
-    return {
-        totalScore: totalScore,
-        scoreRank: scoreRank,  // 상위권/중위권/하위권
-        stage1Score: stage1Score,
-        stage2Score: stage2Score,
-        stage3Score: stage3Score,
-        ageAdjustment: ageAdjustment
+        speedScore,
+        metacognitionScore,
+        rawScore: Math.round(rawScore),
+        finalScore,
+        rank,
+        ageAdjustment,
+        upwardAdjustment,
+        totalTimeSeconds,
+        totalTimeFormatted
     };
 }
 
@@ -293,60 +293,73 @@ function calculateScore(stage1, stage2, stage3, birthYear, testSettings) {
    단계별 점수 계산
 ======================================== */
 function calculateStageScore(correctCount, baseScore, pointPerQuestion, ageAdjustment) {
-    // 점수 = 기본점수 + (정답 개수 × 문제당 배점) + 연령 보정
-    const rawScore = baseScore + (correctCount * pointPerQuestion) + ageAdjustment;
-
-    // 100점 초과 방지
-    const finalScore = Math.min(100, rawScore);
+    const rawScore = baseScore + (correctCount * pointPerQuestion);
+    const scoreWithAge = Math.min(100, rawScore + ageAdjustment);
 
     console.log('단계 점수 계산:', {
         correctCount,
         baseScore,
         pointPerQuestion,
-        ageAdjustment,
         rawScore,
-        finalScore
+        ageAdjustment,
+        finalScore: scoreWithAge
     });
 
-    return finalScore;
+    return scoreWithAge;
 }
 
 /* ========================================
-   점수 기반 등급 (상위권/중위권/하위권)
+   등급 판정
 ======================================== */
-function getScoreRank(score) {
-    if (score >= 85) return '상위권';
-    if (score >= 65) return '중위권';
+function getRank(score) {
+    if (score >= 90) return '최상위권';
+    if (score >= 80) return '상위권';
+    if (score >= 60) return '중위권';
     return '하위권';
 }
 
 /* ========================================
-   단계별 점수 표시
+   시간 포맷 변환 (초 → 분:초)
 ======================================== */
-function displayStageScores(scoreResult) {
-    // 단계별 점수를 표시할 요소들이 있다면 표시
-    const stage1ScoreElem = document.getElementById('stage1Score');
-    const stage2ScoreElem = document.getElementById('stage2Score');
-    const stage3ScoreElem = document.getElementById('stage3Score');
+function formatTime(seconds) {
+    if (!seconds || seconds <= 0) return '0분 0초';
 
-    if (stage1ScoreElem) {
-        stage1ScoreElem.textContent = `${scoreResult.stage1Score}점`;
-        console.log('1단계 점수 표시:', scoreResult.stage1Score);
-    }
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
 
-    if (stage2ScoreElem) {
-        stage2ScoreElem.textContent = `${scoreResult.stage2Score}점`;
-        console.log('2단계 점수 표시:', scoreResult.stage2Score);
-    }
-
-    if (stage3ScoreElem) {
-        stage3ScoreElem.textContent = `${scoreResult.stage3Score}점`;
-        console.log('3단계 점수 표시:', scoreResult.stage3Score);
-    }
+    return `${minutes}분 ${remainingSeconds}초`;
 }
 
 /* ========================================
-   해석 표시 (상위권/중위권/하위권 기준)
+   진위확인 코드 생성
+======================================== */
+function generateVerifyCode(input) {
+    if (!input || input.length === 0) {
+        input = Date.now().toString() + Math.random().toString();
+    }
+
+    input = input + '_' + input.length + '_salt';
+
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+        const char = input.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+
+    if (hash === 0) {
+        hash = Date.now();
+    }
+
+    const hexCode = Math.abs(hash).toString(16).toUpperCase();
+    const paddedCode = hexCode.padStart(8, '0').slice(0, 8);
+    const verifyCode = `${paddedCode.slice(0, 4)}-${paddedCode.slice(4, 8)}`;
+
+    return verifyCode;
+}
+
+/* ========================================
+   해석 표시
 ======================================== */
 function displayInterpretation(scoreResult) {
     const container = document.getElementById('interpretationBox');
@@ -357,28 +370,30 @@ function displayInterpretation(scoreResult) {
 
     let level = '';
     let description = '';
+    const score = scoreResult.finalScore;
+    const rank = scoreResult.rank;
 
-    if (scoreResult.totalScore >= 95) {
+    if (score >= 95) {
         level = '최상위 수준';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 멘사 회원 수준의 뛰어난 지능을 보유하고 계십니다. 공식 멘사 입회 테스트 합격 가능성이 매우 높습니다.`;
-    } else if (scoreResult.totalScore >= 90) {
+        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 멘사 회원 수준의 뛰어난 지능을 보유하고 계십니다. 공식 멘사 입회 테스트 합격 가능성이 매우 높습니다.`;
+    } else if (score >= 90) {
         level = '매우 우수';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 우수한 인지 능력을 가지고 계십니다. 멘사 공식 테스트에 도전해보시길 권장드립니다.`;
-    } else if (scoreResult.totalScore >= 85) {
+        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 우수한 인지 능력을 가지고 계십니다. 멘사 공식 테스트에 도전해보시길 권장드립니다.`;
+    } else if (score >= 85) {
         level = '우수';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 평균보다 훨씬 높은 인지 능력을 보유하고 있으며, 논리적 사고와 문제 해결 능력이 뛰어납니다.`;
-    } else if (scoreResult.totalScore >= 75) {
+        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 평균보다 훨씬 높은 인지 능력을 보유하고 있으며, 논리적 사고와 문제 해결 능력이 뛰어납니다.`;
+    } else if (score >= 75) {
         level = '평균 상위';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 평균 이상의 능력을 보유하고 계십니다. 추가 학습과 훈련을 통해 더욱 발전할 수 있습니다.`;
-    } else if (scoreResult.totalScore >= 65) {
+        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 평균 이상의 능력을 보유하고 계십니다. 추가 학습과 훈련을 통해 더욱 발전할 수 있습니다.`;
+    } else if (score >= 65) {
         level = '평균 중상';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 평균 수준의 인지 능력을 가지고 계십니다. 꾸준한 노력으로 향상 가능합니다.`;
-    } else if (scoreResult.totalScore >= 55) {
+        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 평균 수준의 인지 능력을 가지고 계십니다. 꾸준한 노력으로 향상 가능합니다.`;
+    } else if (score >= 55) {
         level = '평균';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 일반적인 인지 능력을 가지고 있으며, 충분한 휴식 후 재응시하시면 더 좋은 결과를 얻으실 수 있습니다.`;
+        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 일반적인 인지 능력을 가지고 있으며, 충분한 휴식 후 재응시하시면 더 좋은 결과를 얻으실 수 있습니다.`;
     } else {
         level = '발전 가능';
-        description = `귀하의 종합 점수는 <strong>${scoreResult.totalScore}점</strong>으로 <strong>${scoreResult.scoreRank}</strong>에 해당합니다. 아직 발전 가능성이 많습니다. 충분한 휴식 후 재도전을 권장합니다.`;
+        description = `귀하의 종합 점수는 <strong>${score}점</strong>으로 <strong>${rank}</strong>에 해당합니다. 아직 발전 가능성이 많습니다. 충분한 휴식 후 재도전을 권장합니다.`;
     }
 
     container.innerHTML = `
@@ -386,22 +401,84 @@ function displayInterpretation(scoreResult) {
         <p>${description}</p>
     `;
 
-    console.log('해석 표시 완료:', { level, totalScore: scoreResult.totalScore, scoreRank: scoreResult.scoreRank });
+    console.log('해석 표시 완료:', { level, score, rank });
 }
 
 /* ========================================
-   이메일 발송
+   샘플 데이터 생성
 ======================================== */
-function sendEmailNotification() {
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+function createSampleUser() {
+    const timestamp = Date.now();
+    return {
+        name: '홍길동',
+        email: `test${timestamp}@example.com`,
+        birthYear: '1990',
+        sessionId: `session_${timestamp}`
+    };
+}
 
-    if (!userData || !userData.email) {
-        console.log('이메일 정보가 없습니다.');
-        return;
-    }
+function createSampleStage1() {
+    return {
+        stage: 1,
+        correctCount: 12,
+        totalQuestions: 15,
+        correctRate: 80,
+        totalTime: 450  // 7분 30초
+    };
+}
 
-    console.log('이메일 발송 대상:', userData.email);
-    // 실제 이메일 발송 로직은 서버사이드에서 처리
+function createSampleStage2() {
+    return {
+        stage: 2,
+        correctCount: 4,
+        totalQuestions: 5,
+        correctRate: 80,
+        totalTime: 200  // 3분 20초
+    };
+}
+
+function createSampleStage3() {
+    return {
+        stage: 3,
+        correctCount: 3,
+        totalQuestions: 5,
+        correctRate: 60,
+        totalTime: 225  // 3분 45초
+    };
+}
+
+function createSampleMetacognition() {
+    return {
+        expectedCorrect: 20,
+        timestamp: new Date().toISOString()
+    };
+}
+
+function createSampleTestSettings() {
+    return {
+        stage1: {
+            questionCount: 15,
+            baseScore: 40,
+            pointPerQuestion: 4,
+            timeLimit: 30,  // 분
+            minRequiredTime: 5  // 분
+        },
+        stage2: {
+            questionCount: 5,
+            baseScore: 60,
+            pointPerQuestion: 8,
+            timeLimit: 10,
+            minRequiredTime: 2
+        },
+        stage3: {
+            questionCount: 5,
+            baseScore: 60,
+            pointPerQuestion: 8,
+            timeLimit: 10,
+            minRequiredTime: 2
+        },
+        upwardAdjustment: 5  // 전체 상향 보정값
+    };
 }
 
 /* ========================================
@@ -409,20 +486,20 @@ function sendEmailNotification() {
 ======================================== */
 function shareResult() {
     const totalScoreElem = document.getElementById('totalScore');
-    const percentileElem = document.getElementById('percentile');
+    const percentileElem = document.getElementById('score-percentile');
 
     if (!totalScoreElem || !percentileElem) {
         alert('점수 정보를 찾을 수 없습니다.');
         return;
     }
 
-    const score = totalScoreElem.textContent;
-    const rank = percentileElem.textContent;  // 상위권/중위권/하위권
-    const text = `나의 멘사 테스트 점수는 ${score} (${rank})! 멘사 온라인 테스트로 확인하세요!`;
+    const score = totalScoreElem.textContent.replace('점', '').trim();
+    const rank = percentileElem.textContent;
+    const text = `나의 멘사 브레인 챌린지 점수는 ${score}점 (${rank})! 멘사코리아 온라인 테스트로 확인하세요!`;
 
     if (navigator.share) {
         navigator.share({
-            title: '멘사 온라인 테스트 결과',
+            title: '멘사코리아 브레인 챌린지 결과',
             text: text,
             url: window.location.origin
         }).catch(err => console.log('공유 취소:', err));
@@ -437,28 +514,17 @@ function shareResult() {
    상세 리포트 업그레이드 (차액 결제)
 ======================================== */
 function upgradeToDetail() {
-    // 결제 확인 팝업
-    const confirmMsg = `상세 리포트 업그레이드\n\n결제 금액: 9,000원\n\n추가 제공 내용:\n- 분석 그래프 4개\n- 단계별 분석\n- 개선 방향 가이드\n- PDF 다운로드\n\n결제를 진행하시겠습니까?`;
+    const confirmMsg = `상세 리포트 업그레이드\n\n결제 금액: 9,000원 (차액 결제)\n\n추가 제공 내용:\n- 표준편차 그래프 4개\n- 5개 항목 점수 상세 분석\n- 개선 방향 가이드\n- PDF 다운로드\n\n결제를 진행하시겠습니까?`;
 
     if (confirm(confirmMsg)) {
-        // 결제 진행 표시
         showPaymentProcessing();
-
-        // 실제 PG 연동 시 아래 주석 해제
-        // initiatePayment();
-
-        // 테스트용: 1.5초 후 결제 완료 처리
         setTimeout(() => {
             processUpgradePayment();
         }, 1500);
     }
 }
 
-/* ========================================
-   결제 처리 중 표시
-======================================== */
 function showPaymentProcessing() {
-    // 로딩 오버레이 생성
     const overlay = document.createElement('div');
     overlay.id = 'paymentOverlay';
     overlay.style.cssText = `
@@ -482,6 +548,7 @@ function showPaymentProcessing() {
             text-align: center;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         ">
+            <div style="font-size: 3rem; margin-bottom: 20px;">💳</div>
             <h3 style="margin-bottom: 10px; color: #333;">결제 진행 중...</h3>
             <p style="color: #666;">잠시만 기다려주세요.</p>
         </div>
@@ -490,89 +557,26 @@ function showPaymentProcessing() {
     document.body.appendChild(overlay);
 }
 
-/* ========================================
-   차액 결제 처리
-======================================== */
 function processUpgradePayment() {
-    // 결제 정보 생성
     const paymentInfo = {
-        type: 'upgrade', // 차액 결제
-        originalAmount: 19900, // 기본 결과 금액
-        upgradeAmount: 5000, // 추가 결제 금액
-        totalPaid: 24900, // 총 결제 금액
+        type: 'upgrade',
+        originalAmount: 14900,
+        upgradeAmount: 9000,
+        totalPaid: 23900,
         upgraded: true,
         paymentTimestamp: new Date().toISOString(),
-        paymentMethod: 'card', // 실제로는 PG에서 받아온 정보
-        transactionId: 'TXN-' + Date.now(), // 실제로는 PG에서 받아온 거래번호
+        transactionId: 'TXN-' + Date.now(),
         certificateNumber: localStorage.getItem('certNumber'),
         verificationCode: localStorage.getItem('verifyCode')
     };
 
-    // localStorage에 결제 정보 저장
     localStorage.setItem('paymentInfo', JSON.stringify(paymentInfo));
 
-    // 결제 완료 로그
-    console.log('차액 결제 완료:', paymentInfo);
-
-    // 로딩 오버레이 제거
     const overlay = document.getElementById('paymentOverlay');
     if (overlay) {
         overlay.remove();
     }
 
-    // 결제 완료 알림
     alert('결제가 완료되었습니다!\n상세 리포트 페이지로 이동합니다.');
-
-    // 상세 리포트 페이지로 이동
     location.href = 'result-detail.html';
-}
-
-/* ========================================
-   실제 PG 결제 연동 (이니시스)
-======================================== */
-function initiatePayment() {
-    // 이니시스 PG 연동 예시
-    // 실제 구현 시 이 함수를 사용하세요
-
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    const certNumber = localStorage.getItem('certNumber');
-
-    // 이니시스 결제 파라미터 설정
-    const paymentParams = {
-        // 상점 정보
-        mid: 'YOUR_MERCHANT_ID', // 상점 ID (발급받은 ID)
-        signKey: 'YOUR_SIGN_KEY', // 서명 키
-
-        // 결제 정보
-        goodsName: '멘사 테스트 상세 리포트 업그레이드',
-        price: 5000,
-        buyerName: userData.name || '구매자',
-        buyerEmail: userData.email || '',
-        buyerTel: userData.phone || '',
-
-        // 주문 정보
-        orderNumber: certNumber || 'ORDER-' + Date.now(),
-        timestamp: new Date().getTime(),
-
-        // 결과 URL
-        returnUrl: window.location.origin + '/payment-complete.html',
-        closeUrl: window.location.origin + '/payment-cancel.html'
-    };
-
-    // 이니시스 결제창 호출
-    // INIStdPay.pay(paymentParams);
-
-    console.log('PG 결제 호출:', paymentParams);
-}
-
-/* ========================================
-   결제 취소 처리
-======================================== */
-function cancelPayment() {
-    const overlay = document.getElementById('paymentOverlay');
-    if (overlay) {
-        overlay.remove();
-    }
-
-    console.log('결제가 취소되었습니다.');
 }

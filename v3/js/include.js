@@ -1,7 +1,7 @@
 /* ========================================
    Include 공통 스크립트
    js/include.js
-   ======================================== */
+======================================== */
 
 // 결제 처리 중 플래그
 let isProcessingPayment = false;
@@ -29,12 +29,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* ========================================
    일반 사용자 페이지 Include
-   ======================================== */
+======================================== */
 
 // 일반 헤더 로드
 function loadUserHeader() {
     const headerPlaceholder = document.getElementById('header-placeholder');
-    if (!headerPlaceholder) return;
+    if (!headerPlaceholder) {
+        console.warn('header-placeholder 요소를 찾을 수 없습니다.');
+        return;
+    }
     
     fetch('includes/header.html')
         .then(response => {
@@ -43,7 +46,10 @@ function loadUserHeader() {
         })
         .then(data => {
             headerPlaceholder.innerHTML = data;
-            initUserHeader();
+            // DOM이 삽입된 후 초기화
+            setTimeout(() => {
+                initUserHeader();
+            }, 0);
         })
         .catch(error => {
             console.error('헤더 로드 에러:', error);
@@ -54,7 +60,10 @@ function loadUserHeader() {
 // 일반 푸터 로드
 function loadUserFooter() {
     const footerPlaceholder = document.getElementById('footer-placeholder');
-    if (!footerPlaceholder) return;
+    if (!footerPlaceholder) {
+        console.warn('footer-placeholder 요소를 찾을 수 없습니다.');
+        return;
+    }
     
     fetch('includes/footer.html')
         .then(response => {
@@ -72,19 +81,50 @@ function loadUserFooter() {
 
 // 일반 헤더 초기화 (모바일 메뉴 등)
 function initUserHeader() {
+    console.log('헤더 초기화 시작');
+    
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const navMenu = document.getElementById('navMenu');
     
+    console.log('mobileMenuToggle:', mobileMenuToggle);
+    console.log('navMenu:', navMenu);
+    
     if (mobileMenuToggle && navMenu) {
-        mobileMenuToggle.addEventListener('click', function() {
+        // 기존 이벤트 리스너 제거 (중복 방지)
+        const newToggle = mobileMenuToggle.cloneNode(true);
+        mobileMenuToggle.parentNode.replaceChild(newToggle, mobileMenuToggle);
+        
+        // 새로운 이벤트 리스너 등록
+        newToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('햄버거 버튼 클릭됨');
             navMenu.classList.toggle('active');
+            console.log('navMenu.classList:', navMenu.classList);
+        });
+        
+        console.log('햄버거 메뉴 이벤트 리스너 등록 완료');
+    } else {
+        console.error('햄버거 메뉴 요소를 찾을 수 없습니다:', {
+            mobileMenuToggle,
+            navMenu
         });
     }
+    
+    // 메뉴 외부 클릭 시 닫기
+    document.addEventListener('click', function(e) {
+        if (navMenu && 
+            navMenu.classList.contains('active') && 
+            !navMenu.contains(e.target) && 
+            !document.getElementById('mobileMenuToggle').contains(e.target)) {
+            navMenu.classList.remove('active');
+        }
+    });
 }
 
 /* ========================================
    결제 페이지 전용 기능
-   ======================================== */
+======================================== */
 
 // 결제 페이지 초기화
 function initPaymentPage() {
@@ -145,14 +185,14 @@ function playSelectionSound() {
 
 // 결제 처리
 function processPayment(type) {
-    // ✅ 이미 처리 중이면 무시
+    // 이미 처리 중이면 무시
     if (isProcessingPayment) {
-        console.log('⏳ 이미 결제 처리 중입니다.');
+        console.log('이미 결제 처리 중입니다.');
         return;
     }
     
     isProcessingPayment = true;
-    console.log('💳 결제 처리 시작:', type);
+    console.log('결제 처리 시작:', type);
     
     // 테스트 데이터 재검증
     if (!validateTestData()) {
@@ -182,15 +222,14 @@ function processPayment(type) {
     const selectedPrice = prices[type];
     
     // 결제 확인 다이얼로그
-    const confirmMessage = `━━━━━━━━━━━━━━━━━━━━
-결제 금액: ${selectedPrice.discounted.toLocaleString()}원  (정상가 ${selectedPrice.original.toLocaleString()}원)
-━━━━━━━━━━━━━━━━━━━━
+    const confirmMessage = `
+결제 금액: ${selectedPrice.discounted.toLocaleString()}원 (정상가 ${selectedPrice.original.toLocaleString()}원)
 
 ${selectedPrice.name} 결제를 진행하시겠습니까?`;
 
     if (!confirm(confirmMessage)) {
-        isProcessingPayment = false; // ✅ 취소 시 플래그 해제
-        console.log('❌ 결제 취소됨');
+        isProcessingPayment = false;
+        console.log('결제 취소됨');
         return;
     }
 
@@ -208,8 +247,6 @@ ${selectedPrice.name} 결제를 진행하시겠습니까?`;
             savedAmount: selectedPrice.original - selectedPrice.discounted,
             timestamp: new Date().toISOString(),
             transactionId: generateTransactionId(),
-            certificateNumber: generateCertificateNumber(),
-            verificationCode: generateVerificationCode(),
             userEmail: userData.email,
             userName: userData.name
         };
@@ -217,7 +254,7 @@ ${selectedPrice.name} 결제를 진행하시겠습니까?`;
         // 결제 정보 저장
         localStorage.setItem('paymentInfo', JSON.stringify(paymentInfo));
         
-        console.log('✅ 결제 완료:', paymentInfo);
+        console.log('결제 완료:', paymentInfo);
         
         // 결제 완료 처리
         hidePaymentProcessing();
@@ -363,7 +400,7 @@ function generateTransactionId() {
 
 /* ========================================
    관리자 페이지 Include
-   ======================================== */
+======================================== */
 
 // 관리자 헤더 로드
 function loadAdminHeader() {
@@ -467,7 +504,7 @@ function highlightCurrentPage() {
 
 /* ========================================
    유틸리티 함수
-   ======================================== */
+======================================== */
 
 // localStorage 안전하게 가져오기
 function safeGetLocalStorage(key, defaultValue = null) {
