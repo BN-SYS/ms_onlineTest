@@ -382,7 +382,9 @@
     color: #e74c3c;
 }
 
-.form-group-compact input {
+/* ✅ input과 select 공통 스타일 */
+.form-group-compact input,
+.form-group-compact select {
     width: 100%;
     padding: 12px 16px;
     border: 2px solid var(--border-color);
@@ -391,16 +393,52 @@
     transition: all 0.3s;
     box-sizing: border-box;
     background: white;
+    color: var(--text-dark);
 }
 
-.form-group-compact input:focus {
+/* ✅ select 전용 스타일 */
+.form-group-compact select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 20px;
+    padding-right: 40px;
+}
+
+/* ✅ select 옵션 스타일 */
+.form-group-compact select option {
+    padding: 10px;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+/* ✅ select 기본 옵션 (placeholder 역할) */
+.form-group-compact select option[value=""] {
+    color: #aaa;
+}
+
+/* focus 상태 */
+.form-group-compact input:focus,
+.form-group-compact select:focus {
     outline: none;
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.12);
 }
 
+/* placeholder 스타일 */
 .form-group-compact input::placeholder {
     color: #aaa;
+}
+
+/* ✅ select가 선택되지 않았을 때 회색 표시 */
+.form-group-compact select:invalid {
+    color: #aaa;
+}
+
+.form-group-compact select:valid {
+    color: var(--text-dark);
 }
 
 /* 체크박스 그룹 */
@@ -622,5 +660,12 @@
 
     .consent-detail-box {
         max-height: 150px;
+    }
+
+    /* ✅ 모바일에서 select 크기 조정 */
+    .form-group-compact select {
+        font-size: 16px;
+        padding: 14px 16px;
+        padding-right: 40px;
     }
 }

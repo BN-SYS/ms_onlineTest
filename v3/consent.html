@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>멘사형 사고력 온라인 테스트</title>
+    <title>멘사 온라인 두뇌 테스트</title>
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/consent.css">
 </head>
@@ -111,8 +111,9 @@
 
                 <div class="form-group-compact">
                     <label>출생연도 <span class="required">*</span></label>
-                    <input type="number" name="birthYear" id="birthYear" required placeholder="1990" min="1900"
-                        max="2024">
+                    <select name="birthYear" id="birthYear" required>
+                        <option value="">출생연도를 선택하세요</option>
+                    </select>
                 </div>
 
                 <div class="form-group-compact">
@@ -180,9 +181,28 @@
     <!-- Scripts -->
     <script src="js/include.js"></script>
     <script>
+        // ✅ 출생연도 드롭다운 생성 (1930 ~ 현재-8)
+        function populateBirthYearDropdown() {
+            const birthYearSelect = document.getElementById('birthYear');
+            const currentYear = new Date().getFullYear();
+            const maxYear = currentYear - 8; // 현재-8
+            const minYear = 1930;
+
+            // 최근 연도부터 과거 순으로 정렬
+            for (let year = maxYear; year >= minYear; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '년';
+                birthYearSelect.appendChild(option);
+            }
+        }
+
+        // 페이지 로드 시 드롭다운 생성
+        window.addEventListener('DOMContentLoaded', populateBirthYearDropdown);
+
         // 예제 문제 선택
         function selectSample(element, isCorrect) {
-            const allOptions = document.querySelectorAll('.sample-option-compact');
+            const allOptions = document.querySelectorAll('.sample-option-image');
             allOptions.forEach(opt => {
                 opt.style.pointerEvents = 'none';
             });
@@ -193,7 +213,7 @@
             } else {
                 element.classList.add('wrong');
                 setTimeout(() => {
-                    document.querySelector('.sample-option-compact:nth-child(2)').classList.add('correct');
+                    document.querySelector('.sample-option-image:nth-child(2)').classList.add('correct');
                     document.getElementById('sampleHint').style.display = 'block';
                 }, 800);
             }
@@ -211,7 +231,7 @@
         function checkFormValidity() {
             const allCheckboxesChecked = Array.from(checkboxes).every(cb => cb.checked);
             const nameValid = userName.value.trim().length > 0;
-            const yearValid = birthYear.value.length === 4 && birthYear.value >= 1900 && birthYear.value <= 2024;
+            const yearValid = birthYear.value !== ''; // 드롭다운 선택 확인
             const emailValid = userEmail.value.includes('@') && userEmail.value.includes('.');
 
             if (allCheckboxesChecked && nameValid && yearValid && emailValid) {
@@ -224,7 +244,7 @@
         // 이벤트 리스너
         checkboxes.forEach(cb => cb.addEventListener('change', checkFormValidity));
         userName.addEventListener('input', checkFormValidity);
-        birthYear.addEventListener('input', checkFormValidity);
+        birthYear.addEventListener('change', checkFormValidity); // input → change
         userEmail.addEventListener('input', checkFormValidity);
 
         // 폼 제출

@@ -222,37 +222,64 @@
 }
 
 /* ========================================
-   문제 섹션 - ✅ 대폭 축소
+   문제 섹션 - ✅ 워터마크 추가
 ======================================== */
 
 .question-section {
     background: white;
-    padding: 10px;
+    max-width: 600px;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    margin-bottom: 12px;
+    margin: 0 auto 12px;
+    padding: 15px;
+    /* ✅ 패딩 추가 */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    /* ✅ 세로 배치 */
+    gap: 8px;
+    /* ✅ 이미지와 워터마크 간격 */
 }
 
 .question-image {
     width: 100%;
-    max-width: 450px;
-    /* ✅ 650px → 550px */
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .question-image img {
     width: 100%;
     max-width: 450px;
-    /* ✅ 650px → 550px */
     height: auto;
     border-radius: 8px;
     display: block;
 }
+
+/* ✅ 응시번호 & URL을 이미지 아래로 배치 */
+.question-watermark {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+    margin: 0 auto;
+}
+
+.test-number {
+    font-size: 0.7rem;
+    color: #e2e2e2;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.test-url {
+    font-size: 0.75rem;
+    color: #777777;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
 
 /* ========================================
    보기 그리드 - ✅ 대폭 축소
@@ -636,13 +663,20 @@ img {
         /* ✅ 줄바꿈 방지 */
     }
 
-    .question-section {
-        padding: 12px 10px;
-        /* ✅ 15px 12px → 12px 10px */
+     .question-section {
+        padding: 12px;
     }
-
-    .question-image img {
-        max-width: 100%;
+    
+    .question-watermark {
+        padding: 3px 6px;
+    }
+    
+    .test-number {
+        font-size: 0.65rem;
+    }
+    
+    .test-url {
+        font-size: 0.7rem;
     }
 
     .choices-grid {
@@ -715,8 +749,15 @@ img {
     }
 
     .question-section {
-        padding: 10px 8px;
-        /* ✅ 12px 8px → 10px 8px */
+        padding: 10px;
+    }
+    
+    .test-number {
+        font-size: 0.6rem;
+    }
+    
+    .test-url {
+        font-size: 0.65rem;
     }
 
     .choices-grid {

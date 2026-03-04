@@ -111,7 +111,8 @@
 /* 타이틀 그룹 */
 .banner-title-group {
     flex: 1;
-    padding-right: 0; /* 패딩 제거 */
+    padding-right: 0;
+    /* 패딩 제거 */
     color: #ffffff;
     margin-top: 16px;
 }
@@ -923,6 +924,43 @@ canvas {
     width: 100% !important;
     max-height: 220px !important;
 }
+
+/* 전체 점수 차트만 강조 */
+.chart-total {
+    background: linear-gradient(135deg, #f8f9ff 0%, #fff8f0 100%);
+    border: 3px solid #d4af37;
+    box-shadow: 0 6px 20px rgba(247, 191, 37, 0.25);
+    position: relative;
+}
+
+.chart-total::before {
+    content: 'Total';
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    /* ✅ right → left 변경 */
+    background: #d4af37;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+
+    font-weight: bold;
+    z-index: 10;
+}
+
+.chart-total h3 {
+    color: #d4af37;
+    font-size: 1.4rem;
+}
+
+/* 기존 단계별 차트 스타일 유지 */
+.score-chart-container:not(.chart-total) {
+    background: white;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
 
 /* ========================================
    개선 가이드

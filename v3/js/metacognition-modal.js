@@ -1,5 +1,5 @@
 /* ========================================
-   js/metacognition-modal.js 수정 버전
+   js/metacognition-modal.js 수정 버전 (예상 정답수만)
 ======================================== */
 
 // 모달 표시
@@ -11,11 +11,9 @@ function showMetacognitionModal() {
         
         // 입력 필드 초기화
         document.getElementById('expectedCorrect').value = '';
-        document.getElementById('expectedPercentile').value = '';
         
         // 에러 메시지 숨김
         document.getElementById('errorCorrect').style.display = 'none';
-        document.getElementById('errorPercentile').style.display = 'none';
     }
 }
 
@@ -31,27 +29,16 @@ function hideMetacognitionModal() {
 // 입력 검증
 function validateMetacognitionInput() {
     const expectedCorrect = document.getElementById('expectedCorrect').value;
-    const expectedPercentile = document.getElementById('expectedPercentile').value;
-    
     const errorCorrect = document.getElementById('errorCorrect');
-    const errorPercentile = document.getElementById('errorPercentile');
     
     let isValid = true;
     
-    // 정답 개수 검증
+    // 정답 개수 검증 (0~25)
     if (!expectedCorrect || expectedCorrect === '' || expectedCorrect < 0 || expectedCorrect > 25) {
         errorCorrect.style.display = 'flex';
         isValid = false;
     } else {
         errorCorrect.style.display = 'none';
-    }
-    
-    // 백분위 검증
-    if (!expectedPercentile || expectedPercentile === '' || expectedPercentile < 1 || expectedPercentile > 100) {
-        errorPercentile.style.display = 'flex';
-        isValid = false;
-    } else {
-        errorPercentile.style.display = 'none';
     }
     
     return isValid;
@@ -68,12 +55,10 @@ function submitMetacognition() {
     }
     
     const expectedCorrect = parseInt(document.getElementById('expectedCorrect').value);
-    const expectedPercentile = parseInt(document.getElementById('expectedPercentile').value);
     
-    // 메타인지 데이터 저장
+    // 메타인지 데이터 저장 (예상 정답수만)
     const metacognitionData = {
         expectedCorrect: expectedCorrect,
-        expectedPercentile: expectedPercentile,
         timestamp: new Date().toISOString()
     };
     
@@ -108,7 +93,6 @@ document.addEventListener('keydown', function(e) {
 // 입력 필드 실시간 검증
 document.addEventListener('DOMContentLoaded', function() {
     const expectedCorrectInput = document.getElementById('expectedCorrect');
-    const expectedPercentileInput = document.getElementById('expectedPercentile');
     
     if (expectedCorrectInput) {
         expectedCorrectInput.addEventListener('input', function() {
@@ -120,28 +104,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 errorCorrect.style.display = 'none';
             }
         });
-    }
-    
-    if (expectedPercentileInput) {
-        expectedPercentileInput.addEventListener('input', function() {
-            const errorPercentile = document.getElementById('errorPercentile');
-            const value = parseInt(this.value);
-            if (this.value && (value < 1 || value > 100)) {
-                errorPercentile.style.display = 'flex';
-            } else if (this.value) {
-                errorPercentile.style.display = 'none';
-            }
-        });
-    }
-    
-    // ✅ Enter 키로 제출 가능하도록
-    const modalInputs = document.querySelectorAll('.modal-input');
-    modalInputs.forEach(input => {
-        input.addEventListener('keypress', function(e) {
+        
+        // ✅ Enter 키로 제출 가능하도록
+        expectedCorrectInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 submitMetacognition();
             }
         });
-    });
+    }
 });
