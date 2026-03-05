@@ -87,7 +87,7 @@ function createMetacognitionModal() {
               </div>
               <p class="input-hint">0 ~ 25 사이의 숫자를 입력해주세요</p>
               <p class="input-error" id="errorCorrect" style="display:none;">
-                ⚠️ 0에서 25 사이의 정수를 입력해주세요
+                0에서 25 사이의 정수를 입력해주세요
               </p>
             </div>
           </div>
@@ -113,6 +113,9 @@ function createMetacognitionModal() {
  */
 function createTestContainer(config) {
   const { stage, questionCount, timeLimit } = config;
+  // ✅ localStorage에서 수험번호 읽기
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const testNumber = userData.testNumber || 'ONT-0000';
 
   // 초기 타이머 표시값
   let initialTimer = '00:00';
@@ -153,7 +156,7 @@ function createTestContainer(config) {
           <img id="questionImg" src="" alt="문제 이미지" style="display: none;">
         </div>
         <div class="question-watermark">
-          <span class="test-number" id="testNumber">ONT-1234</span>
+          <span class="test-number" id="testNumber">${testNumber}</span>
           <span class="test-url">test.mensakorea.kr</span>
         </div>
       </div>
@@ -326,7 +329,7 @@ class TestManager {
   submitMetacognition() {
     const expectedCorrectInput = document.getElementById('expectedCorrectInput');
     const errorElem = document.getElementById('errorCorrect');
-    
+
     console.log('📝 submitMetacognition 호출됨');
     console.log('입력값:', expectedCorrectInput?.value);
 
@@ -393,7 +396,7 @@ class TestManager {
   /* ========== 보안 조치 초기화 (우클릭 방지 등) ========== */
   initSecurityMeasures() {
     // 1. 우클릭(컨텍스트 메뉴) 방지
-    document.addEventListener('contextmenu', function(e) {
+    document.addEventListener('contextmenu', function (e) {
       e.preventDefault();
       return false;
     }, false);
@@ -653,7 +656,7 @@ class TestManager {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
-    
+
     const isFirst = this.currentQuestionIndex === 0;
     const isLast = this.currentQuestionIndex === this.selectedQuestions.length - 1;
     const hasAnswer = this.userAnswers[this.currentQuestionIndex] !== null;
@@ -718,12 +721,12 @@ class TestManager {
     // ✅ 다음 문제로 이동
     if (this.currentQuestionIndex < this.selectedQuestions.length - 1) {
       this.currentQuestionIndex++;
-      
+
       // ✅ 시작 시간 기록 (처음 진입 시에만)
       if (!this.questionStartTimes[this.currentQuestionIndex]) {
         this.questionStartTimes[this.currentQuestionIndex] = Date.now();
       }
-      
+
       this.loadQuestion(this.currentQuestionIndex);
     }
   }
