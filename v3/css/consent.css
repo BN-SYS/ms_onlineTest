@@ -479,7 +479,9 @@
     margin-top: 2px;
 }
 
-/* ✅ 토글 헤더 */
+/* ========================================
+   ✅ 토글 헤더 (약관 펼치기/접기)
+======================================== */
 .consent-toggle-header {
     display: flex;
     justify-content: space-between;
@@ -490,20 +492,42 @@
     transition: all 0.2s;
 }
 
-
+/* ✅ 토글 아이콘 (드롭다운 화살표 스타일) */
 .toggle-icon {
-    font-size: 1rem;
-    transition: transform 0.3s ease;
-    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     margin-left: 8px;
+    transition: transform 0.3s ease;
+    position: relative;
 }
 
-.toggle-icon.open {
-    transform: rotate(180deg);
+/* ✅ CSS 화살표 삼각형 */
+.toggle-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #666;
+    transition: transform 0.3s ease;
 }
 
-/* ✅ 개인정보 동의 상세 박스 (토글) - 전체 너비 사용 */
+/* ✅ 열렸을 때 180도 회전 */
+.toggle-icon.open::after {
+    transform: translate(-50%, -50%) rotate(180deg);
+}
+
+/* ========================================
+   ✅ 개인정보 동의 상세 박스 (토글)
+======================================== */
 .consent-detail-box {
     max-height: 0;
     overflow: hidden;
@@ -520,7 +544,7 @@
 }
 
 .consent-detail-box.open {
-    max-height: 100px;
+    max-height: 300px;
     overflow-y: auto;
     padding: 15px 20px;
     margin-top: 10px;
@@ -580,7 +604,6 @@
     flex: 1;
     width: 100%;
 }
-
 
 /* 시작 버튼 */
 .start-btn-compact {
@@ -642,7 +665,9 @@
     z-index: 100;
 }
 
-/* 반응형 */
+/* ========================================
+   반응형 - 태블릿 및 모바일
+======================================== */
 @media (max-width: 1200px) {
     .main-container {
         grid-template-columns: 1fr;
@@ -700,8 +725,16 @@
         padding: 12px;
     }
 
+    /* ✅ 모바일에서 토글 아이콘 크기 조정 */
     .toggle-icon {
-        font-size: 0.9rem;
+        width: 18px;
+        height: 18px;
+    }
+
+    .toggle-icon::after {
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 5px solid #666;
     }
 
     /* ✅ 모바일에서 select 크기 조정 */

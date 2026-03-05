@@ -1,5 +1,5 @@
 .payment-container {
-    max-width: 1000px;
+    max-width: 1500px; /* ✅ 1000px → 1500px (1.5배) */
     margin: 30px auto;
     padding: 40px 20px;
 }
@@ -113,11 +113,13 @@
     font-size: 1.5rem;
 }
 
-/* 카드 레이아웃 */
+/* ========================================
+   ✅ 카드 레이아웃 (너비 1.5배)
+======================================== */
 .payment-options {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    gap: 36px; /* ✅ 24px → 36px (1.5배) */
     margin-bottom: 40px;
 }
 
@@ -125,14 +127,14 @@
     background: white;
     border: 3px solid #e0e0e0;
     border-radius: 20px;
-    padding: 32px 28px;
+    padding: 48px 42px; /* ✅ 32px 28px → 48px 42px (1.5배) */
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     display: flex;
     flex-direction: column;
-    min-height: 700px;
+    min-height: 750px; /* ✅ 700px → 750px */
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
@@ -191,19 +193,19 @@
 }
 
 .payment-card h3 {
-    font-size: 1.6rem;
+    font-size: 1.8rem; /* ✅ 1.6rem → 1.8rem */
     margin: 10px 0 20px 0;
     color: #333;
 }
 
 /* 가격 영역 */
 .price-wrapper {
-    margin: 0 0 20px 0; /* ✅ 하단 마진 증가 */
-    padding: 0 0 20px 0; /* ✅ 하단 패딩 증가 */
-    border-bottom: 2px solid #e0e0e0; /* ✅ 색상 진하게 */
-    display: flex; /* ✅ flexbox 추가 */
+    margin: 0 0 20px 0;
+    padding: 0 0 20px 0;
+    border-bottom: 2px solid #e0e0e0;
+    display: flex;
     flex-direction: column;
-    align-items: center; /* ✅ 중앙 정렬 */
+    align-items: center;
 }
 
 .discount-badge {
@@ -237,13 +239,13 @@
 
 .original-price {
     color: #999;
-    font-size: 1.1rem;
+    font-size: 1.2rem; /* ✅ 1.1rem → 1.2rem */
     text-decoration: line-through;
     margin-bottom: 8px;
 }
 
 .price {
-    font-size: 3.2rem;
+    font-size: 3.6rem; /* ✅ 3.2rem → 3.6rem (1.125배) */
     font-weight: 800;
     color: var(--primary-color);
     margin: 8px 0;
@@ -257,12 +259,12 @@
 }
 
 .price small {
-    font-size: 1.3rem;
+    font-size: 1.4rem; /* ✅ 1.3rem → 1.4rem */
     font-weight: 600;
 }
 
 .price-description {
-    font-size: 0.9rem;
+    font-size: 1rem; /* ✅ 0.9rem → 1rem */
     color: #666;
     margin-top: 8px;
 }
@@ -272,16 +274,16 @@
     list-style: none;
     padding: 0;
     text-align: left;
-    margin: 20px 0; /* ✅ 상단 마진 증가 */
+    margin: 20px 0;
     flex-grow: 1;
 }
 
 .benefits-list li {
-    padding: 12px 0 12px 32px;
+    padding: 14px 0 14px 36px; /* ✅ 12px → 14px, 32px → 36px */
     position: relative;
     color: #333;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 1.05rem; /* ✅ 0.95rem → 1.05rem */
+    line-height: 1.6;
     border-bottom: 1px solid #f5f5f5;
 }
 
@@ -295,7 +297,7 @@
     left: 0;
     color: var(--success-color);
     font-weight: 700;
-    font-size: 1.3rem;
+    font-size: 1.4rem; /* ✅ 1.3rem → 1.4rem */
 }
 
 .benefits-list li.exclusive {
@@ -330,12 +332,12 @@
 }
 
 .comparison-text {
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* ✅ 0.85rem → 0.9rem */
     color: #666;
 }
 
 .comparison-value {
-    font-size: 1.1rem;
+    font-size: 1.2rem; /* ✅ 1.1rem → 1.2rem */
     font-weight: 700;
     color: var(--primary-color);
 }
@@ -346,7 +348,7 @@
     justify-content: center;
     gap: 12px;
     margin: 16px 0;
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* ✅ 0.85rem → 0.9rem */
     color: #666;
 }
 
@@ -362,12 +364,12 @@
 /* 버튼 */
 .payment-btn {
     width: 100%;
-    padding: 18px 24px;
+    padding: 20px 28px; /* ✅ 18px 24px → 20px 28px */
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
     border: none;
     border-radius: 12px;
-    font-size: 1.05rem;
+    font-size: 1.1rem; /* ✅ 1.05rem → 1.1rem */
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -400,11 +402,11 @@
 }
 
 .btn-text {
-    font-size: 1.05rem;
+    font-size: 1.1rem; /* ✅ 1.05rem → 1.1rem */
 }
 
 .btn-subtext {
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* ✅ 0.85rem → 0.9rem */
     opacity: 0.9;
     font-weight: 500;
 }
@@ -412,8 +414,8 @@
 .premium-btn {
     background: linear-gradient(135deg, #FFD700, #FFA500);
     color: #333;
-    font-size: 1.1rem;
-    padding: 20px 24px;
+    font-size: 1.15rem; /* ✅ 1.1rem → 1.15rem */
+    padding: 22px 28px; /* ✅ 20px 24px → 22px 28px */
 }
 
 .premium-btn:hover {
@@ -422,7 +424,7 @@
 
 /* 만족 보장 */
 .satisfaction-guarantee {
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* ✅ 0.85rem → 0.9rem */
     color: #27ae60;
     font-weight: 600;
     text-align: center;
@@ -467,7 +469,7 @@
 
 /* FAQ 섹션 */
 .faq-section {
-    max-width: 800px;
+    max-width: 1200px; /* ✅ 800px → 1200px (1.5배) */
     margin: 50px auto 30px;
     padding: 30px;
     background: #f8f9fa;
@@ -508,7 +510,7 @@
 
 /* 프로모션 안내 */
 .promotion-notice {
-    max-width: 800px;
+    max-width: 1200px; /* ✅ 800px → 1200px (1.5배) */
     margin: 30px auto;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -553,10 +555,33 @@
     gap: 6px;
 }
 
-/* 반응형 */
+/* ========================================
+   반응형
+======================================== */
+@media (max-width: 1400px) {
+    .payment-container {
+        max-width: 1200px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .payment-container {
+        max-width: 900px;
+    }
+    
+    .payment-options {
+        gap: 24px;
+    }
+    
+    .payment-card {
+        padding: 36px 30px;
+    }
+}
+
 @media (max-width: 768px) {
     .payment-container {
         padding: 20px 15px;
+        max-width: 100%;
     }
     
     .urgency-timer {
@@ -616,5 +641,10 @@
     .security-badges {
         flex-direction: column;
         gap: 8px;
+    }
+    
+    .faq-section,
+    .promotion-notice {
+        max-width: 100%;
     }
 }
