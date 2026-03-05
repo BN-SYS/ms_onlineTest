@@ -36,6 +36,7 @@
 .intro-content {
     position: relative;
     z-index: 10;
+    text-align: center;
 }
 
 .intro-content h1 {
