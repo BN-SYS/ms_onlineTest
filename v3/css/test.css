@@ -96,9 +96,11 @@
     0% {
         box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
     }
+
     50% {
         box-shadow: 0 0 0 8px rgba(102, 126, 234, 0);
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
     }
@@ -189,38 +191,114 @@
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
 }
 
 /* ========================================
-   문제 섹션
+   문제 섹션 - ✅ 데스크톱 기본
 ======================================== */
 
 .question-section {
     background: white;
     max-width: 600px;
+    min-height: 150px;
+    max-height: 650px;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     margin: 0 auto 12px;
     padding: 15px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    overflow: hidden;
+    box-sizing: border-box;
 }
+
+/* ========================================
+   ✅ 문제 텍스트 영역 (Q. 접두사 포함)
+======================================== */
+
+/* ========================================
+   ✅ 문제 텍스트 영역 (Q. 접두사 첫 줄 앞에 고정)
+======================================== */
+
+.question-text {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    /* ✅ 왼쪽에 Q. 공간 확보 */
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    line-height: 1.6;
+    word-break: keep-all;
+    flex-shrink: 0;
+    position: relative;
+    /* ✅ ::before 기준점 */
+}
+
+/* ✅ Q. 접두사 - 절대 위치로 첫 줄 앞에 고정 */
+.question-text::before {
+    content: 'Q. ';
+    color: #667eea;
+    font-weight: 700;
+    font-size: 1.2rem;
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    /* ✅ 첫 줄 시작 위치에 고정 */
+}
+
+/* ✅ 텍스트만 있는 경우: 상하 중앙 정렬 */
+.question-text.text-only-centered {
+    display: flex;
+    align-items: center;
+    /* ✅ 박스 전체를 세로 중앙 정렬 */
+    justify-content: flex-start;
+    /* ✅ 좌측 정렬 */
+    flex: 1;
+    text-align: left;
+    margin: 0;
+    padding: 20px 20px 20px 40px;
+    /* ✅ Q. 공간 유지 */
+}
+
+/* ✅✅ 핵심 수정: 텍스트 전용일 때도 Q.는 첫 줄에 고정 */
+.question-text.text-only-centered::before {
+    top: 20px;
+    /* ✅ padding-top과 동일하게 (50%에서 고정값으로 변경) */
+    transform: none;
+    /* ✅ translateY 제거 */
+}
+
 
 .question-image {
     width: 100%;
+    flex: 1;
+    min-height: 0;
+    max-height: 570px;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    overflow: hidden;
+    margin-bottom: 4px;
 }
 
 .question-image img {
-    width: 100%;
-    max-width: 450px;
+    max-width: 100%;
+    max-height: 510px;
+    /* ✅ 데스크톱: 480px 제한 */
+    width: auto;
     height: auto;
+    object-fit: contain;
     border-radius: 8px;
     display: block;
 }
@@ -231,8 +309,10 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 0 10px;
-    margin: 0 auto;
+    padding: 6px 10px 0 10px;
+    margin: 0;
+    flex-shrink: 0;
+    height: 28px;
 }
 
 .test-number {
@@ -293,9 +373,17 @@
 }
 
 @keyframes selectPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .choice-item img {
@@ -419,11 +507,29 @@
     }
 
     .question-section {
-        padding: 18px;
+        padding: 15px;
+    }
+
+    .question-text {
+        font-size: 1rem;
+        padding: 10px 12px;
+    }
+
+    .question-text.text-only-centered {
+        padding: 20px 15px;
+    }
+
+    .question-text::before {
+        font-size: 1.05rem;
+    }
+
+    .question-image {
+        max-height: 570px;
     }
 
     .question-image img {
-        max-width: 480px;
+        max-height: 440px;
+        /* ✅ 태블릿: 440px 제한 */
     }
 
     .choices-grid {
@@ -529,10 +635,35 @@
 
     .question-section {
         padding: 12px;
+        max-height: 620px;
+    }
+
+    .question-text {
+        font-size: 1.05rem;
+        padding: 10px 12px;
+    }
+
+    .question-text.text-only-centered {
+        padding: 15px 12px;
+    }
+
+    .question-text::before {
+        font-size: 1rem;
+    }
+
+    .question-image {
+        max-height: 500px;
+        /* ✅ 모바일: 이미지 영역 500px */
+    }
+
+    .question-image img {
+        max-height: 470px;
+        /* ✅ 모바일: 이미지 470px 제한 */
     }
 
     .question-watermark {
-        padding: 3px 6px;
+        padding: 6px 8px 0 8px;
+        height: 26px;
     }
 
     .test-number {
@@ -601,6 +732,35 @@
 
     .question-section {
         padding: 10px;
+        max-height: 550px;
+        /* ✅ 작은 모바일: 박스 550px */
+    }
+
+    .question-text {
+        font-size: 1rem;
+        padding: 8px 10px;
+    }
+
+    .question-text.text-only-centered {
+        padding: 15px 10px;
+    }
+
+    .question-text::before {
+        font-size: 0.95rem;
+    }
+
+    .question-image {
+        max-height: 450px;
+        /* ✅ 작은 모바일: 이미지 영역 450px */
+    }
+
+    .question-image img {
+        max-height: 370px;
+        /* ✅ 작은 모바일: 이미지 370px 제한 */
+    }
+
+    .question-watermark {
+        height: 24px;
     }
 
     .test-number {
@@ -652,9 +812,20 @@
 }
 
 @keyframes dots {
-    0%, 20% { content: '.'; }
-    40% { content: '..'; }
-    60%, 100% { content: '...'; }
+
+    0%,
+    20% {
+        content: '.';
+    }
+
+    40% {
+        content: '..';
+    }
+
+    60%,
+    100% {
+        content: '...';
+    }
 }
 
 .error-message {

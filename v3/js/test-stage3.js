@@ -16,67 +16,89 @@ const stage3QuestionBank = [
             { id: 2, image: './image/stage3/q1-option2.jpg', isCorrect: false },
             { id: 3, image: './image/stage3/q1-option3.jpg', isCorrect: false },
             { id: 4, image: './image/stage3/q1-option4.jpg', isCorrect: false },
-            { id: 5, image: './image/stage3/q1-option5.jpg', isCorrect: false },
-            { id: 6, image: './image/stage3/q1-option6.jpg', isCorrect: false },
-            { id: 7, image: './image/stage3/q1-option7.jpg', isCorrect: false },
-            { id: 8, image: './image/stage3/q1-option8.jpg', isCorrect: false }
+            { id: 5, image: './image/stage3/q1-option5.jpg', isCorrect: false }
         ]
     },
     {
         id: 's3_q2',
-        questionImage: './image/stage3/question1.jpg',
+        questionImage: './image/stage3/question2.jpg',
         choices: [
             { id: 1, image: './image/stage3/q1-option1.jpg', isCorrect: true },
             { id: 2, image: './image/stage3/q1-option2.jpg', isCorrect: false },
             { id: 3, image: './image/stage3/q1-option3.jpg', isCorrect: false },
             { id: 4, image: './image/stage3/q1-option4.jpg', isCorrect: false },
-            { id: 5, image: './image/stage3/q1-option5.jpg', isCorrect: false },
-            { id: 6, image: './image/stage3/q1-option6.jpg', isCorrect: false },
-            { id: 7, image: './image/stage3/q1-option7.jpg', isCorrect: false },
-            { id: 8, image: './image/stage3/q1-option8.jpg', isCorrect: false }
+            { id: 5, image: './image/stage3/q1-option5.jpg', isCorrect: false }
         ]
     },
     {
         id: 's3_q3',
-        questionImage: './image/stage3/question1.jpg',
+        questionImage: './image/stage3/question3.jpg',
         choices: [
             { id: 1, image: './image/stage3/q1-option1.jpg', isCorrect: true },
             { id: 2, image: './image/stage3/q1-option2.jpg', isCorrect: false },
             { id: 3, image: './image/stage3/q1-option3.jpg', isCorrect: false },
             { id: 4, image: './image/stage3/q1-option4.jpg', isCorrect: false },
-            { id: 5, image: './image/stage3/q1-option5.jpg', isCorrect: false },
-            { id: 6, image: './image/stage3/q1-option6.jpg', isCorrect: false },
-            { id: 7, image: './image/stage3/q1-option7.jpg', isCorrect: false },
-            { id: 8, image: './image/stage3/q1-option8.jpg', isCorrect: false }
+            { id: 5, image: './image/stage3/q1-option5.jpg', isCorrect: false }
         ]
     },
     {
         id: 's3_q4',
-        questionImage: './image/stage3/question1.jpg',
+        questionText: '텍스트+이미지 혼합 문제 예시입니다.',
+        questionImage: './image/stage3/question4.jpg',
         choices: [
             { id: 1, image: './image/stage3/q1-option1.jpg', isCorrect: true },
             { id: 2, image: './image/stage3/q1-option2.jpg', isCorrect: false },
             { id: 3, image: './image/stage3/q1-option3.jpg', isCorrect: false },
             { id: 4, image: './image/stage3/q1-option4.jpg', isCorrect: false },
             { id: 5, image: './image/stage3/q1-option5.jpg', isCorrect: false },
-            { id: 6, image: './image/stage3/q1-option6.jpg', isCorrect: false },
-            { id: 7, image: './image/stage3/q1-option7.jpg', isCorrect: false },
-            { id: 8, image: './image/stage3/q1-option8.jpg', isCorrect: false }
+            { id: 6, image: './image/stage3/q1-option6.jpg', isCorrect: false }
         ]
     },
     {
         id: 's3_q5',
-        questionImage: './image/stage3/question1.jpg',
+        questionText: '텍스트+이미지 혼합 문제 예시입니다.',
+        questionImage: './image/stage3/question5.jpg',
         choices: [
             { id: 1, image: './image/stage3/q1-option1.jpg', isCorrect: true },
             { id: 2, image: './image/stage3/q1-option2.jpg', isCorrect: false },
             { id: 3, image: './image/stage3/q1-option3.jpg', isCorrect: false },
             { id: 4, image: './image/stage3/q1-option4.jpg', isCorrect: false },
             { id: 5, image: './image/stage3/q1-option5.jpg', isCorrect: false },
-            { id: 6, image: './image/stage3/q1-option6.jpg', isCorrect: false },
-            { id: 7, image: './image/stage3/q1-option7.jpg', isCorrect: false },
-            { id: 8, image: './image/stage3/q1-option8.jpg', isCorrect: false }
+            { id: 6, image: './image/stage3/q1-option6.jpg', isCorrect: false }
         ]
+    },
+     // 텍스트만 있는 문제 (중앙 정렬 테스트)
+    {
+        id: 's3_q6',
+        questionText: '1. 텍스트만 있는 문제 예시입니다.',
+        choices: [
+            { id: 1, image: './image/stage3/q1-option1.jpg', isCorrect: true },
+            { id: 2, image: './image/stage3/q1-option2.jpg', isCorrect: false },
+            { id: 3, image: './image/stage3/q1-option3.jpg', isCorrect: false },
+            { id: 4, image: './image/stage3/q1-option4.jpg', isCorrect: false }
+        ]
+    },
+    {
+        id: 's3_q7',
+        questionText: '2. 텍스트만 있는 문제 예시입니다.2. 텍스트만 있는 문제 예시입니다',
+        choices: [
+            { id: 1, image: './image/stage3/q1-option1.jpg', isCorrect: true },
+            { id: 2, image: './image/stage3/q1-option2.jpg', isCorrect: false },
+            { id: 3, image: './image/stage3/q1-option3.jpg', isCorrect: false },
+            { id: 4, image: './image/stage3/q1-option4.jpg', isCorrect: false }
+        ]
+    },
+    {
+        id: 's3_q8',
+        questionText: '3. 텍스트만 있는 문제 예시입니다.3. 텍스트만 있는 문제 예시입니다.3. 텍스트만 있는 문제 예시입니다.3. 텍스트만 있는 문제 예시입니다.3. 텍스트만 있는 문제 예시입니다.',
+        choices: [
+            { id: 1, image: './image/stage3/q1-option1.jpg', isCorrect: true },
+            { id: 2, image: './image/stage3/q1-option2.jpg', isCorrect: false },
+            { id: 3, image: './image/stage3/q1-option3.jpg', isCorrect: false },
+            { id: 4, image: './image/stage3/q1-option4.jpg', isCorrect: false }
+        ]
+
+
     }
 ];
 

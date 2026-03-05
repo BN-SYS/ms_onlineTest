@@ -130,8 +130,11 @@ function createTestContainer(config) {
 
       <!-- 문제 영역 -->
       <div class="question-section">
+        <div class="question-text" id="questionText" style="display: none;">
+          <!-- 텍스트 영역 (동적 생성) -->
+        </div>
         <div class="question-image">
-          <img id="questionImg" src="" alt="문제 이미지">
+          <img id="questionImg" src="" alt="문제 이미지" style="display: none;">
         </div>
         <div class="question-watermark">
           <span class="test-number" id="testNumber">ONT-1234</span>
@@ -350,10 +353,10 @@ class TestManager {
   /* ========== 보안 조치 초기화 (우클릭 방지 등) ========== */
   initSecurityMeasures() {
     // 1. 우클릭(컨텍스트 메뉴) 방지
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-      return false;
-    }, false);
+    // document.addEventListener('contextmenu', function(e) {
+    //   e.preventDefault();
+    //   return false;
+    // }, false);
 
     // 2. 개발자 도구 단축키 방지
     document.addEventListener('keydown', function(e) {
@@ -491,32 +494,77 @@ class TestManager {
     this.submitStage();
   }
 
-  /* ========== 문제 로드 ========== */
+  /* ========== ✅ 문제 로드 (텍스트+이미지 지원, CSS 클래스 기반 중앙정렬) ========== */
   loadQuestion(idx) {
     this.currentQuestionIndex = idx;
     const question = this.selectedQuestions[idx];
 
+    const questionTextElem = document.getElementById('questionText');
     const questionImg = document.getElementById('questionImg');
-    if (questionImg) {
+
+    // 텍스트/이미지 존재 여부 확인
+    const hasText = question.questionText && question.questionText.trim() !== '';
+    const hasImage = question.questionImage && question.questionImage.trim() !== '';
+
+    // ✅ 케이스별 처리
+    if (hasText && !hasImage) {
+      // ✅ 텍스트만: 좌측 정렬 + 상하 중앙
+      questionTextElem.textContent = question.questionText;
+      questionTextElem.style.display = 'flex';
+      questionTextElem.classList.add('text-only-centered');
+      questionTextElem.style.textAlign = 'left'; // 좌측 정렬 추가
+      questionImg.style.display = 'none';
+    } else if (hasText && hasImage) {
+      // ✅ 텍스트 + 이미지: 텍스트 좌측 정렬, 이미지 아래
+      questionTextElem.textContent = question.questionText;
+      questionTextElem.style.display = 'block';
+      questionTextElem.classList.remove('text-only-centered');
+      questionTextElem.style.textAlign = 'left';
+      questionTextElem.style.marginBottom = '15px';
+      
       questionImg.src = question.questionImage;
       questionImg.alt = `문제 ${idx + 1}`;
+      questionImg.style.display = 'block';
       questionImg.onerror = () => {
         questionImg.src = 'https://via.placeholder.com/750x400?text=이미지+로드+실패';
       };
       questionImg.ondragstart = function() { return false; };
       questionImg.oncontextmenu = function() { return false; };
+    } else if (!hasText && hasImage) {
+      // ✅ 이미지만: 기존 방식
+      questionTextElem.style.display = 'none';
+      questionTextElem.classList.remove('text-only-centered');
+      questionImg.src = question.questionImage;
+      questionImg.alt = `문제 ${idx + 1}`;
+      questionImg.style.display = 'block';
+      questionImg.onerror = () => {
+        questionImg.src = 'https://via.placeholder.com/750x400?text=이미지+로드+실패';
+      };
+      questionImg.ondragstart = function() { return false; };
+      questionImg.oncontextmenu = function() { return false; };
+    } else {
+      // ✅ 둘 다 없음: 기본 텍스트 좌측 정렬 + 상하 중앙
+      questionTextElem.textContent = '물음표(?)로 표시된 곳에 들어갈 가장 적절한 정답을 보기 중에서 선택하세요.';
+      questionTextElem.style.display = 'flex';
+      questionTextElem.classList.add('text-only-centered');
+      questionTextElem.style.textAlign = 'left'; // 좌측 정렬 추가
+      questionImg.style.display = 'none';
     }
 
+    // 문제 번호 업데이트
     const currentQuestionElem = document.getElementById('currentQuestion');
     if (currentQuestionElem) {
       currentQuestionElem.textContent = idx + 1;
     }
 
+    // 진행바 업데이트
     this.updateProgressBar();
 
+    // 보기 랜덤 셔플 및 표시
     const shuffledChoices = [...question.choices].sort(() => Math.random() - 0.5);
     this.displayChoices(shuffledChoices, question.id);
 
+    // 이전 답안 복원
     const prevAnswer = this.userAnswers[idx];
     if (prevAnswer && typeof prevAnswer === 'object' && prevAnswer.choiceId) {
       const selectedElem = document.querySelector(
@@ -525,6 +573,7 @@ class TestManager {
       if (selectedElem) selectedElem.classList.add('selected');
     }
 
+    // 네비게이션 버튼 상태 업데이트
     this.updateNavigationButtons();
   }
 
@@ -655,7 +704,7 @@ class TestManager {
     this.processSubmission();
   }
 
-  // ✅ 실제 제출 처리 로직
+  /* ========== ✅ 실제 제출 처리 로직 ========== */
   processSubmission() {
     let correctCount = 0;
     let totalTime = 0;
@@ -678,13 +727,7 @@ class TestManager {
     const avgTimePerQuestion = answeredCount > 0 ? totalTime / answeredCount : 0;
     const actualTotalTime = this.config.timeLimit ? this.elapsedTime : Math.floor((Date.now() - this.stageStartTime) / 1000);
 
-    // console.log(`=== ${this.config.stage}단계 채점 결과 ===`);
-    // console.log(`정답: ${correctCount} / ${this.selectedQuestions.length}`);
-    // console.log(`정답률: ${correctRate.toFixed(1)}%`);
-    // console.log(`답변한 문제: ${answeredCount}`);
-    // console.log(`총 소요 시간: ${actualTotalTime}초`);
-    // console.log(`평균 문제당 시간: ${avgTimePerQuestion.toFixed(1)}초`);
-
+    // 검증 로직
     if (this.config.validation) {
       const validationResult = this.config.validation(correctRate, avgTimePerQuestion, actualTotalTime);
       if (!validationResult.passed) {
@@ -703,7 +746,7 @@ class TestManager {
 
         if (this.config.stage === 1) {
           const proceed = confirm(
-            '1단계 검증 실패하였습니다.\n회원정보는 유지되지만, 새로운 세션으로 1단계를 다시 시작합니다.\n계속하시겠습니까?'
+            '1단계 검증 실패하였습니다.\n회원정보는 유지되지만, 새로운 세션으로 1단계를 다시 시작합니다.\n계속하시겠습니까?\n취소 시 메인 페이지로 이동합니다.'
           );
           if (proceed) {
             const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -728,7 +771,7 @@ class TestManager {
         }
 
         const proceed = confirm(
-          `${this.config.stage}단계 검증 실패\n이 단계를 다시 시작하시겠습니까?`
+          `${this.config.stage}단계 검증 실패\n이 단계를 다시 시작하시겠습니까?\n취소 시 메인 페이지로 이동합니다.`
         );
         if (proceed) {
           const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -750,6 +793,7 @@ class TestManager {
       }
     }
 
+    // 합격 처리
     const stageResult = {
       stage: this.config.stage,
       questions: this.selectedQuestions.map((q) => q.id),
@@ -822,7 +866,7 @@ function createValidation(minCorrectRate, minAvgTime, minTotalTime) {
       return {
         passed: false,
         reason: 'too_fast',
-        message: `비정상적인 응시 패턴 감지되었습니다.\n해당 단계 재응시가 필요합니다.`
+        message: `비정상적인 응시 패턴이 감지되었습니다.\n해당 단계 재응시가 필요합니다.`
       };
     }
     if (totalTime < minTotalTime) {
