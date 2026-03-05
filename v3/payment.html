@@ -12,82 +12,83 @@
 <body>
     <!-- 헤더 -->
     <div id="header-placeholder"></div>
-    
-    <div class="payment-container">
+    <main>
+        <div class="payment-container">
 
-        <div class="payment-header">
-            <h1>테스트를 완료하셨습니다!</h1>
-            <p class="description">지금 바로 <strong>나의 결과</strong>를 확인하세요</p>
-        </div>
-
-        <div class="payment-options">
-            <!-- ✅ 기본 결과 - 카드 클릭 시 결제 진행 -->
-            <div class="payment-card" onclick="processPayment('basic')">
-                <div class="card-tag">빠른 확인</div>
-                <h3>기본 결과</h3>
-                
-                <div class="price-wrapper">
-                    <div class="discount-badge">
-                        <span class="discount-percent">25% 할인</span>
-                    </div>
-                    <div class="original-price">19,900원</div>
-                    <div class="price">
-                        14,900<small>원</small>
-                    </div>
-                    <div class="price-description" style="color: white;">-</div>
-                </div>
-
-                <ul class="benefits-list">
-                    <li><strong>종합 점수</strong></li>
-                    <li>기본 결과 해석</li>
-                    <li>이메일 즉시 발송 (5분 이내)</li>
-                </ul>
-
-                <!-- ✅ stopPropagation 제거 (카드 클릭과 동일하게 동작) -->
-                <button class="payment-btn" onclick="processPayment('basic')">
-                    <span class="btn-text">지금 바로 결제하고 결과 확인</span>
-                </button>
+            <div class="payment-header">
+                <h1>테스트를 완료하셨습니다!</h1>
+                <p class="description">지금 바로 <strong>나의 결과</strong>를 확인하세요</p>
             </div>
 
-            <!-- ✅ 상세 리포트 - 카드 클릭 시 결제 진행 -->
-            <div class="payment-card premium" onclick="processPayment('detail')">
-                <div class="most-popular">
-                    <span>83%가 선택</span>
-                </div>
-                <div class="card-tag recommended">전문가 추천</div>
-                <h3>상세 리포트</h3>
-                
-                <div class="price-wrapper">
-                    <div class="discount-badge">
-                        <span class="discount-percent">40% 할인</span>
+            <div class="payment-options">
+                <!-- ✅ 기본 결과 - 카드 클릭 시 결제 진행 -->
+                <div class="payment-card" onclick="processPayment('basic')">
+                    <div class="card-tag">빠른 확인</div>
+                    <h3>기본 결과</h3>
+
+                    <div class="price-wrapper">
+                        <div class="discount-badge">
+                            <span class="discount-percent">25% 할인</span>
+                        </div>
+                        <div class="original-price">19,900원</div>
+                        <div class="price">
+                            14,900<small>원</small>
+                        </div>
+                        <div class="price-description" style="color: white;">-</div>
                     </div>
-                    <div class="original-price">39,900원</div>
-                    <div class="price highlight">
-                        23,900<small>원</small>
+
+                    <ul class="benefits-list">
+                        <li><strong>종합 점수</strong></li>
+                        <li>기본 결과 해석</li>
+                        <li>이메일 즉시 발송 (5분 이내)</li>
+                    </ul>
+
+                    <!-- ✅ stopPropagation 제거 (카드 클릭과 동일하게 동작) -->
+                    <button class="payment-btn" onclick="processPayment('basic')">
+                        <span class="btn-text">지금 바로 결제하고 결과 확인</span>
+                    </button>
+                </div>
+
+                <!-- ✅ 상세 리포트 - 카드 클릭 시 결제 진행 -->
+                <div class="payment-card premium" onclick="processPayment('detail')">
+                    <div class="most-popular">
+                        <span>83%가 선택</span>
                     </div>
-                    <div class="price-description">전문가 수준의 상세 분석</div>
+                    <div class="card-tag recommended">전문가 추천</div>
+                    <h3>상세 리포트</h3>
+
+                    <div class="price-wrapper">
+                        <div class="discount-badge">
+                            <span class="discount-percent">40% 할인</span>
+                        </div>
+                        <div class="original-price">39,900원</div>
+                        <div class="price highlight">
+                            23,900<small>원</small>
+                        </div>
+                        <div class="price-description">전문가 수준의 상세 분석</div>
+                    </div>
+
+                    <ul class="benefits-list">
+                        <li><strong class="highlight-text">기본 결과 전체 포함</strong></li>
+                        <li><strong>영역별 상세 분석</strong></li>
+                        <li>전문가 해석 + 분석 그래프</li>
+                        <li>고급 PDF 다운로드 (인쇄 가능)</li>
+                    </ul>
+
+                    <div class="value-comparison">
+                        <span class="comparison-text">기본 대비 9,000원으로</span>
+                        <span class="comparison-value">3배 더 많은 정보</span>
+                    </div>
+
+                    <!-- ✅ stopPropagation 제거 -->
+                    <button class="payment-btn premium-btn" onclick="processPayment('detail')">
+                        <span class="btn-text">상세 리포트로 완벽 분석하기</span>
+                    </button>
                 </div>
-
-                <ul class="benefits-list">
-                    <li><strong class="highlight-text">기본 결과 전체 포함</strong></li>
-                    <li><strong>영역별 상세 분석</strong></li>
-                    <li>전문가 해석 + 분석 그래프</li>
-                    <li>고급 PDF 다운로드 (인쇄 가능)</li>
-                </ul>
-
-                <div class="value-comparison">
-                    <span class="comparison-text">기본 대비 9,000원으로</span>
-                    <span class="comparison-value">3배 더 많은 정보</span>
-                </div>
-
-                <!-- ✅ stopPropagation 제거 -->
-                <button class="payment-btn premium-btn" onclick="processPayment('detail')">
-                    <span class="btn-text">상세 리포트로 완벽 분석하기</span>
-                </button>
             </div>
-        </div>
 
-    </div>
+        </div>
+    </main>
 
     <!-- 푸터 -->
     <div id="footer-placeholder"></div>

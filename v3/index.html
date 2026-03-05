@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,8 @@
         body {
             margin: 0;
             padding: 0;
-            background: #f5f5f5; /* 여백 배경색 */
+            background: #f5f5f5;
+            /* 여백 배경색 */
         }
 
         /* 헤더 고정 */
@@ -25,19 +27,24 @@
 
         /* 이미지 영역 - 헤더 아래부터 시작 */
         .fullscreen-image-wrapper {
-            margin-top: 70px; /* 헤더 높이만큼 여백 */
+            margin-top: 70px;
+            /* 헤더 높이만큼 여백 */
             width: 100%;
-            min-height: calc(100vh - 70px); /* 최소 높이 */
+            min-height: calc(100vh - 70px);
+            /* 최소 높이 */
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #fff; /* 이미지 배경 */
-            padding: 20px 0; /* 상하 여백 */
+            background: #fff;
+            /* 이미지 배경 */
+            padding: 20px 0;
+            /* 상하 여백 */
         }
 
         .fullscreen-image {
             width: 100%;
-            height: auto; /* 원본 비율 유지 */
+            height: auto;
+            /* 원본 비율 유지 */
             max-width: 100%;
             display: block;
         }
@@ -67,37 +74,40 @@
         }
     </style>
 </head>
+
 <body>
 
-<!-- 헤더 (고정) -->
-<div id="header-placeholder"></div>
+    <!-- 헤더 (고정) -->
+    <div id="header-placeholder"></div>
+    <main>
 
-<!-- 전체 화면 이미지 (헤더 아래부터 시작) -->
-<div class="fullscreen-image-wrapper">
-    <img src="./image/test.mensakorea.kr_.png" alt="멘사형 사고력 테스트" class="fullscreen-image">
-</div>
+        <!-- 전체 화면 이미지 (헤더 아래부터 시작) -->
+        <div class="fullscreen-image-wrapper">
+            <img src="./image/test.mensakorea.kr_.png" alt="멘사형 사고력 테스트" class="fullscreen-image">
+        </div>
+    </main>
+    <!-- 푸터 -->
+    <div id="footer-placeholder"></div>
 
-<!-- 푸터 -->
-<div id="footer-placeholder"></div>
-
-<!-- include.js 추가 -->
-<script src="js/include.js"></script>
-<script>
-function openSidebar(){
-    document.getElementById('sidebar').classList.add('active');
-}
-function closeSidebar(){
-    document.getElementById('sidebar').classList.remove('active');
-}
-window.addEventListener('scroll', function() {
-    const header = document.querySelector('.header');
-    if (window.scrollY > 50) {
-        header.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-    } else {
-        header.style.boxShadow = 'none';
-    }
-});
-</script>
+    <!-- include.js 추가 -->
+    <script src="js/include.js"></script>
+    <script>
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('active');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('active');
+        }
+        window.addEventListener('scroll', function () {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        });
+    </script>
 
 </body>
+
 </html>

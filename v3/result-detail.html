@@ -11,127 +11,128 @@
 
 <body>
     <div id="header-placeholder"></div>
+    <main>
+        <!-- A4 레이아웃 결과지 -->
+        <div class="result-page-wrapper">
+            <div class="result-page" id="resultPage">
 
-    <!-- A4 레이아웃 결과지 -->
-    <div class="result-page-wrapper">
-        <div class="result-page" id="resultPage">
-
-            <!-- 전문적인 인증서 배너 -->
-            <div class="result-banner">
-                <div class="banner-decoration-top"></div>
-                <div class="banner-content">
-                    <div class="banner-header">
-                        <div class="banner-seal"><img src="./image/banner-seal.png" alt="MENSA Korea Seal"></div>
-                        <div class="banner-title-group">
-                            <h1 class="banner-main-title">Mensa Korea Brain Challenge</h1>
-                            <p class="banner-subtitle">Advanced Report</p>
-                            <div class="banner-korean-wrapper">
-                                <p class="banner-korean">온라인 테스트 결과</p>
-                                <div class="banner-date-inline">
-                                    <span class="date-label">Test Date:</span>
-                                    <span class="date-value" id="bannerDate"></span>
+                <!-- 전문적인 인증서 배너 -->
+                <div class="result-banner">
+                    <div class="banner-decoration-top"></div>
+                    <div class="banner-content">
+                        <div class="banner-header">
+                            <div class="banner-seal"><img src="./image/banner-seal.png" alt="MENSA Korea Seal"></div>
+                            <div class="banner-title-group">
+                                <h1 class="banner-main-title">Mensa Korea Brain Challenge</h1>
+                                <p class="banner-subtitle">Advanced Report</p>
+                                <div class="banner-korean-wrapper">
+                                    <p class="banner-korean">온라인 테스트 결과</p>
+                                    <div class="banner-date-inline">
+                                        <span class="date-label">Test Date:</span>
+                                        <span class="date-value" id="bannerDate"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="banner-decoration-bottom"></div>
                 </div>
-                <div class="banner-decoration-bottom"></div>
-            </div>
 
-            <!-- 인증 정보 카드 -->
-            <div class="cert-card">
-                <div class="cert-item">
-                    <span class="cert-label">성명</span>
-                    <span class="cert-value" id="userName"></span>
-                </div>
-                <div class="cert-item">
-                    <span class="cert-label">출생년도</span>
-                    <span class="cert-value" id="userBirth"></span>
-                </div>
-                <div class="cert-item">
-                    <span class="cert-label">인증번호</span>
-                    <span class="cert-value" id="certNumber"></span>
-                </div>
-                <div class="cert-item">
-                    <span class="cert-label">진위확인코드</span>
-                    <span class="cert-value" id="verifyCode"></span>
-                </div>
-            </div>
-
-            <!-- 종합 점수 섹션 -->
-            <div class="score-section">
-                <div class="main-score-box">
-                    <div class="score-label">종합 점수</div>
-                    <div class="score-value" id="totalScore"></div>
-                    <div class="score-rank"><span id="scoreRank"></span></div>
-                </div>
-                <div class="level-box" id="levelBox">
-                    <!-- JS로 동적 생성 -->
-                </div>
-            </div>
-
-            <!-- 단계별 성적 -->
-            <div class="stages-section">
-                <h3 class="section-title">단계별 성적</h3>
-                <div class="stages-grid" id="stagesGrid">
-                    <!-- JS로 동적 생성 (5개 항목) -->
-                </div>
-            </div>
-
-            <!-- 표준편차 분석 그래프 -->
-            <div class="charts-section">
-                <h3 class="section-title">표준편차 분석</h3>
-                <div class="charts-grid">
-                    <div class="chart-box chart-total">
-                        <canvas id="totalChart"></canvas>
-                        <p class="chart-label">종합 평가</p>
+                <!-- 인증 정보 카드 -->
+                <div class="cert-card">
+                    <div class="cert-item">
+                        <span class="cert-label">성명</span>
+                        <span class="cert-value" id="userName"></span>
                     </div>
-                    <div class="chart-box">
-                        <canvas id="stage1Chart"></canvas>
-                        <p class="chart-label">시각 추론</p>
+                    <div class="cert-item">
+                        <span class="cert-label">출생년도</span>
+                        <span class="cert-value" id="userBirth"></span>
                     </div>
-                    <div class="chart-box">
-                        <canvas id="stage2Chart"></canvas>
-                        <p class="chart-label">논리 사고</p>
+                    <div class="cert-item">
+                        <span class="cert-label">인증번호</span>
+                        <span class="cert-value" id="certNumber"></span>
                     </div>
-                    <div class="chart-box">
-                        <canvas id="stage3Chart"></canvas>
-                        <p class="chart-label">종합 인지</p>
+                    <div class="cert-item">
+                        <span class="cert-label">진위확인코드</span>
+                        <span class="cert-value" id="verifyCode"></span>
                     </div>
                 </div>
-            </div>
 
-            <!-- 맞춤형 개선 가이드 -->
-            <div class="recommendation-section">
-                <h3 class="section-title">맞춤형 개선 가이드</h3>
-                <div class="recommendation-content" id="recommendationContent">
-                    <!-- JS로 동적 생성 -->
+                <!-- 종합 점수 섹션 -->
+                <div class="score-section">
+                    <div class="main-score-box">
+                        <div class="score-label">종합 점수</div>
+                        <div class="score-value" id="totalScore"></div>
+                        <div class="score-rank"><span id="scoreRank"></span></div>
+                    </div>
+                    <div class="level-box" id="levelBox">
+                        <!-- JS로 동적 생성 -->
+                    </div>
+                </div>
+
+                <!-- 단계별 성적 -->
+                <div class="stages-section">
+                    <h3 class="section-title">단계별 성적</h3>
+                    <div class="stages-grid" id="stagesGrid">
+                        <!-- JS로 동적 생성 (5개 항목) -->
+                    </div>
+                </div>
+
+                <!-- 표준편차 분석 그래프 -->
+                <div class="charts-section">
+                    <h3 class="section-title">표준편차 분석</h3>
+                    <div class="charts-grid">
+                        <div class="chart-box chart-total">
+                            <canvas id="totalChart"></canvas>
+                            <p class="chart-label">종합 평가</p>
+                        </div>
+                        <div class="chart-box">
+                            <canvas id="stage1Chart"></canvas>
+                            <p class="chart-label">시각 추론</p>
+                        </div>
+                        <div class="chart-box">
+                            <canvas id="stage2Chart"></canvas>
+                            <p class="chart-label">논리 사고</p>
+                        </div>
+                        <div class="chart-box">
+                            <canvas id="stage3Chart"></canvas>
+                            <p class="chart-label">종합 인지</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 맞춤형 개선 가이드 -->
+                <div class="recommendation-section">
+                    <h3 class="section-title">맞춤형 개선 가이드</h3>
+                    <div class="recommendation-content" id="recommendationContent">
+                        <!-- JS로 동적 생성 -->
+                    </div>
+                </div>
+
+                <!-- 푸터 -->
+                <div class="result-page-footer">
+                    <p>본 리포트는 멘사코리아 브레인 챌린지 결과입니다. | https://test.mensakorea.kr</p>
+                    <p class="footer-notice">※ 본 결과는 온라인 테스트 기준이며, 공식 멘사 가입을 위해서는 오프라인 테스트가 필요합니다.</p>
                 </div>
             </div>
 
-            <!-- 푸터 -->
-            <div class="result-page-footer">
-                <p>본 리포트는 멘사코리아 브레인 챌린지 결과입니다. | https://test.mensakorea.kr</p>
-                <p class="footer-notice">※ 본 결과는 온라인 테스트 기준이며, 공식 멘사 가입을 위해서는 오프라인 테스트가 필요합니다.</p>
+            <!-- 액션 버튼 (PDF 외부에 배치) -->
+            <div class="action-buttons-wrapper">
+                <button class="action-btn primary" onclick="downloadPDF()">
+                    PDF 다운로드
+                </button>
+                <button class="action-btn" onclick="printResult()">
+                    인쇄하기
+                </button>
+                <button class="action-btn" onclick="shareResult()">
+                    공유하기
+                </button>
+                <button class="action-btn" onclick="location.href='index.html'">
+                    홈으로
+                </button>
             </div>
         </div>
-
-        <!-- 액션 버튼 (PDF 외부에 배치) -->
-        <div class="action-buttons-wrapper">
-            <button class="action-btn primary" onclick="downloadPDF()">
-                PDF 다운로드
-            </button>
-            <button class="action-btn" onclick="printResult()">
-                인쇄하기
-            </button>
-            <button class="action-btn" onclick="shareResult()">
-                공유하기
-            </button>
-            <button class="action-btn" onclick="location.href='index.html'">
-                홈으로
-            </button>
-        </div>
-    </div>
+    </main>
 
     <div id="footer-placeholder"></div>
 
