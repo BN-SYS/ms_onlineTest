@@ -65,7 +65,7 @@ const stage2QuestionBank = [
      // 텍스트만 있는 문제 (중앙 정렬 테스트)
     {
         id: 's2_q6',
-        questionText: '1. 텍스트만 있는 문제 예시입니다.',
+        questionText: '서울특별시청에서 부산광역시청까지 차량 이동시 거리는 몇 km 일까요?',
         choices: [
             { id: 1, image: './image/stage2/q1-option1.jpg', isCorrect: true },
             { id: 2, image: './image/stage2/q1-option2.jpg', isCorrect: false },
@@ -75,7 +75,7 @@ const stage2QuestionBank = [
     },
     {
         id: 's2_q7',
-        questionText: '2. 텍스트만 있는 문제 예시입니다.2. 텍스트만 있는 문제 예시입니다',
+        questionText: '2026년 기준, Republic of Korea의 인구는 약 몇 명일까요?',
         choices: [
             { id: 1, image: './image/stage2/q1-option1.jpg', isCorrect: true },
             { id: 2, image: './image/stage2/q1-option2.jpg', isCorrect: false },
