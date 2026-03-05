@@ -163,20 +163,15 @@ function createTestContainer(config) {
         <!-- JS로 동적 생성 -->
       </div>
 
-      <!-- 자동 넘김 안내 문구 -->
-      <div class="auto-next-notice">
-        <strong>※ 답을 선택하면 자동으로 다음 문제로 넘어갑니다</strong>
-      </div>
-
       <!-- 네비게이션 버튼 -->
       <div class="navigation-buttons">
-        <button class="nav-btn prev-btn" id="prevBtn">
+        <button class="nav-btn prev-btn" id="prevBtn" disabled>
           ← 이전 문제
         </button>
-        <button class="nav-btn next-btn" id="nextBtn">
+        <button class="nav-btn next-btn" id="nextBtn" disabled>
           다음 문제 →
         </button>
-        <button class="nav-btn submit-btn" id="submitBtn" style="display:none;">
+        <button class="nav-btn submit-btn" id="submitBtn" style="display:none;" disabled>
           제출하기
         </button>
       </div>
@@ -398,10 +393,10 @@ class TestManager {
   /* ========== 보안 조치 초기화 (우클릭 방지 등) ========== */
   initSecurityMeasures() {
     // 1. 우클릭(컨텍스트 메뉴) 방지
-    // document.addEventListener('contextmenu', function(e) {
-    //   e.preventDefault();
-    //   return false;
-    // }, false);
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    }, false);
 
     // 2. 개발자 도구 단축키 방지
     document.addEventListener('keydown', function (e) {
@@ -539,7 +534,7 @@ class TestManager {
     this.submitStage();
   }
 
-  /* ========== ✅ 문제 로드 (텍스트+이미지 지원, CSS 클래스 기반 중앙정렬) ========== */
+  /* ========== ✅ 문제 로드 ========== */
   loadQuestion(idx) {
     this.currentQuestionIndex = idx;
     const question = this.selectedQuestions[idx];
@@ -553,14 +548,12 @@ class TestManager {
 
     // ✅ 케이스별 처리
     if (hasText && !hasImage) {
-      // ✅ 텍스트만: 좌측 정렬 + 상하 중앙
       questionTextElem.textContent = question.questionText;
       questionTextElem.style.display = 'flex';
       questionTextElem.classList.add('text-only-centered');
-      questionTextElem.style.textAlign = 'left'; // 좌측 정렬 추가
+      questionTextElem.style.textAlign = 'left';
       questionImg.style.display = 'none';
     } else if (hasText && hasImage) {
-      // ✅ 텍스트 + 이미지: 텍스트 좌측 정렬, 이미지 아래
       questionTextElem.textContent = question.questionText;
       questionTextElem.style.display = 'block';
       questionTextElem.classList.remove('text-only-centered');
@@ -576,7 +569,6 @@ class TestManager {
       questionImg.ondragstart = function () { return false; };
       questionImg.oncontextmenu = function () { return false; };
     } else if (!hasText && hasImage) {
-      // ✅ 이미지만: 기존 방식
       questionTextElem.style.display = 'none';
       questionTextElem.classList.remove('text-only-centered');
       questionImg.src = question.questionImage;
@@ -588,11 +580,10 @@ class TestManager {
       questionImg.ondragstart = function () { return false; };
       questionImg.oncontextmenu = function () { return false; };
     } else {
-      // ✅ 둘 다 없음: 기본 텍스트 좌측 정렬 + 상하 중앙
       questionTextElem.textContent = '물음표(?)로 표시된 곳에 들어갈 가장 적절한 정답을 보기 중에서 선택하세요.';
       questionTextElem.style.display = 'flex';
       questionTextElem.classList.add('text-only-centered');
-      questionTextElem.style.textAlign = 'left'; // 좌측 정렬 추가
+      questionTextElem.style.textAlign = 'left';
       questionImg.style.display = 'none';
     }
 
@@ -609,7 +600,7 @@ class TestManager {
     const shuffledChoices = [...question.choices].sort(() => Math.random() - 0.5);
     this.displayChoices(shuffledChoices, question.id);
 
-    // 이전 답안 복원
+    // ✅ 이전 답안 복원
     const prevAnswer = this.userAnswers[idx];
     if (prevAnswer && typeof prevAnswer === 'object' && prevAnswer.choiceId) {
       const selectedElem = document.querySelector(
@@ -657,31 +648,46 @@ class TestManager {
     bar.style.width = percentage + '%';
   }
 
-  /* ========== 네비게이션 버튼 활성화 제어 ========== */
+  /* ========== ✅ 네비게이션 버튼 활성화 제어 ========== */
   updateNavigationButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
+    
+    const isFirst = this.currentQuestionIndex === 0;
     const isLast = this.currentQuestionIndex === this.selectedQuestions.length - 1;
+    const hasAnswer = this.userAnswers[this.currentQuestionIndex] !== null;
 
+    // ✅ 이전 버튼: 첫 문제가 아니면 활성화
     if (prevBtn) {
-      prevBtn.disabled = this.currentQuestionIndex === 0;
-      prevBtn.style.opacity = prevBtn.disabled ? '0.4' : '1';
+      prevBtn.disabled = isFirst;
+      prevBtn.style.opacity = isFirst ? '0.4' : '1';
+      prevBtn.style.cursor = isFirst ? 'not-allowed' : 'pointer';
     }
 
+    // ✅ 다음/제출 버튼
     if (nextBtn && submitBtn) {
       if (isLast) {
+        // 마지막 문제: 제출 버튼 표시
         nextBtn.style.display = 'none';
         submitBtn.style.display = 'inline-block';
+        submitBtn.disabled = !hasAnswer;
+        submitBtn.style.opacity = hasAnswer ? '1' : '0.4';
+        submitBtn.style.cursor = hasAnswer ? 'pointer' : 'not-allowed';
       } else {
+        // 중간 문제: 다음 버튼 표시
         nextBtn.style.display = 'inline-block';
+        nextBtn.disabled = !hasAnswer;
+        nextBtn.style.opacity = hasAnswer ? '1' : '0.4';
+        nextBtn.style.cursor = hasAnswer ? 'pointer' : 'not-allowed';
         submitBtn.style.display = 'none';
       }
     }
   }
 
-  /* ========== 보기 선택 ========== */
+  /* ========== ✅ 보기 선택 (자동 넘김 제거) ========== */
   selectChoice(choiceId, questionId) {
+    // ✅ 답안 저장 (기존 답안 수정 가능)
     this.questionEndTimes[this.currentQuestionIndex] = Date.now();
     this.userAnswers[this.currentQuestionIndex] = {
       questionId,
@@ -690,34 +696,39 @@ class TestManager {
       endTime: this.questionEndTimes[this.currentQuestionIndex]
     };
 
+    // ✅ UI 업데이트
     document.querySelectorAll('.choice-item').forEach((el) => el.classList.remove('selected'));
     const selectedElem = document.querySelector(`.choice-item[data-choice-id="${choiceId}"]`);
     if (selectedElem) selectedElem.classList.add('selected');
 
-    if (this.currentQuestionIndex === this.selectedQuestions.length - 1) {
-      if (confirm(`${this.config.stage}단계 마지막 문제입니다. 제출하시겠습니까?`)) {
-        this.submitStage();
-      }
-    } else {
-      setTimeout(() => this.nextQuestion(), 800);
-    }
+    console.log(`✅ 문제 ${this.currentQuestionIndex + 1}: 보기 ${choiceId} 선택`);
+
+    // ✅ 버튼 상태 업데이트 (다음/제출 버튼 활성화)
+    this.updateNavigationButtons();
   }
 
-  /* ========== 다음 문제 ========== */
+  /* ========== ✅ 다음 문제 ========== */
   nextQuestion() {
+    // ✅ 답안 선택 확인
     if (!this.userAnswers[this.currentQuestionIndex]) {
-      console.log(`문제 ${this.currentQuestionIndex + 1}: 답을 선택하지 않음 → 오답 처리`);
-      this.userAnswers[this.currentQuestionIndex] = null;
-      this.questionEndTimes[this.currentQuestionIndex] = Date.now();
+      alert('답을 선택해주세요.');
+      return;
     }
+
+    // ✅ 다음 문제로 이동
     if (this.currentQuestionIndex < this.selectedQuestions.length - 1) {
       this.currentQuestionIndex++;
-      this.questionStartTimes[this.currentQuestionIndex] = Date.now();
+      
+      // ✅ 시작 시간 기록 (처음 진입 시에만)
+      if (!this.questionStartTimes[this.currentQuestionIndex]) {
+        this.questionStartTimes[this.currentQuestionIndex] = Date.now();
+      }
+      
       this.loadQuestion(this.currentQuestionIndex);
     }
   }
 
-  /* ========== 이전 문제 ========== */
+  /* ========== ✅ 이전 문제 ========== */
   previousQuestion() {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
@@ -734,9 +745,12 @@ class TestManager {
   submitStage() {
     clearInterval(this.timerInterval);
 
-    if (!this.userAnswers[this.currentQuestionIndex]) {
-      this.userAnswers[this.currentQuestionIndex] = null;
-      this.questionEndTimes[this.currentQuestionIndex] = Date.now();
+    // ✅ 미답변 문제 확인
+    const unansweredCount = this.userAnswers.filter(a => a === null).length;
+    if (unansweredCount > 0) {
+      if (!confirm(`${unansweredCount}개 문제를 풀지 않았습니다. 제출하시겠습니까?`)) {
+        return;
+      }
     }
 
     // ✅ 3단계 마지막 문제 제출 시 메타인지 모달 표시

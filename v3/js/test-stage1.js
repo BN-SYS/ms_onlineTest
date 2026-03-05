@@ -301,7 +301,7 @@ const stage1QuestionBank = [
         ]
     },
 
-    // 텍스트만 있는 문제 (중앙 정렬 테스트)
+    // 텍스트만 있는 문제
     {
         id: 's1_q25',
         questionText: '1. 텍스트만 있는 문제 예시입니다.',
