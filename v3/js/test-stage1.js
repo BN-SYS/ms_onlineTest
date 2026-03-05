@@ -344,9 +344,9 @@ document.addEventListener('DOMContentLoaded', () => {
     testManager = new TestManager({
         stage: 1,
         questionBank: stage1QuestionBank,
-        questionCount: 24, // ✅ 24개 전체 출제
+        questionCount: 15, // ✅ 15개 출제
         timeLimit: 30 * 60, // 30분
-        validation: createValidation(20, 1, 30), // 정답률 20%, 평균 1초, 총 30초
+        validation: createValidation(20, 1, 15), // 정답률 20%, 평균 1초, 총 30초
         nextPage: 'test-stage2.html'
     });
 
