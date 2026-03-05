@@ -86,7 +86,7 @@ function checkFormValidity() {
 }
 
 /**
- * ✅ 접수번호 생성 (ONT-000001 형식, 순차 증가)
+ * 접수번호 생성 (ONT-000001 형식, 순차 증가)
  */
 function generateTestNumber() {
     // localStorage에서 마지막 번호 가져오기
@@ -105,7 +105,7 @@ function generateTestNumber() {
 }
 
 /**
- * ✅ 폼 제출 처리 (접수번호 자동 생성 포함)
+ * 폼 제출 처리 (접수번호 자동 생성 포함)
  */
 function handleFormSubmit(event) {
     event.preventDefault();
@@ -114,11 +114,11 @@ function handleFormSubmit(event) {
     const birthYear = document.getElementById('birthYear');
     const userEmail = document.getElementById('userEmail');
 
-    // ✅ 접수번호 자동 생성
+    // 접수번호 자동 생성
     const testNumber = generateTestNumber();
 
     const userData = {
-        testNumber: testNumber,  // ✅ 접수번호 추가
+        testNumber: testNumber,  // 접수번호 추가
         name: userName.value.trim(),
         birthYear: parseInt(birthYear.value),
         email: userEmail.value.trim(),
@@ -127,7 +127,7 @@ function handleFormSubmit(event) {
     };
 
     localStorage.setItem('userData', JSON.stringify(userData));
-    console.log('✅ 사용자 정보 저장:', userData);
+    console.log('사용자 정보 저장:', userData);
     console.log(`📋 접수번호: ${testNumber}`);
 
     window.location.href = 'test-stage1.html';
@@ -179,5 +179,5 @@ function initConsentPage() {
     form.addEventListener('submit', handleFormSubmit);
 }
 
-// ✅ DOMContentLoaded 이벤트에서 초기화
+// DOMContentLoaded 이벤트에서 초기화
 document.addEventListener('DOMContentLoaded', initConsentPage);

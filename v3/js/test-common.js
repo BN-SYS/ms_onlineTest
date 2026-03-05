@@ -113,7 +113,7 @@ function createMetacognitionModal() {
  */
 function createTestContainer(config) {
   const { stage, questionCount, timeLimit } = config;
-  // ✅ localStorage에서 수험번호 읽기
+  // localStorage에서 수험번호 읽기
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const testNumber = userData.testNumber || 'ONT-0000';
 
@@ -219,10 +219,10 @@ class TestManager {
 
   /* ========== 초기화 ========== */
   init() {
-    // ✅ 페이지 렌더링
+    // 페이지 렌더링
     renderTestPage(this.config);
 
-    // ✅ 우클릭 방지 초기화
+    // 우클릭 방지 초기화
     this.initSecurityMeasures();
 
     if (!this.validatePreviousStages()) {
@@ -249,16 +249,16 @@ class TestManager {
     this.questionStartTimes[0] = Date.now();
     this.updateNavigationButtons();
 
-    // ✅ 네비게이션 버튼 이벤트 등록
+    // 네비게이션 버튼 이벤트 등록
     this.attachNavigationEvents();
 
-    // ✅ 3단계: 메타인지 모달 이벤트 등록
+    // 3단계: 메타인지 모달 이벤트 등록
     if (this.config.stage === 3) {
       this.attachMetacognitionEvents();
     }
   }
 
-  /* ========== ✅ 네비게이션 이벤트 등록 ========== */
+  /* ========== 네비게이션 이벤트 등록 ========== */
   attachNavigationEvents() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -275,7 +275,7 @@ class TestManager {
     }
   }
 
-  /* ========== ✅ 메타인지 모달 이벤트 등록 ========== */
+  /* ========== 메타인지 모달 이벤트 등록 ========== */
   attachMetacognitionEvents() {
     const modalSubmitBtn = document.getElementById('metaSubmitBtn');
     const expectedCorrectInput = document.getElementById('expectedCorrectInput');
@@ -283,7 +283,7 @@ class TestManager {
 
     if (modalSubmitBtn) {
       modalSubmitBtn.addEventListener('click', () => {
-        console.log('✅ 메타인지 제출 버튼 클릭됨');
+        console.log('메타인지 제출 버튼 클릭됨');
         this.submitMetacognition();
       });
     } else {
@@ -295,7 +295,7 @@ class TestManager {
       expectedCorrectInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
-          console.log('✅ Enter 키로 메타인지 제출');
+          console.log('Enter 키로 메타인지 제출');
           this.submitMetacognition();
         }
       });
@@ -325,7 +325,7 @@ class TestManager {
     });
   }
 
-  /* ========== ✅ 메타인지 데이터 제출 ========== */
+  /* ========== 메타인지 데이터 제출 ========== */
   submitMetacognition() {
     const expectedCorrectInput = document.getElementById('expectedCorrectInput');
     const errorElem = document.getElementById('errorCorrect');
@@ -341,7 +341,7 @@ class TestManager {
     const value = expectedCorrectInput.value.trim();
     const expectedCorrect = parseInt(value);
 
-    // ✅ 검증 강화
+    // 검증 강화
     if (value === '' || isNaN(expectedCorrect) || !Number.isInteger(expectedCorrect) || expectedCorrect < 0 || expectedCorrect > 25) {
       console.warn('⚠️ 유효하지 않은 입력:', value);
       if (errorElem) errorElem.style.display = 'flex';
@@ -357,7 +357,7 @@ class TestManager {
     };
 
     localStorage.setItem('metacognitionData', JSON.stringify(metacognitionData));
-    console.log('✅ 메타인지 데이터 저장:', metacognitionData);
+    console.log('메타인지 데이터 저장:', metacognitionData);
 
     // 모달 닫기
     const modal = document.getElementById('metacognitionModal');
@@ -370,7 +370,7 @@ class TestManager {
     this.processSubmission();
   }
 
-  /* ========== ✅ 메타인지 모달 표시 ========== */
+  /* ========== 메타인지 모달 표시 ========== */
   showMetacognitionModal() {
     const modal = document.getElementById('metacognitionModal');
     if (!modal) {
@@ -378,7 +378,7 @@ class TestManager {
       return;
     }
 
-    console.log('✅ 메타인지 모달 표시');
+    console.log('메타인지 모달 표시');
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
 
@@ -537,7 +537,7 @@ class TestManager {
     this.submitStage();
   }
 
-  /* ========== ✅ 문제 로드 ========== */
+  /* ========== 문제 로드 ========== */
   loadQuestion(idx) {
     this.currentQuestionIndex = idx;
     const question = this.selectedQuestions[idx];
@@ -549,7 +549,7 @@ class TestManager {
     const hasText = question.questionText && question.questionText.trim() !== '';
     const hasImage = question.questionImage && question.questionImage.trim() !== '';
 
-    // ✅ 케이스별 처리
+    // 케이스별 처리
     if (hasText && !hasImage) {
       questionTextElem.textContent = question.questionText;
       questionTextElem.style.display = 'flex';
@@ -603,7 +603,7 @@ class TestManager {
     const shuffledChoices = [...question.choices].sort(() => Math.random() - 0.5);
     this.displayChoices(shuffledChoices, question.id);
 
-    // ✅ 이전 답안 복원
+    // 이전 답안 복원
     const prevAnswer = this.userAnswers[idx];
     if (prevAnswer && typeof prevAnswer === 'object' && prevAnswer.choiceId) {
       const selectedElem = document.querySelector(
@@ -651,7 +651,7 @@ class TestManager {
     bar.style.width = percentage + '%';
   }
 
-  /* ========== ✅ 네비게이션 버튼 활성화 제어 ========== */
+  /* ========== 네비게이션 버튼 활성화 제어 ========== */
   updateNavigationButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -661,14 +661,14 @@ class TestManager {
     const isLast = this.currentQuestionIndex === this.selectedQuestions.length - 1;
     const hasAnswer = this.userAnswers[this.currentQuestionIndex] !== null;
 
-    // ✅ 이전 버튼: 첫 문제가 아니면 활성화
+    // 이전 버튼: 첫 문제가 아니면 활성화
     if (prevBtn) {
       prevBtn.disabled = isFirst;
       prevBtn.style.opacity = isFirst ? '0.4' : '1';
       prevBtn.style.cursor = isFirst ? 'not-allowed' : 'pointer';
     }
 
-    // ✅ 다음/제출 버튼
+    // 다음/제출 버튼
     if (nextBtn && submitBtn) {
       if (isLast) {
         // 마지막 문제: 제출 버튼 표시
@@ -688,9 +688,9 @@ class TestManager {
     }
   }
 
-  /* ========== ✅ 보기 선택 (자동 넘김 제거) ========== */
+  /* ========== 보기 선택 (자동 넘김 제거) ========== */
   selectChoice(choiceId, questionId) {
-    // ✅ 답안 저장 (기존 답안 수정 가능)
+    // 답안 저장 (기존 답안 수정 가능)
     this.questionEndTimes[this.currentQuestionIndex] = Date.now();
     this.userAnswers[this.currentQuestionIndex] = {
       questionId,
@@ -699,30 +699,30 @@ class TestManager {
       endTime: this.questionEndTimes[this.currentQuestionIndex]
     };
 
-    // ✅ UI 업데이트
+    // UI 업데이트
     document.querySelectorAll('.choice-item').forEach((el) => el.classList.remove('selected'));
     const selectedElem = document.querySelector(`.choice-item[data-choice-id="${choiceId}"]`);
     if (selectedElem) selectedElem.classList.add('selected');
 
-    console.log(`✅ 문제 ${this.currentQuestionIndex + 1}: 보기 ${choiceId} 선택`);
+    console.log(`문제 ${this.currentQuestionIndex + 1}: 보기 ${choiceId} 선택`);
 
-    // ✅ 버튼 상태 업데이트 (다음/제출 버튼 활성화)
+    // 버튼 상태 업데이트 (다음/제출 버튼 활성화)
     this.updateNavigationButtons();
   }
 
-  /* ========== ✅ 다음 문제 ========== */
+  /* ========== 다음 문제 ========== */
   nextQuestion() {
-    // ✅ 답안 선택 확인
+    // 답안 선택 확인
     if (!this.userAnswers[this.currentQuestionIndex]) {
       alert('답을 선택해주세요.');
       return;
     }
 
-    // ✅ 다음 문제로 이동
+    // 다음 문제로 이동
     if (this.currentQuestionIndex < this.selectedQuestions.length - 1) {
       this.currentQuestionIndex++;
 
-      // ✅ 시작 시간 기록 (처음 진입 시에만)
+      // 시작 시간 기록 (처음 진입 시에만)
       if (!this.questionStartTimes[this.currentQuestionIndex]) {
         this.questionStartTimes[this.currentQuestionIndex] = Date.now();
       }
@@ -731,7 +731,7 @@ class TestManager {
     }
   }
 
-  /* ========== ✅ 이전 문제 ========== */
+  /* ========== 이전 문제 ========== */
   previousQuestion() {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
@@ -748,7 +748,7 @@ class TestManager {
   submitStage() {
     clearInterval(this.timerInterval);
 
-    // ✅ 미답변 문제 확인
+    // 미답변 문제 확인
     const unansweredCount = this.userAnswers.filter(a => a === null).length;
     if (unansweredCount > 0) {
       if (!confirm(`${unansweredCount}개 문제를 풀지 않았습니다. 제출하시겠습니까?`)) {
@@ -756,7 +756,7 @@ class TestManager {
       }
     }
 
-    // ✅ 3단계 마지막 문제 제출 시 메타인지 모달 표시
+    // 3단계 마지막 문제 제출 시 메타인지 모달 표시
     if (this.config.stage === 3) {
       console.log('3단계 완료 - 메타인지 모달 표시');
       this.showMetacognitionModal();
@@ -766,7 +766,7 @@ class TestManager {
     this.processSubmission();
   }
 
-  /* ========== ✅ 실제 제출 처리 로직 ========== */
+  /* ========== 실제 제출 처리 로직 ========== */
   processSubmission() {
     let correctCount = 0;
     let totalTime = 0;
@@ -921,21 +921,21 @@ function createValidation(minCorrectRate, minAvgTime, minTotalTime) {
       return {
         passed: false,
         reason: 'low_correct_rate',
-        message: `정답률이 너무 낮습니다.\n해당 단계 재응시가 필요합니다.`
+        message: `정답률이 너무 낮습니다.\n해당 단계 재응시가 필요합니다.\n취소 시 메인 페이지로 이동합니다.`
       };
     }
     if (avgTimePerQuestion > 0 && avgTimePerQuestion < minAvgTime) {
       return {
         passed: false,
         reason: 'too_fast',
-        message: `비정상적인 응시 패턴이 감지되었습니다.\n해당 단계 재응시가 필요합니다.`
+        message: `비정상적인 응시 패턴이 감지되었습니다.\n해당 단계 재응시가 필요합니다.\n취소 시 메인 페이지로 이동합니다.`
       };
     }
     if (totalTime < minTotalTime) {
       return {
         passed: false,
         reason: 'too_fast_total',
-        message: `총 응시 시간이 너무 짧습니다.\n해당 단계 재응시가 필요합니다.`
+        message: `총 응시 시간이 너무 짧습니다.\n해당 단계 재응시가 필요합니다.\n취소 시 메인 페이지로 이동합니다.`
       };
     }
     return { passed: true };
