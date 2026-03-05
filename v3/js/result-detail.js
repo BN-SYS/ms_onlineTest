@@ -420,27 +420,27 @@ function displayLevel(scoreResult) {
 function displayFiveScores(scoreResult) {
     const stages = [
         {
-            title: '1단계',
+            title: '1단계 환산점수',
             detail: '시각 추론',
             score: scoreResult.stage1Score
         },
         {
-            title: '2단계',
+            title: '2단계 환산점수',
             detail: '논리 사고',
             score: scoreResult.stage2Score
         },
         {
-            title: '3단계',
+            title: '3단계 환산점수',
             detail: '종합 인지',
             score: scoreResult.stage3Score
         },
         {
-            title: '작업 속도',
+            title: '작업 속도 환산점수',
             score: scoreResult.speedScore,
             detail: `소요시간: ${scoreResult.totalTimeFormatted || '0분 0초'}`
         },
         {
-            title: '메타인지',
+            title: '메타인지 원점수',
             score: scoreResult.metacognitionScore,
             detail: '자기 인식 정확도'
         }
