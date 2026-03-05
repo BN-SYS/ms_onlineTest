@@ -44,14 +44,17 @@ function createStageIndicator(currentStage) {
   return html;
 }
 
+
 /**
- * 메타인지 모달 HTML 생성 (3단계 전용)
+ * 메타인지 모달 생성 (3단계 전용)
  */
 function createMetacognitionModal() {
   return `
-    <div class="metacognition-modal" id="metacognitionModal" style="display: none;">
+    <div class="metacognition-modal" id="metacognitionModal" style="display:none;">
       <div class="modal-overlay"></div>
       <div class="modal-content">
+        
+        <!-- 모달 헤더 -->
         <div class="modal-header">
           <h2>테스트를 마치셨습니다!</h2>
           <p class="modal-subtitle">결과 확인 전, 본인의 예상 성적을 입력해주세요.</p>
@@ -60,44 +63,57 @@ function createMetacognitionModal() {
             <span class="info-text">메타인지(자기 인식 능력)는 높은 지능의 중요한 요소입니다.</span>
           </div>
         </div>
+
+        <!-- 모달 바디 -->
         <div class="modal-body">
           <div class="question-item">
             <div class="question-header">
               <span class="question-badge">Q</span>
               <h3>전체 25문제 중 몇 문제를 맞췄다고 생각하시나요?</h3>
             </div>
+            
             <div class="input-group">
               <div class="input-wrapper">
-                <input type="number" id="expectedCorrect" class="modal-input" min="0" max="25" placeholder="예: 18">
+                <input 
+                  type="number" 
+                  class="modal-input" 
+                  id="expectedCorrectInput" 
+                  min="0" 
+                  max="25" 
+                  placeholder="예: 18"
+                  autocomplete="off"
+                />
                 <span class="input-unit">문제</span>
               </div>
               <p class="input-hint">0 ~ 25 사이의 숫자를 입력해주세요</p>
-              <p class="input-error" id="errorCorrect" style="display: none;">
-                0에서 25 사이의 숫자를 입력해주세요
+              <p class="input-error" id="errorCorrect" style="display:none;">
+                ⚠️ 0에서 25 사이의 정수를 입력해주세요
               </p>
             </div>
           </div>
         </div>
+
+        <!-- 모달 푸터 -->
         <div class="modal-footer">
-          <button class="modal-submit-btn" id="modalSubmitBtn">
+          <button class="modal-submit-btn" id="metaSubmitBtn">
             <span class="btn-icon">✓</span>
             <span class="btn-text">완료하기</span>
           </button>
-          <p class="modal-notice">
-            ※ 입력하신 정보는 메타인지 분석에만 사용되며, 실제 점수에는 영향을 주지 않습니다
-          </p>
+          <p class="modal-notice">※ 제출 후에는 수정할 수 없습니다.</p>
         </div>
+
       </div>
     </div>
   `;
 }
+
 
 /**
  * 전체 테스트 컨테이너 생성
  */
 function createTestContainer(config) {
   const { stage, questionCount, timeLimit } = config;
-  
+
   // 초기 타이머 표시값
   let initialTimer = '00:00';
   if (stage === 1 && timeLimit) {
@@ -263,17 +279,25 @@ class TestManager {
 
   /* ========== ✅ 메타인지 모달 이벤트 등록 ========== */
   attachMetacognitionEvents() {
-    const modalSubmitBtn = document.getElementById('modalSubmitBtn');
+    const modalSubmitBtn = document.getElementById('metaSubmitBtn');
+    const expectedCorrectInput = document.getElementById('expectedCorrectInput');
+    const errorElem = document.getElementById('errorCorrect');
+
     if (modalSubmitBtn) {
-      modalSubmitBtn.addEventListener('click', () => this.submitMetacognition());
+      modalSubmitBtn.addEventListener('click', () => {
+        console.log('✅ 메타인지 제출 버튼 클릭됨');
+        this.submitMetacognition();
+      });
+    } else {
+      console.error('❌ metaSubmitBtn 버튼을 찾을 수 없음');
     }
 
-    // Enter 키 제출
-    const expectedCorrectInput = document.getElementById('expectedCorrect');
     if (expectedCorrectInput) {
+      // Enter 키 제출
       expectedCorrectInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
+          console.log('✅ Enter 키로 메타인지 제출');
           this.submitMetacognition();
         }
       });
@@ -281,13 +305,14 @@ class TestManager {
       // 실시간 검증
       expectedCorrectInput.addEventListener('input', () => {
         const value = parseInt(expectedCorrectInput.value);
-        const errorElem = document.getElementById('errorCorrect');
-        if (expectedCorrectInput.value && (value < 0 || value > 25)) {
+        if (expectedCorrectInput.value && (value < 0 || value > 25 || isNaN(value))) {
           errorElem.style.display = 'flex';
-        } else if (expectedCorrectInput.value) {
+        } else {
           errorElem.style.display = 'none';
         }
       });
+    } else {
+      console.error('❌ expectedCorrectInput 입력 필드를 찾을 수 없음');
     }
 
     // ESC 키 방지
@@ -304,13 +329,26 @@ class TestManager {
 
   /* ========== ✅ 메타인지 데이터 제출 ========== */
   submitMetacognition() {
-    const expectedCorrectInput = document.getElementById('expectedCorrect');
-    const expectedCorrect = parseInt(expectedCorrectInput.value);
+    const expectedCorrectInput = document.getElementById('expectedCorrectInput');
     const errorElem = document.getElementById('errorCorrect');
+    
+    console.log('📝 submitMetacognition 호출됨');
+    console.log('입력값:', expectedCorrectInput?.value);
 
-    // 검증
-    if (!expectedCorrectInput.value || expectedCorrect < 0 || expectedCorrect > 25) {
-      errorElem.style.display = 'flex';
+    if (!expectedCorrectInput) {
+      console.error('❌ expectedCorrectInput 요소를 찾을 수 없음');
+      return;
+    }
+
+    const value = expectedCorrectInput.value.trim();
+    const expectedCorrect = parseInt(value);
+
+    // ✅ 검증 강화
+    if (value === '' || isNaN(expectedCorrect) || !Number.isInteger(expectedCorrect) || expectedCorrect < 0 || expectedCorrect > 25) {
+      console.warn('⚠️ 유효하지 않은 입력:', value);
+      if (errorElem) errorElem.style.display = 'flex';
+      alert('0에서 25 사이의 정수를 입력해주세요.');
+      expectedCorrectInput.focus();
       return;
     }
 
@@ -337,17 +375,24 @@ class TestManager {
   /* ========== ✅ 메타인지 모달 표시 ========== */
   showMetacognitionModal() {
     const modal = document.getElementById('metacognitionModal');
-    if (modal) {
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-
-      // 입력 필드 초기화
-      const input = document.getElementById('expectedCorrect');
-      if (input) input.value = '';
-
-      const errorElem = document.getElementById('errorCorrect');
-      if (errorElem) errorElem.style.display = 'none';
+    if (!modal) {
+      console.error('❌ metacognitionModal을 찾을 수 없음');
+      return;
     }
+
+    console.log('✅ 메타인지 모달 표시');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    // 입력 필드 초기화
+    const input = document.getElementById('expectedCorrectInput');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+
+    const errorElem = document.getElementById('errorCorrect');
+    if (errorElem) errorElem.style.display = 'none';
   }
 
   /* ========== 보안 조치 초기화 (우클릭 방지 등) ========== */
@@ -359,30 +404,30 @@ class TestManager {
     // }, false);
 
     // 2. 개발자 도구 단축키 방지
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'F12' ||
-          (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-          (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-          (e.ctrlKey && e.key === 'U') ||
-          (e.ctrlKey && e.key === 's') ||
-          (e.ctrlKey && e.shiftKey && e.key === 'C')) {
+        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+        (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+        (e.ctrlKey && e.key === 'U') ||
+        (e.ctrlKey && e.key === 's') ||
+        (e.ctrlKey && e.shiftKey && e.key === 'C')) {
         e.preventDefault();
         return false;
       }
     }, false);
 
     // 3. 드래그 방지
-    document.addEventListener('dragstart', function(e) {
+    document.addEventListener('dragstart', function (e) {
       e.preventDefault();
       return false;
     }, false);
 
     // 4. 이미지 보안 속성
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const images = document.querySelectorAll('img');
       images.forEach(img => {
-        img.ondragstart = function() { return false; };
-        img.oncontextmenu = function() { return false; };
+        img.ondragstart = function () { return false; };
+        img.oncontextmenu = function () { return false; };
       });
     });
 
@@ -409,8 +454,8 @@ class TestManager {
     // 6. 콘솔 경고
     console.clear();
     console.log('%c경고', 'color: red; font-size: 40px; font-weight: bold;');
-    console.log('%c이 페이지의 콘솔을 사용하여 테스트를 조작하는 것은 부정행위입니다.\n모든 활동이 기록되고 있습니다.', 
-                'color: orange; font-size: 16px;');
+    console.log('%c이 페이지의 콘솔을 사용하여 테스트를 조작하는 것은 부정행위입니다.\n모든 활동이 기록되고 있습니다.',
+      'color: orange; font-size: 16px;');
   }
 
   /* ========== 이전 단계 검증 ========== */
@@ -521,15 +566,15 @@ class TestManager {
       questionTextElem.classList.remove('text-only-centered');
       questionTextElem.style.textAlign = 'left';
       questionTextElem.style.marginBottom = '15px';
-      
+
       questionImg.src = question.questionImage;
       questionImg.alt = `문제 ${idx + 1}`;
       questionImg.style.display = 'block';
       questionImg.onerror = () => {
         questionImg.src = 'https://via.placeholder.com/750x400?text=이미지+로드+실패';
       };
-      questionImg.ondragstart = function() { return false; };
-      questionImg.oncontextmenu = function() { return false; };
+      questionImg.ondragstart = function () { return false; };
+      questionImg.oncontextmenu = function () { return false; };
     } else if (!hasText && hasImage) {
       // ✅ 이미지만: 기존 방식
       questionTextElem.style.display = 'none';
@@ -540,8 +585,8 @@ class TestManager {
       questionImg.onerror = () => {
         questionImg.src = 'https://via.placeholder.com/750x400?text=이미지+로드+실패';
       };
-      questionImg.ondragstart = function() { return false; };
-      questionImg.oncontextmenu = function() { return false; };
+      questionImg.ondragstart = function () { return false; };
+      questionImg.oncontextmenu = function () { return false; };
     } else {
       // ✅ 둘 다 없음: 기본 텍스트 좌측 정렬 + 상하 중앙
       questionTextElem.textContent = '물음표(?)로 표시된 곳에 들어갈 가장 적절한 정답을 보기 중에서 선택하세요.';
@@ -593,13 +638,13 @@ class TestManager {
              onerror="this.src='https://via.placeholder.com/140?text=보기+${choice.id}'" />
       `;
       item.onclick = () => this.selectChoice(choice.id, questionId);
-      
+
       const img = item.querySelector('img');
       if (img) {
-        img.ondragstart = function() { return false; };
-        img.oncontextmenu = function() { return false; };
+        img.ondragstart = function () { return false; };
+        img.oncontextmenu = function () { return false; };
       }
-      
+
       grid.appendChild(item);
     });
   }
