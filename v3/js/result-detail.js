@@ -202,6 +202,15 @@ function calculateComprehensiveScore(stage1, stage2, stage3, birthYear, testSett
     // 3. 작업속도 점수 계산 (연령 보정 적용)
     // ========================================
     const totalTimeSeconds = (stage1.totalTime || 0) + (stage2.totalTime || 0) + (stage3.totalTime || 0);
+
+    // ✅ 전체 문제 수
+    const totalQuestions = 25; // (15 + 5 + 5)
+
+    // ✅ 문제당 평균 시간 (반올림)
+    const avgTimePerQuestion = totalTimeSeconds > 0
+        ? Math.round(totalTimeSeconds / totalQuestions)
+        : 0;
+
     const totalTimeFormatted = formatTime(totalTimeSeconds);
 
     const timeLimit = (testSettings.stage1.timeLimit || 30) * 60 +
@@ -222,9 +231,15 @@ function calculateComprehensiveScore(stage1, stage2, stage3, birthYear, testSett
         speedScore = 60;
     }
 
-    speedScore = Math.min(100, speedScore + ageAdjustment);
+    // ✅ 연령 보정 적용 및 반올림 (한 번만)
+    speedScore = Math.min(100, Math.round(speedScore + ageAdjustment));
 
-    console.log('작업속도 점수 (연령 보정 후):', speedScore);
+    console.log('작업속도 계산:', {
+        totalTimeSeconds,
+        totalQuestions,
+        avgTimePerQuestion: `${avgTimePerQuestion}초`,
+        speedScore: `${speedScore}점`
+    });
 
     // ========================================
     // 4. 메타인지 점수 계산 (연령 보정 미적용)
@@ -275,8 +290,9 @@ function calculateComprehensiveScore(stage1, stage2, stage3, birthYear, testSett
         stage2Percentile: getPercentile(stage2Score),
         stage3Score,
         stage3Percentile: getPercentile(stage3Score),
-        speedScore,
+        speedScore, // ✅ 이미 반올림됨
         speedPercentile: getPercentile(speedScore),
+        avgTimePerQuestion, // ✅ 추가: 반올림된 평균 시간 (초)
         metacognitionScore,
         metacognitionPercentile: getPercentile(metacognitionScore),
         rawScore: Math.round(rawScore),
@@ -437,7 +453,7 @@ function displayFiveScores(scoreResult) {
         {
             title: '작업 속도 환산점수',
             score: scoreResult.speedScore,
-            detail: `소요시간: ${scoreResult.totalTimeFormatted || '0분 0초'}`
+            detail: `총 소요시간: ${scoreResult.totalTimeFormatted || '0분 0초'}` // ✅ 수정
         },
         {
             title: '메타인지 원점수',
@@ -668,7 +684,7 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
     // 점수순 정렬
     const sortedStages = [...stages].sort((a, b) => b.score - a.score);
     const maxScore = sortedStages[0].score;
-    
+
     // 최고점 단계들 (동점 처리)
     const topStages = stages.filter(s => s.score === maxScore);
     const minScore = sortedStages[sortedStages.length - 1].score;
@@ -679,7 +695,7 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
     if (scoreResult.finalScore >= 90) {
         const topNames = topStages.map(s => s.name).join(', ');
         const isAllSame = topStages.length === 3;
-        
+
         content = `
             ${isAllSame ? `
                 <p style="margin-bottom: 15px; color: #333; line-height: 1.7; font-size: 11px; font-weight: 700;">
@@ -712,7 +728,7 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
     } else if (scoreResult.finalScore >= 80) {
         const topNames = topStages.map(s => s.name).join(', ');
         const weakNames = weakStages.map(s => `${s.name}(${s.score}점)`).join(', ');
-        
+
         content = `
             <p style="margin-bottom: 15px; color: #333; line-height: 1.7; font-size: 11px; font-weight: 700;">
                 ${topNames} 영역(${maxScore}점)이 강점입니다. ${weakStages.length > 0 && maxScore !== minScore ? `${weakNames} 영역을 집중 보완하면 90점대 진입이 가능합니다.` : '모든 영역이 균형잡혀 있어 심화 학습으로 도약할 수 있습니다.'}
@@ -720,14 +736,13 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
             <ul style="list-style: none; padding: 0; margin: 0;">
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
-                    <strong style="color: #1a1a2e;">약점 영역 집중 공략:</strong> ${weakStages.length > 0 && maxScore !== minScore ? 
-                        `${weakStages[0].name} 영역 특화 훈련이 필요합니다. ${
-                            weakStages[0].name === '시각 추론' ? '공간 지각력 훈련(3D 퍼즐, 회전 문제), 패턴 변환 연습' :
-                            weakStages[0].name === '논리 사고' ? '기호 논리학 기초, 논리 게임(스도쿠, 켄켄), 삼단논법 훈련' :
-                            '복합 문제 풀이, 다단계 추론 연습, 정보 통합 훈련'
-                        }을 추천합니다.` : 
-                        '모든 영역의 난이도를 한 단계 높여 고급 문제에 도전하세요.'
-                    }
+                    <strong style="color: #1a1a2e;">약점 영역 집중 공략:</strong> ${weakStages.length > 0 && maxScore !== minScore ?
+                `${weakStages[0].name} 영역 특화 훈련이 필요합니다. ${weakStages[0].name === '시각 추론' ? '공간 지각력 훈련(3D 퍼즐, 회전 문제), 패턴 변환 연습' :
+                    weakStages[0].name === '논리 사고' ? '기호 논리학 기초, 논리 게임(스도쿠, 켄켄), 삼단논법 훈련' :
+                        '복합 문제 풀이, 다단계 추론 연습, 정보 통합 훈련'
+                }을 추천합니다.` :
+                '모든 영역의 난이도를 한 단계 높여 고급 문제에 도전하세요.'
+            }
                 </li>
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
@@ -735,10 +750,10 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
                 </li>
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
-                    <strong style="color: #1a1a2e;">시간 관리 최적화:</strong> ${scoreResult.speedScore < 80 ? 
-                        `작업 속도 ${scoreResult.speedScore}점을 향상시키기 위해, 단계별 시간 제한을 설정하고(1단계 1분 30초, 2단계 1분, 3단계 1분 20초) 반복 연습하세요.` :
-                        `현재 속도(${scoreResult.speedScore}점)를 유지하면서 정확도를 높이는 데 집중하세요.`
-                    }
+                    <strong style="color: #1a1a2e;">시간 관리 최적화:</strong> ${scoreResult.speedScore < 80 ?
+                `작업 속도 ${scoreResult.speedScore}점을 향상시키기 위해, 단계별 시간 제한을 설정하고(1단계 1분 30초, 2단계 1분, 3단계 1분 20초) 반복 연습하세요.` :
+                `현재 속도(${scoreResult.speedScore}점)를 유지하면서 정확도를 높이는 데 집중하세요.`
+            }
                 </li>
                 <li style="margin-bottom: 0; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
@@ -749,7 +764,7 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
     } else if (scoreResult.finalScore >= 70) {
         const topNames = topStages.map(s => s.name).join(', ');
         const weakNames = weakStages.map(s => `${s.name}(${s.score}점)`).join(', ');
-        
+
         content = `
             <p style="margin-bottom: 15px; color: #333; line-height: 1.7; font-size: 11px; font-weight: 700;">
                 ${topNames} 영역(${maxScore}점)을 중심으로 실력을 확장하고, ${weakStages.length > 0 && maxScore !== minScore ? `${weakNames} 영역을 체계적으로 보강하면` : '모든 영역을 균형있게 발전시키면'} 80점대 돌파가 가능합니다.
@@ -769,11 +784,10 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
                     <strong style="color: #1a1a2e;">영역별 맞춤 훈련:</strong>
                     <ul style="list-style: disc; margin: 8px 0 0 20px; padding: 0;">
-                        ${stages.map(s => `<li style="margin-bottom: 6px; color: #555; font-size: 10px; line-height: 1.6;">${s.name}: ${s.score}점 → ${
-                            s.name === '시각 추론' ? '도형 규칙 찾기, 거울상/회전 문제 집중' :
-                            s.name === '논리 사고' ? '조건 추론, 명제 논리, 벤다이어그램 연습' :
-                            '복합 정보 처리, 다중 규칙 적용 문제'
-                        }</li>`).join('')}
+                        ${stages.map(s => `<li style="margin-bottom: 6px; color: #555; font-size: 10px; line-height: 1.6;">${s.name}: ${s.score}점 → ${s.name === '시각 추론' ? '도형 규칙 찾기, 거울상/회전 문제 집중' :
+            s.name === '논리 사고' ? '조건 추론, 명제 논리, 벤다이어그램 연습' :
+                '복합 정보 처리, 다중 규칙 적용 문제'
+            }</li>`).join('')}
                     </ul>
                 </li>
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
@@ -789,7 +803,7 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
     } else {
         const topNames = topStages.map(s => s.name).join(', ');
         const weakNames = weakStages.map(s => `${s.name}(${s.score}점)`).join(', ');
-        
+
         content = `
             <p style="margin-bottom: 15px; color: #333; line-height: 1.7; font-size: 11px; font-weight: 700;">
                 ${topStages.length > 0 ? `${topNames} 영역(${maxScore}점)에서 긍정적인 신호를 보이고 있습니다. 이를 발판으로 ` : ''}
@@ -807,11 +821,10 @@ function displayRecommendation(scoreResult, stage1, stage2, stage3) {
                 </li>
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
-                    <strong style="color: #1a1a2e;">핵심 유형 마스터:</strong> ${weakStages[0]?.name || '취약 영역'}에서 자주 나오는 5가지 핵심 패턴(${
-                        weakStages[0]?.name === '시각 추론' ? '회전, 대칭, 중첩, 크기 변화, 개수 규칙' :
-                        weakStages[0]?.name === '논리 사고' ? '조건 추론, 대소 비교, 순서 배열, 참/거짓 판단, 논리 연산' :
-                        '단계적 추론, 규칙 결합, 예외 찾기, 역추론, 정보 통합'
-                    })을 집중 학습하세요.
+                    <strong style="color: #1a1a2e;">핵심 유형 마스터:</strong> ${weakStages[0]?.name || '취약 영역'}에서 자주 나오는 5가지 핵심 패턴(${weakStages[0]?.name === '시각 추론' ? '회전, 대칭, 중첩, 크기 변화, 개수 규칙' :
+                weakStages[0]?.name === '논리 사고' ? '조건 추론, 대소 비교, 순서 배열, 참/거짓 판단, 논리 연산' :
+                    '단계적 추론, 규칙 결합, 예외 찾기, 역추론, 정보 통합'
+            })을 집중 학습하세요.
                 </li>
                 <li style="margin-bottom: 14px; padding-left: 22px; position: relative; line-height: 1.7; color: #444; font-size: 11px;">
                     <span style="position: absolute; left: 0; top: 7px; width: 6px; height: 6px; background: #d4af37; border-radius: 50%;"></span>
@@ -878,7 +891,8 @@ function createSampleUser() {
         name: '홍길동',
         email: 'hong@example.com',
         birthYear: '1990',
-        sessionId: 'session_sample_' + Date.now()
+        sessionId: 'session_sample_' + Date.now(),
+        testNumber: 'ONT-999999' // ✅ 수험번호 추가
     };
 }
 
@@ -888,7 +902,9 @@ function createSampleStage1() {
         correctCount: 12,
         totalQuestions: 15,
         correctRate: 80,
-        totalTime: 450
+        totalTime: 450, // 7.5분
+        avgTimePerQuestion: 30, // ✅ 문제당 평균 30초
+        passed: true
     };
 }
 
@@ -898,7 +914,9 @@ function createSampleStage2() {
         correctCount: 4,
         totalQuestions: 5,
         correctRate: 80,
-        totalTime: 200
+        totalTime: 200, // 3.33분
+        avgTimePerQuestion: 40, // ✅ 문제당 평균 40초
+        passed: true
     };
 }
 
@@ -908,13 +926,16 @@ function createSampleStage3() {
         correctCount: 3,
         totalQuestions: 5,
         correctRate: 60,
-        totalTime: 225
+        totalTime: 225, // 3.75분
+        avgTimePerQuestion: 45, // ✅ 문제당 평균 45초
+        passed: true
     };
 }
 
 function createSampleMetacognition() {
     return {
-        expectedCorrect: 20,
+        expectedCorrect: 20, // 예상 정답 수
+        actualCorrect: 19,   // 실제 정답 수 (12 + 4 + 3)
         timestamp: new Date().toISOString()
     };
 }
@@ -925,24 +946,31 @@ function createSampleTestSettings() {
             questionCount: 15,
             baseScore: 40,
             pointPerQuestion: 4,
-            timeLimit: 30,
-            minRequiredTime: 5
+            timeLimit: 30 * 60, // ✅ 초 단위 (30분 = 1800초)
+            minRequiredTime: 5 * 60 // ✅ 초 단위 (5분 = 300초)
         },
         stage2: {
             questionCount: 5,
             baseScore: 60,
             pointPerQuestion: 8,
-            timeLimit: 10,
-            minRequiredTime: 2
+            timeLimit: 10 * 60, // ✅ 초 단위 (10분 = 600초)
+            minRequiredTime: 2 * 60 // ✅ 초 단위 (2분 = 120초)
         },
         stage3: {
             questionCount: 5,
             baseScore: 60,
             pointPerQuestion: 8,
-            timeLimit: 10,
-            minRequiredTime: 2
+            timeLimit: 10 * 60, // ✅ 초 단위 (10분 = 600초)
+            minRequiredTime: 2 * 60 // ✅ 초 단위 (2분 = 120초)
         },
-        upwardAdjustment: 5
+        upwardAdjustment: 5,
+        // ✅ 작업속도 점수 계산 기준
+        workSpeedThresholds: {
+            excellent: 30,  // 문제당 30초 이하: 100점
+            good: 45,       // 문제당 45초 이하: 90점
+            normal: 60,     // 문제당 60초 이하: 80점
+            slow: Infinity  // 그 외: 70점
+        }
     };
 }
 
